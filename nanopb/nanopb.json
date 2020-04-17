@@ -1,0 +1,17 @@
+{
+	"book": "nanopb",
+	"files": [
+		{
+			"fileName": "pb_common.c",
+			"language": "c"
+		},
+		{
+			"fileName": "pb_encode.c",
+			"language": "c"
+		},
+		{
+			"fileName": "pb_decode.c",
+			"language": "c"
+		}
+	]
+}
