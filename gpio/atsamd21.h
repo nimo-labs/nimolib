@@ -17,8 +17,8 @@
 * Description: SAMD21 GPIO device driver
 */
 
-#define GPIO_PIN_DIR(lPORT, PIN, DIR)                     \
-	if (GPIO_DIR_OUT == DIR)                              \
+#define GPIO_PIN_DIR(lPORT, PIN, lDIR)                     \
+	if (GPIO_DIR_OUT == lDIR)                              \
 	{													\
 		PORT->Group[lPORT].DIR.reg |= (1 << PIN);      \
 		(PORT->Group[lPORT].PINCFG[PIN].reg &= ~(1 << 1)); \
