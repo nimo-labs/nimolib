@@ -1,0 +1,82 @@
+/*
+* Copyright 2020 NimoLabs Ltd.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* File: atsamd21.c
+* Description: ATSAMD21 SPI device driver
+*/
+
+/** Pings the selected address to see if a device is present.
+ *
+ * Returns 0 if device present
+ * Returns 1 if device NOT present
+ *
+ */
+
+#include <sam.h>
+#include <system.h>
+#include <nimolib.h>
+
+#if defined(__SAMD21)
+#include <sam.h>
+#include "i2c_samd.c"
+#elif defined(__SAMR21)
+#include <sam.h>
+#include "i2c_samd.c"
+#elif defined(__XMEGA)
+#include "i2c_xmega.c"
+#else
+#error uC not defined
+#endif
+
+unsigned char i2cPing(unsigned char UNUSED(chan), unsigned char addr)
+{
+	return i2cWrite(addr, (unsigned char *)"\0", 0, TRUE);
+}
+
+void i2cDetect(unsigned char UNUSED(chan))
+{
+	unsigned int i, j, res;
+	unsigned int first = 0x03, last = 0x77;
+
+	DEBUG_STR(
+		"        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
+
+	for (i = 0; i < 127; i += 16)
+	{
+		DEBUG_HEX8(i);
+		DEBUG_STR(": ");
+		for (j = 0; j < 16; j++)
+		{
+			/* Skip unwanted addresses */
+			if (i + j < first || i + j > last)
+			{
+				DEBUG_STR("     ");
+				continue;
+			}
+
+			/* Probe this address */
+			res = i2cPing(0, i + j);
+
+			if (res)
+				DEBUG_STR(" --  ");
+			else
+			{
+				DEBUG_HEX8(i + j);
+				DEBUG_STR(" ");
+			}
+		}
+		DEBUG_STR("\r\n");
+	}
+}
