@@ -27,6 +27,7 @@
 #include <sam.h>
 #include <system.h>
 #include <nimolib.h>
+#include <printf.h>
 
 #if defined(__SAMD21)
 #include <sam.h>
@@ -50,19 +51,18 @@ void i2cDetect(unsigned char UNUSED(chan))
 	unsigned int i, j, res;
 	unsigned int first = 0x03, last = 0x77;
 
-	DEBUG_STR(
-		"        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
+	pritnf("        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
 
 	for (i = 0; i < 127; i += 16)
 	{
-		DEBUG_HEX8(i);
-		DEBUG_STR(": ");
+		printf("0x%.2X", i);
+		printf(": ");
 		for (j = 0; j < 16; j++)
 		{
 			/* Skip unwanted addresses */
 			if (i + j < first || i + j > last)
 			{
-				DEBUG_STR("     ");
+				printf("     ");
 				continue;
 			}
 
@@ -70,13 +70,13 @@ void i2cDetect(unsigned char UNUSED(chan))
 			res = i2cPing(0, i + j);
 
 			if (res)
-				DEBUG_STR(" --  ");
+				printf(" --  ");
 			else
 			{
-				DEBUG_HEX8(i + j);
-				DEBUG_STR(" ");
+				printf("%.2X",(i + j);
+				printf(" ");
 			}
 		}
-		DEBUG_STR("\r\n");
+		printf("\r\n");
 	}
 }
