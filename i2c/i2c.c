@@ -51,7 +51,7 @@ void i2cDetect(unsigned char UNUSED(chan))
 	unsigned int i, j, res;
 	unsigned int first = 0x03, last = 0x77;
 
-	pritnf("        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
+	printf("        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
 
 	for (i = 0; i < 127; i += 16)
 	{
@@ -73,8 +73,8 @@ void i2cDetect(unsigned char UNUSED(chan))
 				printf(" --  ");
 			else
 			{
-				printf("%.2X",(i + j);
-				printf(" ");
+				printf(" %.2X", (i + j));
+				printf("  ");
 			}
 		}
 		printf("\r\n");
