@@ -13,19 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: spiDataFlash.c
-* Description: SPI Dataflash API provider
+* File: at25pe80.h
+* Description: AT25PE80 dataflash chip device driver
 */
 
-#include <sam.h>
-#include <gpio.h>
-#include <nimolib.h>
-#include "uart.h"
+/*Chip commands*/
+#define SST25VF_CMD_WRITE_EN 0x06
+/*Read commands*/
+#define SST25VF_CMD_READ 0x03
 
-#if defined(SPI_DATAFLASH_AT25PE80)
-#include "at25pe80.c"
-#elif defined(SPI_DATAFLASH_SST25VF)
-#include "sst25vf.c"
-#else
-#error SPI_DATAFLASH chip not defined
-#endif
+/*Program / erase commands*/
+#define SST25VF_CMD_BYTE_PROGRAM 0x02
+#define SST25VF_CMD_CHIP_ERASE 0x60
