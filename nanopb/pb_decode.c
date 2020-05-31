@@ -1646,7 +1646,15 @@ static bool checkreturn pb_dec_submessage(pb_istream_t *stream, const pb_field_i
     {
         /* Message callback is stored right before pSize. */
         pb_callback_t *callback = (pb_callback_t *)field->pSize - 1;
-        if (callback->funcs.decode)
+
+        if (callback->usingPtr) /*Call pb_read directly*/
+        {
+            callback->buffLen = substream.bytes_left;
+            pb_read(&substream, (unsigned char *)callback->buffer, 2); /*read off 2 dummy bytes*/
+            if (!pb_read(&substream, (unsigned char *)callback->buffer, substream.bytes_left))
+                PB_RETURN_ERROR(stream, "pb_read failed");
+        }
+        else if (callback->funcs.decode)
         {
             status = callback->funcs.decode(&substream, field, &callback->arg);
         }
