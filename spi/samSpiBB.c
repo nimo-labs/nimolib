@@ -41,13 +41,12 @@ void spiInit(void)
     printf("spiInit() (BB)...");
 
     /*Set MOSI and SCK as outputs*/
-    BBSPI_CHAN0_MOSI_SETUP;
-    BBSPI_CHAN0_MOSI_DESELECT;
+    GPIO_PIN_DIR(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_DIR_OUT);
+    GPIO_PIN_DIR(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN, GPIO_DIR_IN);
+    GPIO_PIN_DIR(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_DIR_OUT);
 
-    BBSPI_CHAN0_SCK_SETUP;
-    BBSPI_CHAN0_SCK_DESELECT;
-
-    BBSPI_CHAN0_MISO_SETUP;
+    GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
+    GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
 
     printf("Done.\r\n");
 }
@@ -67,20 +66,20 @@ void spiTxByte(unsigned char byte)
     for (i = 0; i < 8; i++)
     {
         if (byte & (0x01 << (7 - i)))
-            BBSPI_CHAN0_MOSI_SELECT;
+            GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_HIGH);
         else
-            BBSPI_CHAN0_MOSI_DESELECT;
+            GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
 
-        if ((BBSPI_CHAN0_MISO_READ) > 0)
+        if ((GPIO_READ(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN)) > 0)
             rxByte |= (1 << 0);
         else
             rxByte &= ~(1 << 0);
         if (i < 7)
             rxByte <<= 1;
 
-        BBSPI_CHAN0_SCK_SELECT;
+        GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_HIGH);
         bitDelay();
-        BBSPI_CHAN0_SCK_DESELECT;
+        GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
         bitDelay();
     }
 }
