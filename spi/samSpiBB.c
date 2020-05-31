@@ -69,7 +69,7 @@ void spiTxByte(unsigned char byte)
         else
             GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
 
-        if ((GPIO_READ(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN)) > 0)
+        if ((GPIO_PIN_READ(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN)) > 0)
             rxByte |= (1 << 0);
         else
             rxByte &= ~(1 << 0);
