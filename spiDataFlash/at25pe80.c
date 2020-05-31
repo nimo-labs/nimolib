@@ -18,6 +18,7 @@
 */
 #include <sam.h>
 #include <nimolib.h>
+#include <gpio.h>
 #include <spi.h>
 #include <printf.h>
 #include <delay.h>
@@ -27,14 +28,14 @@
 void spiDataFlashInit(unsigned char chip __attribute__((unused)))
 {
     printf("spiDataFlashInit()...");
-    SPI_DATAFLASH_AT25PE80_CS_SETUP;
-    SPI_DATAFLASH_AT25PE80_CS_DESELECT;
+    GPIO_PIN_DIR(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_DIR_OUT);
+    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     printf("Done.\r\n");
 }
 void spiDataFlashReadData(unsigned char chip __attribute__((unused)), unsigned long address,
                           unsigned char *data, unsigned int dataLen)
 {
-    SPI_DATAFLASH_AT25PE80_CS_SELECT;
+    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
     spiTxByte(AT25PE80_CONTINUOUS_READ_SLOW);
     spiTxByte((address >> 16) & 0xff);
     spiTxByte((address >> 8) & 0xff);
@@ -42,7 +43,7 @@ void spiDataFlashReadData(unsigned char chip __attribute__((unused)), unsigned l
 
     for (unsigned int i = 0; i < dataLen; i++)
         data[i] = spiRxByte();
-    SPI_DATAFLASH_AT25PE80_CS_DESELECT;
+    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 }
 
 void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned long address,
@@ -59,7 +60,7 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
 
     for (unsigned int i = 0; i < iter; i++)
     {
-        SPI_DATAFLASH_AT25PE80_CS_SELECT;
+        GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
         spiTxByte(AT25PE80_PROG_RMW);
         spiTxByte((address >> 16) & 0xff);
         spiTxByte((address >> 8) & 0xff);
@@ -74,7 +75,7 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
 
         for (unsigned int j = 0; j < dataLen; j++, dataCtr++)
             spiTxByte(data[dataCtr]);
-        SPI_DATAFLASH_AT25PE80_CS_DESELECT;
+        GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
         delayMs(55);
         address += dataLen;
@@ -83,11 +84,11 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
 
 void spiDataFlashChipErase(unsigned char chip __attribute__((unused)))
 {
-    SPI_DATAFLASH_AT25PE80_CS_SELECT;
+    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
     spiTxByte(0xC7);
     spiTxByte(0x94);
     spiTxByte(0x80);
     spiTxByte(0x9A);
-    SPI_DATAFLASH_AT25PE80_CS_DESELECT;
+    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(20000);
 }
