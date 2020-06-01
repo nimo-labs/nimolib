@@ -54,7 +54,7 @@ static void bitDelay(void)
 {
     unsigned long i;
 #warning this should be using a better delay routine
-    for (i = 0; i < 400; i++)
+    for (i = 0; i < 600; i++)
         asm("nop");
 }
 
