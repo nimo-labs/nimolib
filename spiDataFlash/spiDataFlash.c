@@ -29,3 +29,7 @@
 #else
 #error SPI_DATAFLASH chip not defined
 #endif
+
+#ifndef SPI_DATAFLASH_SIZE
+#error SPI_DATAFLASH chip size not defined
+#endif

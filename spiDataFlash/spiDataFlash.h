@@ -18,8 +18,13 @@
 */
 
 void spiDataFlashInit(unsigned char chip);
+void spiDataFlash4kErase(unsigned char chip __attribute__((unused)), unsigned long address);
 void spiDataFlashChipErase(unsigned char chip);
 void spiDataFlashPageWrite(unsigned char chip, unsigned long address,
                            unsigned char *data, unsigned char dataLen);
 void spiDataFlashReadData(unsigned char chip, unsigned long address,
                           unsigned char *data, unsigned int dataLen);
+
+/*Dataflash size defines for use with SPI_DATAFLASH_SIZE */
+
+#define SPI_DATAFLASH_4Mb 4194304
