@@ -89,7 +89,7 @@ static void writeByte(unsigned long address, unsigned char data)
     spiTxByte(data);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
-    delayMs(100);
+    delayMs(1);
 }
 
 void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned long address,
