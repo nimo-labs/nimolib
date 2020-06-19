@@ -45,15 +45,6 @@ void spiDataFlashInit(unsigned char chip __attribute__((unused)))
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(10);
 
-    /*Read status byte*/
-    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_READ_STATUS_REG);
-    flashBuf[0] = spiRxByte();
-    GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
-    delayMs(10);
-
-    outputHex("Flash status", flashBuf, 1);
-
     printf("Done.\r\n");
 }
 void spiDataFlashReadData(unsigned char chip __attribute__((unused)), unsigned long address,
