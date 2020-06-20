@@ -35,7 +35,6 @@ static void bitDelay(void)
 
 void spiDataFlashInit(unsigned char chip __attribute__((unused)))
 {
-    unsigned char flashBuf[4];
     printf("spiDataFlashInit()...");
     GPIO_PIN_DIR(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_DIR_OUT);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
