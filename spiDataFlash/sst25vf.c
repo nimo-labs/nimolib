@@ -25,6 +25,14 @@
 
 #include "sst25vf.h"
 
+static void bitDelay(void)
+{
+    unsigned long i;
+#warning this should be using a better delay routine
+    for (i = 0; i < 600; i++)
+        asm("nop");
+}
+
 void spiDataFlashInit(unsigned char chip __attribute__((unused)))
 {
     unsigned char flashBuf[4];
@@ -80,7 +88,8 @@ static void writeByte(unsigned long address, unsigned char data)
     spiTxByte(data);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
-    delayMs(1);
+    //delayMs(1);
+    bitDelay();
 }
 
 void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned long address,
@@ -122,5 +131,5 @@ void spiDataFlashChipErase(unsigned char chip __attribute__((unused)))
     spiTxByte(SST25VF_CMD_CHIP_ERASE);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
-    delayMs(120);
+    delayMs(50);
 }
