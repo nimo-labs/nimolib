@@ -1,8 +1,8 @@
 {
-    "book": "at86rf233",
+    "book": "at86rf23x",
     "files": [
         {
-            "fileName": "at86rf233.c",
+            "fileName": "at86rf23x.c",
             "language": "c"
         }
     ]
