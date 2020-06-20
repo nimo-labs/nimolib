@@ -87,10 +87,10 @@ static void at86rf23xPollAesStatus(void)
     while (!result)
     {
         GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-        spiTxByte(AT86RF23XCMD_READ_SRAM);
-        spiTxByte(AT86RF23XREG_AES_STATUS);
-        spiTxByte(((AT86RF23XAES_CTRL_MODE_KEY << 4) | (0 << 3)));
-        result = (spiRxByte() & 0x01);
+        spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_READ_SRAM);
+        spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_STATUS);
+        spiTxByte(AT86RF23X_SPI_CHAN, ((AT86RF23XAES_CTRL_MODE_KEY << 4) | (0 << 3)));
+        result = (spiRxByte(AT86RF23X_SPI_CHAN) & 0x01);
         GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
     }
 }
@@ -104,26 +104,26 @@ void at86rf23xEncryptData(unsigned char *data, unsigned char *key)
 
     /*Store the encryption key*/
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_WRITE_SRAM);
-    spiTxByte(AT86RF23XREG_AES_CTRL);
-    spiTxByte(
-        ((AT86RF23XAES_CTRL_MODE_KEY << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)));
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_CTRL);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              ((AT86RF23XAES_CTRL_MODE_KEY << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)));
     for (i = 0; i < AT86RF23XAES_BLOCK_SIZE; i++)
-        spiTxByte(key[i]);
+        spiTxByte(AT86RF23X_SPI_CHAN, key[i]);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
     //  xorStr(data, nonce);
 
     /*Encrypt data with our key */
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_WRITE_SRAM);
-    spiTxByte(AT86RF23XREG_AES_CTRL);
-    spiTxByte(
-        (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Set ECB mode and direction to encrypt*/
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_CTRL);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Set ECB mode and direction to encrypt*/
     for (i = 0; i < AT86RF23XAES_BLOCK_SIZE; i++)
-        spiTxByte(data[i]);
-    spiTxByte(
-        (1 << AT86RF23XAES_CTRL_REQUEST) | (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Start encryption*/
+        spiTxByte(AT86RF23X_SPI_CHAN, data[i]);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              (1 << AT86RF23XAES_CTRL_REQUEST) | (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Start encryption*/
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
     /*Wait for encryption to finish */
     //   AT86RF23XPollAesStatus();
@@ -134,10 +134,10 @@ void at86rf23xEncryptData(unsigned char *data, unsigned char *key)
 
     /*Read out data*/
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_READ_SRAM);
-    spiTxByte(AT86RF23XREG_AES_DATA_START);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_READ_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_DATA_START);
     for (i = 0; i < AT86RF23XAES_BLOCK_SIZE; i++)
-        data[i] = spiRxByte();
+        data[i] = spiRxByte(AT86RF23X_SPI_CHAN);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
     printfOutputHex("Out", &data[0], AT86RF23XAES_BLOCK_SIZE);
@@ -149,24 +149,24 @@ void at86rf23xDecryptData(unsigned char *data, unsigned char *key)
     /*Store the encryption key*/
     printfOutputHex("In", data, AT86RF23XAES_BLOCK_SIZE);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_WRITE_SRAM);
-    spiTxByte(AT86RF23XREG_AES_CTRL);
-    spiTxByte(
-        ((AT86RF23XAES_CTRL_MODE_KEY << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)));
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_CTRL);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              ((AT86RF23XAES_CTRL_MODE_KEY << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)));
     for (i = 0; i < 16; i++)
-        spiTxByte(key[i]);
+        spiTxByte(AT86RF23X_SPI_CHAN, key[i]);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
     /*Decrypt data with our key */
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_WRITE_SRAM);
-    spiTxByte(AT86RF23XREG_AES_CTRL);
-    spiTxByte(
-        (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Set ECB mode and direction to encrypt*/
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_CTRL);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Set ECB mode and direction to encrypt*/
     for (i = 0; i < 16; i++)
-        spiTxByte(data[i]);
-    spiTxByte(
-        (1 << AT86RF23XAES_CTRL_REQUEST) | (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Start decryption*/
+        spiTxByte(AT86RF23X_SPI_CHAN, data[i]);
+    spiTxByte(AT86RF23X_SPI_CHAN,
+              (1 << AT86RF23XAES_CTRL_REQUEST) | (AT86RF23XAES_CTRL_MODE_CBC << AT86RF23XAES_CTRL_MODE) | (0 << AT86RF23XAES_CTRL_DIR)); /*Start decryption*/
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
     /*Wait for decryption to finish */
     at86rf23xPollAesStatus();
@@ -176,10 +176,10 @@ void at86rf23xDecryptData(unsigned char *data, unsigned char *key)
 
     /*Read out data*/
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_READ_SRAM);
-    spiTxByte(AT86RF23XREG_AES_DATA_START);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_READ_SRAM);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XREG_AES_DATA_START);
     for (i = 0; i < 16; i++)
-        data[i] = spiRxByte();
+        data[i] = spiRxByte(AT86RF23X_SPI_CHAN);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
     // xorStr(data, nonce);
@@ -272,8 +272,8 @@ void at86rf23xStoreData(void)
     {
         rxData = 0;
         GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-        spiTxByte(AT86RF23XCMD_READ_FRAME);
-        dLen = spiRxByte();
+        spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_READ_FRAME);
+        dLen = spiRxByte(AT86RF23X_SPI_CHAN);
         dLen -= 2; /*Remove CRC from end of data*/
 
         dataFrameBuf[frameBufStart][0] = dLen;
@@ -281,7 +281,7 @@ void at86rf23xStoreData(void)
 
         while (dLen > 0)
         {
-            dataFrameBuf[frameBufStart][i] = spiRxByte();
+            dataFrameBuf[frameBufStart][i] = spiRxByte(AT86RF23X_SPI_CHAN);
             i++;
             dLen--;
         }
@@ -314,10 +314,10 @@ void at86rf23xTransmitFrame(unsigned char data)
         printf("PLL_ON\r\n");
 
         GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-        spiTxByte(AT86RF23XCMD_WRITE_FRAME);
+        spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_FRAME);
 
-        spiTxByte('\003');
-        spiTxByte(data);
+        spiTxByte(AT86RF23X_SPI_CHAN, '\003');
+        spiTxByte(AT86RF23X_SPI_CHAN, data);
         GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
         txBusy = 1;
@@ -408,10 +408,10 @@ void at86rf23xTxData(unsigned char *data, unsigned char size)
             at86rf23xSetTrxState(AT86RF23XTRX_CMD_TX_ARET_ON);
             GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
 
-            spiTxByte(AT86RF23XCMD_WRITE_FRAME);
-            spiTxByte(size + 2); /*+2 to account for the CRC*/
+            spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_FRAME);
+            spiTxByte(AT86RF23X_SPI_CHAN, size + 2); /*+2 to account for the CRC*/
             for (i = 0; i < size; i++)
-                spiTxByte(data[i]);
+                spiTxByte(AT86RF23X_SPI_CHAN, data[i]);
 
             GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 
@@ -431,9 +431,9 @@ static unsigned char at86rf23xReadReg(unsigned char regAddr)
     unsigned char data;
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
     //    printf("1\r\n");
-    spiTxByte(AT86RF23XCMD_READ_REG | regAddr);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_READ_REG | regAddr);
     //    printf("2\r\n");
-    data = spiRxByte();
+    data = spiRxByte(AT86RF23X_SPI_CHAN);
     //    printf("3\r\n");
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
     //    printf("4\r\n");
@@ -444,8 +444,8 @@ static unsigned char at86rf23xReadReg(unsigned char regAddr)
 static void at86rf23xWriteReg(unsigned char regAddr, unsigned char data)
 {
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(AT86RF23XCMD_WRITE_REG | regAddr);
-    spiTxByte(data);
+    spiTxByte(AT86RF23X_SPI_CHAN, AT86RF23XCMD_WRITE_REG | regAddr);
+    spiTxByte(AT86RF23X_SPI_CHAN, data);
     GPIO_PIN_OUT(AT86RF23X_CS_PORT, AT86RF23X_CS_PIN, GPIO_OUT_HIGH);
 }
 
