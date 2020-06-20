@@ -18,3 +18,4 @@
 */
 
 int printf(const char *format, ...);
+void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen);

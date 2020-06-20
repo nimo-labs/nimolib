@@ -17,7 +17,6 @@
 * Description: Simple printf library
 */
 
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
@@ -75,6 +74,16 @@ int printf(const char *format, ...)
     return ret;
 #else
     return 0;
+#endif
+}
+
+void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen)
+{
+#if (PRINTF_BUFF_SIZE > 0)
+    printf("%s: ", marker);
+    for (unsigned int i = 0; i < dataLen; i++)
+        printf("%.02X ", data[i]);
+    printf("\r\n");
 #endif
 }
 
