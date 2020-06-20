@@ -41,14 +41,14 @@ void spiDataFlashInit(unsigned char chip __attribute__((unused)))
 
     /*Enable status write*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_EN_WRITE_STATUS_REG);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_EN_WRITE_STATUS_REG);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(10);
 
     /*Disable write protection for whole chip*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_WRITE_STATUS_REG);
-    spiTxByte(0x00); /*Disable all write protection */
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_WRITE_STATUS_REG);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, 0x00); /*Disable all write protection */
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(10);
 
@@ -58,13 +58,13 @@ void spiDataFlashReadData(unsigned char chip __attribute__((unused)), unsigned l
                           unsigned char *data, unsigned int dataLen)
 {
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_READ);
-    spiTxByte((address >> 16) & 0xff);
-    spiTxByte((address >> 8) & 0xff);
-    spiTxByte(address & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_READ);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 16) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 8) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, address & 0xff);
 
     for (unsigned int i = 0; i < dataLen; i++)
-        data[i] = spiRxByte();
+        data[i] = spiRxByte(SPI_DATAFLASH_SPI_CHAN);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 }
 
@@ -72,19 +72,19 @@ static void writeByte(unsigned long address, unsigned char data)
 {
     /*Perform write enable*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_WRITE_EN);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_WRITE_EN);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(1);
     /*Write data*/
 
     /*Write first byte with address*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_BYTE_PROGRAM);
-    spiTxByte((address >> 16) & 0xff);
-    spiTxByte((address >> 8) & 0xff);
-    spiTxByte(address & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_BYTE_PROGRAM);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 16) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 8) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, address & 0xff);
 
-    spiTxByte(data);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, data);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
     //delayMs(1);
@@ -102,16 +102,16 @@ void spiDataFlash4kErase(unsigned char chip __attribute__((unused)), unsigned lo
 {
     /*Perform write enable*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_WRITE_EN);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_WRITE_EN);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(1);
 
     /*Write erase command with address*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_4K_ERASE);
-    spiTxByte((address >> 16) & 0xff);
-    spiTxByte((address >> 8) & 0xff);
-    spiTxByte(address & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_4K_ERASE);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 16) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, (address >> 8) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, address & 0xff);
 
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
@@ -121,13 +121,13 @@ void spiDataFlashChipErase(unsigned char chip __attribute__((unused)))
 {
     /*Perform write enable*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_WRITE_EN);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_WRITE_EN);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(1);
 
     /*Write erase command*/
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SST25VF_CMD_CHIP_ERASE);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_CHIP_ERASE);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
     delayMs(50);
