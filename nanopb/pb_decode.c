@@ -1650,7 +1650,8 @@ static bool checkreturn pb_dec_submessage(pb_istream_t *stream, const pb_field_i
         if (callback->usingPtr) /*Call pb_read directly*/
         {
             callback->buffLen = substream.bytes_left;
-            pb_read(&substream, (unsigned char *)callback->buffer, 2); /*read off 2 dummy bytes*/
+            if (!pb_read(&substream, (unsigned char *)callback->buffer, 2)) /*read off 2 dummy bytes*/
+                PB_RETURN_ERROR(stream, "pb_read failed");
             if (!pb_read(&substream, (unsigned char *)callback->buffer, substream.bytes_left))
                 PB_RETURN_ERROR(stream, "pb_read failed");
         }
