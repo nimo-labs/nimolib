@@ -99,10 +99,8 @@ void at86rf233EncryptData(unsigned char *data, unsigned char *key)
 {
     unsigned char i;
 
-    printf("Key:\r\n");
-    debugHexArray(AT86RF233AES_BLOCK_SIZE, key);
-    printf("In:\r\n");
-    debugHexArray(AT86RF233AES_BLOCK_SIZE, data);
+    printfOutputHex("Key", key, AT86RF233AES_BLOCK_SIZE);
+    printfOutputHex("In", data, AT86RF233AES_BLOCK_SIZE);
 
     /*Store the encryption key*/
     GPIO_PIN_OUT(AT86RF233_CS_PORT, AT86RF233_CS_PIN, GPIO_OUT_LOW);
@@ -142,16 +140,14 @@ void at86rf233EncryptData(unsigned char *data, unsigned char *key)
         data[i] = spiRxByte();
     GPIO_PIN_OUT(AT86RF233_CS_PORT, AT86RF233_CS_PIN, GPIO_OUT_HIGH);
 
-    printf("Out:\r\n");
-    debugHexArray(AT86RF233AES_BLOCK_SIZE, &data[0]);
+    printfOutputHex("Out", &data[0], AT86RF233AES_BLOCK_SIZE);
 }
 
 void at86rf233DecryptData(unsigned char *data, unsigned char *key)
 {
     unsigned char i;
     /*Store the encryption key*/
-    printf("IN:\r\n");
-    debugHexArray(AT86RF233AES_BLOCK_SIZE, data);
+    printfOutputHex("In", data, AT86RF233AES_BLOCK_SIZE);
     GPIO_PIN_OUT(AT86RF233_CS_PORT, AT86RF233_CS_PIN, GPIO_OUT_LOW);
     spiTxByte(AT86RF233CMD_WRITE_SRAM);
     spiTxByte(AT86RF233REG_AES_CTRL);
@@ -173,7 +169,7 @@ void at86rf233DecryptData(unsigned char *data, unsigned char *key)
         (1 << AT86RF233AES_CTRL_REQUEST) | (AT86RF233AES_CTRL_MODE_CBC << AT86RF233AES_CTRL_MODE) | (0 << AT86RF233AES_CTRL_DIR)); /*Start decryption*/
     GPIO_PIN_OUT(AT86RF233_CS_PORT, AT86RF233_CS_PIN, GPIO_OUT_HIGH);
     /*Wait for decryption to finish */
-    AT86RF233PollAesStatus();
+    at86rf233PollAesStatus();
     //   delay(65000);
     for (i = 0; i < 16; i++)
         data[i] = 0x00;
@@ -188,8 +184,7 @@ void at86rf233DecryptData(unsigned char *data, unsigned char *key)
 
     // xorStr(data, nonce);
 
-    printf("Out:\r\n");
-    debugHexArray(AT86RF233AES_BLOCK_SIZE, data);
+    printfOutputHex("Out", data, AT86RF233AES_BLOCK_SIZE);
 }
 
 unsigned char at86rf233IsBusy(void)
@@ -199,7 +194,7 @@ unsigned char at86rf233IsBusy(void)
 
 void at86rf233SleepReq(void)
 {
-    AT86RF233SetTrxState(AT86RF233TRX_CMD_TRX_OFF);
+    at86rf233SetTrxState(AT86RF233TRX_CMD_TRX_OFF);
     GPIO_PIN_OUT(AT86RF233_SLP_TR_PORT, AT86RF233_SLP_TR_PIN, GPIO_OUT_HIGH);
 }
 
@@ -207,10 +202,10 @@ void at86rf233WakeupReq(void)
 {
     GPIO_PIN_OUT(AT86RF233_SLP_TR_PORT, AT86RF233_SLP_TR_PIN, GPIO_OUT_LOW);
 
-    AT86RF233SetTrxState(AT86RF233TRX_CMD_TRX_OFF);
-    AT86RF233ReadReg(AT86RF233REG_IRQ_STATUS);
+    at86rf233SetTrxState(AT86RF233TRX_CMD_TRX_OFF);
+    at86rf233ReadReg(AT86RF233REG_IRQ_STATUS);
 
-    AT86RF233SetTrxState(AT86RF233TRX_CMD_RX_AACK_ON);
+    at86rf233SetTrxState(AT86RF233TRX_CMD_RX_AACK_ON);
 }
 
 void at86rf233Init(void)
@@ -233,36 +228,36 @@ void at86rf233Init(void)
     GPIO_PIN_OUT(AT86RF233_RESET_PORT, AT86RF233_RESET_PIN, GPIO_OUT_LOW);
     delayMs(100);
 
-    AT86RF233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_FORCE_TRX_OFF);
+    at86rf233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_FORCE_TRX_OFF);
 
-    while (AT86RF233TRX_STATUS_TRX_OFF != (AT86RF233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
+    while (AT86RF233TRX_STATUS_TRX_OFF != (at86rf233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
         ;
 
     //asm("WDR");
 
-    AT86RF233WriteReg(AT86RF233REG_TRX_CTRL_1, (1 << 5)); /*TX_AUTO_CRC_ON*/
+    at86rf233WriteReg(AT86RF233REG_TRX_CTRL_1, (1 << 5)); /*TX_AUTO_CRC_ON*/
     //  AT86RF233WriteReg(AT86RF233_REG_PHY_TX_PWR, 0x00); /*+3dB*/
 
-    AT86RF233WriteReg(AT86RF233REG_RX_CTRL, 0x07); /*Set sensitivity to 3 when using Ant diversity, otherwise it should be 7*/
+    at86rf233WriteReg(AT86RF233REG_RX_CTRL, 0x07); /*Set sensitivity to 3 when using Ant diversity, otherwise it should be 7*/
     //    AT86RF233WriteReg(AT86RF233REG_ANT_DIV, (1 << 3) | (1 << 2)); /*Enable antenna diversity and ext switch*/
 
-    AT86RF233WriteReg(AT86RF233REG_IRQ_MASK, 0x00);
-    AT86RF233ReadReg(AT86RF233REG_IRQ_STATUS);
-    AT86RF233WriteReg(AT86RF233REG_IRQ_MASK, AT86RF233TRX_END_MASK);
-    //AT86RF233WriteReg(AT86RF233REG_IRQ_MASK, 0xff);
+    at86rf233WriteReg(AT86RF233REG_IRQ_MASK, 0x00);
+    at86rf233ReadReg(AT86RF233REG_IRQ_STATUS);
+    at86rf233WriteReg(AT86RF233REG_IRQ_MASK, AT86RF233TRX_END_MASK);
+    //at86rf233WriteReg(AT86RF233REG_IRQ_MASK, 0xff);
 
-    AT86RF233WriteReg(AT86RF233REG_TRX_CTRL_2, (1 << 7)); /*Set RX safe mode*/
+    at86rf233WriteReg(AT86RF233REG_TRX_CTRL_2, (1 << 7)); /*Set RX safe mode*/
 
     printf("Done.\r\n");
-    printf("TRX Stat: 0x%.sX\r\n", AT86RF233ReadReg(AT86RF233REG_TRX_STATUS));
-    printf("Part num: 0x%.sX\r\n", AT86RF233ReadReg(AT86RF233REG_PART_NUM));
+    printf("TRX Stat: 0x%.sX\r\n", at86rf233ReadReg(AT86RF233REG_TRX_STATUS));
+    printf("Part num: 0x%.sX\r\n", at86rf233ReadReg(AT86RF233REG_PART_NUM));
 }
 
 void at86rf233SetClkmFreq(unsigned char frequency)
 {
     unsigned char tmpTrxCtrl0;
 
-    tmpTrxCtrl0 = AT86RF233ReadReg(AT86RF233REG_TRX_CTRL_0);
+    tmpTrxCtrl0 = at86rf233ReadReg(AT86RF233REG_TRX_CTRL_0);
     tmpTrxCtrl0 &= 0xf0;      /*Clear CLKM_CTRL and CLKM_SHA_SEL to ensure immediate clock switch*/
     tmpTrxCtrl0 |= frequency; /*Set new CLKM_CTRL value*/
     at86rf233WriteReg(AT86RF233REG_TRX_CTRL_0, tmpTrxCtrl0);
@@ -313,8 +308,8 @@ void at86rf233TransmitFrame(unsigned char data)
 {
     if (!txBusy)
     {
-        AT86RF233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_PLL_ON);
-        while (AT86RF233TRX_STATUS_PLL_ON != (AT86RF233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
+        at86rf233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_PLL_ON);
+        while (AT86RF233TRX_STATUS_PLL_ON != (at86rf233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
             ;
         printf("PLL_ON\r\n");
 
@@ -326,7 +321,7 @@ void at86rf233TransmitFrame(unsigned char data)
         GPIO_PIN_OUT(AT86RF233_CS_PORT, AT86RF233_CS_PIN, GPIO_OUT_HIGH);
 
         txBusy = 1;
-        AT86RF233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_TX_START);
+        at86rf233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_TX_START);
 
         printf("TX Frame done.\r\n");
     }
@@ -507,12 +502,12 @@ static unsigned char at86rf233GenRndByte(void)
     at86rf233WriteReg(AT86RF233REG_IRQ_MASK, 0x00);     /*Disable interrupts*/
 
     at86rf233WriteReg(AT86RF233REG_TRX_STATE, AT86RF233TRX_CMD_RX_ON);
-    while (AT86RF233TRX_STATUS_RX_ON != (AT86RF233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
+    while (AT86RF233TRX_STATUS_RX_ON != (at86rf233ReadReg(AT86RF233REG_TRX_STATUS) & AT86RF233TRX_STATUS_TRX_STATUS_MASK))
         ;
 
     for (i = 0; i < 4; i++)
     {
-        delay(1000); /*Must be min 1uS*/
+        delayMs(1000); /*Must be min 1uS*/
         byte |= ((at86rf233ReadReg(AT86RF233REG_PHY_RSSI) >> 5) & 0x03)
                 << (i * 2);
     }
