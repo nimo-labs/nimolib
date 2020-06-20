@@ -17,6 +17,9 @@
 * Description: ATSAMD21 SPI API provider
 */
 
-void spiInit(void);
-void spiTxByte(unsigned char byte);
-unsigned char spiRxByte(void);
+#define SPI_CHAN0 0
+#define SPI_CHAN1 1
+
+void spiInit(unsigned char channel);
+void spiTxByte(unsigned char channel, unsigned char byte);
+unsigned char spiRxByte(unsigned char channel);

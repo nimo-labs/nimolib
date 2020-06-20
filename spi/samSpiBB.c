@@ -36,17 +36,27 @@
 
 static unsigned char rxByte;
 
-void spiInit(void)
+void spiInit(unsigned char channel)
 {
     printf("spiInit() (BB)...");
 
     /*Set MOSI and SCK as outputs*/
-    GPIO_PIN_DIR(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_DIR_OUT);
-    GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
-    GPIO_PIN_DIR(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN, GPIO_DIR_IN);
-    GPIO_PIN_DIR(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_DIR_OUT);
-    GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
-
+    if (SPI_CHAN0 == channel)
+    {
+        GPIO_PIN_DIR(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_DIR_OUT);
+        GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
+        GPIO_PIN_DIR(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN, GPIO_DIR_IN);
+        GPIO_PIN_DIR(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_DIR_OUT);
+        GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
+    }
+    else if (SPI_CHAN1 == channel)
+    {
+        GPIO_PIN_DIR(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_DIR_OUT);
+        GPIO_PIN_OUT(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_OUT_LOW);
+        GPIO_PIN_DIR(BBSPI_CHAN1_MISO_PORT, BBSPI_CHAN1_MISO_PIN, GPIO_DIR_IN);
+        GPIO_PIN_DIR(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_DIR_OUT);
+        GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_LOW);
+    }
     printf("Done.\r\n");
 }
 
@@ -58,33 +68,61 @@ static void bitDelay(void)
         asm("nop");
 }
 
-void spiTxByte(unsigned char byte)
+void spiTxByte(unsigned char channel, unsigned char byte)
 {
     unsigned char i;
     rxByte = 0;
     for (i = 0; i < 8; i++)
     {
         if (byte & (0x01 << (7 - i)))
-            GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_HIGH);
+        {
+            if (SPI_CHAN0 == channel)
+                GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_HIGH);
+            else
+                GPIO_PIN_OUT(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_OUT_HIGH);
+        }
         else
-            GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
+        {
+            if (SPI_CHAN0 == channel)
+                GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
+            else
+                GPIO_PIN_OUT(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_OUT_LOW);
+        }
 
-        if ((GPIO_PIN_READ(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN)) > 0)
-            rxByte |= (1 << 0);
+        if (SPI_CHAN0 == channel)
+        {
+            if ((GPIO_PIN_READ(BBSPI_CHAN0_MISO_PORT, BBSPI_CHAN0_MISO_PIN)) > 0)
+                rxByte |= (1 << 0);
+            else
+                rxByte &= ~(1 << 0);
+            if (i < 7)
+                rxByte <<= 1;
+        }
         else
-            rxByte &= ~(1 << 0);
-        if (i < 7)
-            rxByte <<= 1;
+        {
+            if ((GPIO_PIN_READ(BBSPI_CHAN1_MISO_PORT, BBSPI_CHAN1_MISO_PIN)) > 0)
+                rxByte |= (1 << 0);
+            else
+                rxByte &= ~(1 << 0);
+            if (i < 7)
+                rxByte <<= 1;
+        }
 
-        GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_HIGH);
+        if (SPI_CHAN0 == channel)
+            GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_HIGH);
+        else
+            GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_HIGH);
         bitDelay();
-        GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
+        if (SPI_CHAN0 == channel)
+            GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
+        else
+            GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_LOW);
         bitDelay();
     }
 }
 
-unsigned char spiRxByte(void)
+unsigned char spiRxByte(unsigned char channel)
 {
-    spiTxByte(0x00); /*Write dummy byte*/
+    spiTxByte(channel, 0x00); /*Write dummy byte*/
     return rxByte;
 }
