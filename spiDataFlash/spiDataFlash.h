@@ -27,4 +27,4 @@ void spiDataFlashReadData(unsigned char chip, unsigned long address,
 
 /*Dataflash size defines for use with SPI_DATAFLASH_SIZE */
 
-#define SPI_DATAFLASH_4Mb 4194304
+#define SPI_DATAFLASH_4Mb 524287
