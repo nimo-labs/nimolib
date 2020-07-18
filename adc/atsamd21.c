@@ -18,7 +18,7 @@
 */
 
 #include <sam.h>
-#include <hal.h>
+#include <nimolib.h>
 #include <printf.h>
 
 #include "adc.h"
