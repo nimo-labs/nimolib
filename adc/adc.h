@@ -17,11 +17,11 @@
 * Description: ADC API provider
 */
 
-#ifndef ADC_H_
-#define ADC_H_
+#ifndef ADC_H
+#define ADC_H
 
 void adcInit(void);
-unsigned int adcReadChan(unsigned char channel);	   // Mode = 1 for single ended, 0 for internal
+unsigned int adcReadChan(unsigned char channel);       // Mode = 1 for single ended, 0 for internal
 unsigned int adcReadChanSingle(unsigned char channel); // Mode = 1 for single ended, 0 for internal
 
-#endif /* ADC_H_ */
+#endif /* ADC_H */
