@@ -36,13 +36,13 @@ void spiDataFlashReadData(unsigned char chip __attribute__((unused)), unsigned l
                           unsigned char *data, unsigned int dataLen)
 {
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,AT25PE80_CONTINUOUS_READ_SLOW);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,(address >> 16) & 0xff);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,(address >> 8) & 0xff);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,address & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,AT25PE80_CONTINUOUS_READ_SLOW);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,(address >> 16) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,(address >> 8) & 0xff);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,address & 0xff);
 
     for (unsigned int i = 0; i < dataLen; i++)
-        data[i] = spiRxByte(SPI_DATAFLASH_CS_PORT);
+        data[i] = spiRxByte(SPI_DATAFLASH_SPI_CHAN);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 }
 
@@ -61,10 +61,10 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
     for (unsigned int i = 0; i < iter; i++)
     {
         GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-        spiTxByte(SPI_DATAFLASH_CS_PORT,AT25PE80_PROG_RMW);
-        spiTxByte(SPI_DATAFLASH_CS_PORT,(address >> 16) & 0xff);
-        spiTxByte(SPI_DATAFLASH_CS_PORT,(address >> 8) & 0xff);
-        spiTxByte(SPI_DATAFLASH_CS_PORT,address & 0xff);
+        spiTxByte(SPI_DATAFLASH_SPI_CHAN,AT25PE80_PROG_RMW);
+        spiTxByte(SPI_DATAFLASH_SPI_CHAN,(address >> 16) & 0xff);
+        spiTxByte(SPI_DATAFLASH_SPI_CHAN,(address >> 8) & 0xff);
+        spiTxByte(SPI_DATAFLASH_SPI_CHAN,address & 0xff);
 
         if (i < (iter - 1))
             dataLen = 256 - (address & 0xff);
@@ -74,7 +74,7 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
             dataLen--;
 
         for (unsigned int j = 0; j < dataLen; j++, dataCtr++)
-            spiTxByte(SPI_DATAFLASH_CS_PORT,data[dataCtr]);
+            spiTxByte(SPI_DATAFLASH_SPI_CHAN,data[dataCtr]);
         GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
         delayMs(55);
@@ -85,10 +85,10 @@ void spiDataFlashPageWrite(unsigned char chip __attribute__((unused)), unsigned 
 void spiDataFlashChipErase(unsigned char chip __attribute__((unused)))
 {
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,0xC7);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,0x94);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,0x80);
-    spiTxByte(SPI_DATAFLASH_CS_PORT,0x9A);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,0xC7);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,0x94);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,0x80);
+    spiTxByte(SPI_DATAFLASH_SPI_CHAN,0x9A);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
     delayMs(20000);
 }

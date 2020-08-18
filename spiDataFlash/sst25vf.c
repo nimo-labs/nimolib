@@ -130,5 +130,5 @@ void spiDataFlashChipErase(unsigned char chip __attribute__((unused)))
     spiTxByte(SPI_DATAFLASH_SPI_CHAN, SST25VF_CMD_CHIP_ERASE);
     GPIO_PIN_OUT(SPI_DATAFLASH_CS_PORT, SPI_DATAFLASH_CS_PIN, GPIO_OUT_HIGH);
 
-    delayMs(50);
+    delayMs(6000);
 }
