@@ -40,7 +40,7 @@ void spiInit(unsigned char channel)
 {
     printf("spiInit() (BB)...");
 
-/*Set MOSI and SCK as outputs*/
+    /*Set MOSI and SCK as outputs*/
 #ifdef SPIBB_USE_CHAN0
     if (SPI_CHAN0 == channel)
     {
@@ -138,8 +138,8 @@ void spiTxByte(unsigned char channel, unsigned char byte)
             GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
 #endif
 #ifdef SPIBB_USE_CHAN1
-        if (SPI_CHAN0 == channel)
-            GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
+        if (SPI_CHAN1 == channel)
+            GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_LOW);
 #endif
         bitDelay();
     }
