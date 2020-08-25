@@ -359,11 +359,18 @@ void at86rf23xSetChannel(unsigned char channel)
 {
     //    channel += 0x0B; /*Shift the channel into the allowed range for the radio chip*/
     printf("at86rf23xSetChannel(0x%.2X)...", channel);
-    at86rf23xSetTrxState(AT86RF23X_TRX_CMD_TRX_OFF);
-    unsigned char v = at86rf23xReadReg(AT86RF23X_REG_PHY_CC_CCA) & ~0x1f;
-    at86rf23xWriteReg(AT86RF23X_REG_PHY_CC_CCA, v | channel);
-    at86rf23xSetRxState(1);
-    printf("Done.\r\n");
+    if ((channel >= 0x0B) && (channel <= 0x1A))
+    {
+        at86rf23xSetTrxState(AT86RF23X_TRX_CMD_TRX_OFF);
+        unsigned char v = at86rf23xReadReg(AT86RF23X_REG_PHY_CC_CCA) & ~0x1f;
+        at86rf23xWriteReg(AT86RF23X_REG_PHY_CC_CCA, v | channel);
+        at86rf23xSetRxState(1);
+        printf("Done.\r\n");
+    }
+    else
+    {
+        printf("Error, undefined channel.\r\n");
+    }
 }
 
 void at86rf23xSetPanId(unsigned int panId)
