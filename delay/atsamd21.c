@@ -37,10 +37,10 @@ void delaySetup(unsigned int baseTimer)
     switch (baseTimer)
     {
     case DELAY_BASE_MICRO_SEC:
-        divisor = 1000000;
+        divisor = 1000;
         break;
     case DELAY_BASE_MILLI_SEC:
-        divisor = 1000;
+        divisor = 1000000;
         break;
     default:
         printf("Error: delaySetup()\r\n");
