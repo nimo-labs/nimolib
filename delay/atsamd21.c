@@ -33,14 +33,14 @@ unsigned long delayGetDiff(unsigned long start, unsigned long end)
 
 void delaySetup(unsigned int baseTimer)
 {
-    unsigned int divisor;
+    unsigned long divisor;
     switch (baseTimer)
     {
     case DELAY_BASE_MICRO_SEC:
-        divisor = 1000;
+        divisor = 1000000;
         break;
     case DELAY_BASE_MILLI_SEC:
-        divisor = 1000000;
+        divisor = 1000;
         break;
     default:
         printf("Error: delaySetup()\r\n");
