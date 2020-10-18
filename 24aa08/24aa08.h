@@ -27,7 +27,8 @@
 #define M24AA08_BANK3 0x03
 
 void m24aa08Init(void);
-unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsigned char data) ;
+unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsigned char data);
+void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned char dataLen);
 unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr);
 
 #endif // M24AA08H

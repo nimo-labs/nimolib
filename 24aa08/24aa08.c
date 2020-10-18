@@ -50,9 +50,9 @@
 
 void m24aa08Init(void)
 {
-printf("24AA08Init()...");
+    printf("24AA08Init()...");
 
-printf("Done.\r\n");
+    printf("Done.\r\n");
 }
 
 static ackCheck(void)
@@ -61,7 +61,7 @@ static ackCheck(void)
     for (int i = 0; i < 10; i++)
     {
         if(!i2cRead(M24AA08_ADDR_BASE, &ret, 1))
-        break;
+            break;
     }
 }
 
@@ -81,5 +81,11 @@ unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr)
     i2cRead(M24AA08_ADDR_BASE+memBank, &ret, 1);
 
     return ret;
+}
+
+void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned char dataLen)
+{
+    i2cWrite(M24AA08_ADDR_BASE+memBank, &addr, 1,0);
+    i2cRead(M24AA08_ADDR_BASE+memBank, data, dataLen);
 }
 
