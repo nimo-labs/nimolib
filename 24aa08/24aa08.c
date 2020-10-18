@@ -74,6 +74,29 @@ unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsign
     ackCheck();
 }
 
+void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned char dataLen)
+{
+    unsigned char lBuf[17];
+    /*Data writes can't exceed 16 bytes of data!*/
+
+    lBuf[0] = addr;
+    lBuf[1] = 0x01;
+    lBuf[2] = 0x02;
+    lBuf[3] = 0x03;
+    lBuf[4] = 0x04;
+
+    // for(char i=0; i < dataLen; i++)
+    //     lBuf[i+1] = data[i];
+
+    if(((unsigned int) addr) + dataLen < 256)
+    {
+        i2cWrite(M24AA08_ADDR_BASE + memBank, lBuf, dataLen+1, 1); /*Write start address*/
+        ackCheck();
+    }
+    else
+        printf("m24aa08WriteBytes() data exceeds boundary\r\n");
+}
+
 unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr)
 {
     unsigned char ret;
