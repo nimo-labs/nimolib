@@ -74,29 +74,54 @@ unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsign
     ackCheck();
 }
 
-void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned char dataLen)
+void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned int dataLen)
 {
     unsigned char lBuf[17];
+    unsigned char writeCycles = 0; /*Holds the number of (upto) 16byte write cycles required to write all of the data*/
+    unsigned char writeCyclesRemainder = 0;
     /*Data writes can't exceed 16 bytes of data!*/
 
-    lBuf[0] = addr;
-    lBuf[1] = 0x01;
-    lBuf[2] = 0x02;
-    lBuf[3] = 0x03;
-    lBuf[4] = 0x04;
-
-    // for(char i=0; i < dataLen; i++)
-    //     lBuf[i+1] = data[i];
-
-    if(((unsigned int) addr) + dataLen < 256)
+    if(((unsigned int) addr) + dataLen > 256)
     {
+        printf("m24aa08WriteBytes() data exceeds boundary\r\n");
+        return;
+    }
+
+    writeCycles = dataLen / 16;
+    if(0 == dataLen % 16)
+        writeCyclesRemainder = 0;
+    else
+    {
+        writeCycles ++;
+        writeCyclesRemainder = dataLen % 16;
+    }
+
+    for(unsigned char i=0; i < writeCycles; i++)
+    {
+        if((i == (writeCycles -1)) && (writeCyclesRemainder > 0))
+            dataLen = writeCyclesRemainder;
+        else
+            dataLen = 16;
+
+        lBuf[0] = addr+(i*16);
+        for(char j=0; j < dataLen; j++)
+            lBuf[j+1] = data[j];
+
         i2cWrite(M24AA08_ADDR_BASE + memBank, lBuf, dataLen+1, 1); /*Write start address*/
         ackCheck();
     }
-    else
-        printf("m24aa08WriteBytes() data exceeds boundary\r\n");
 }
 
+void m24aa08ChipErase(void)
+{
+    unsigned char buf[256];
+    printf("Chip erase\r\n");
+    for(int i = 0 ; i < 256; i++)
+        buf[i] = 0xFF;
+    for(char i=0; i < 4 ; i++)
+        m24aa08WriteBytes(i, 0, buf, 256);
+    printf("Done\r\n");
+}
 unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr)
 {
     unsigned char ret;
@@ -106,7 +131,7 @@ unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr)
     return ret;
 }
 
-void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned char dataLen)
+void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned int dataLen)
 {
     i2cWrite(M24AA08_ADDR_BASE+memBank, &addr, 1,0);
     i2cRead(M24AA08_ADDR_BASE+memBank, data, dataLen);

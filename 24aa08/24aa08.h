@@ -28,8 +28,9 @@
 
 void m24aa08Init(void);
 unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsigned char data);
-void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned char dataLen);
+void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned int dataLen);
+void m24aa08ChipErase(void);
 unsigned char m24aa08ReadByte(unsigned char memBank, unsigned char addr);
-void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned char dataLen);
+void m24aa08ReadBytes(unsigned char memBank, unsigned char addr, unsigned char * data, unsigned int dataLen);
 
 #endif // M24AA08H
