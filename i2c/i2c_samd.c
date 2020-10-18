@@ -72,7 +72,13 @@ void i2cInit(unsigned int UNUSED(baudRate))
     while (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.SYNCBUSY.reg)
         ;
 
-    SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.BAUD.reg = SERCOM_I2CM_BAUD_BAUD(35);
+    int32_t tmp_baud;
+    tmp_baud = (int32_t)(((UP_CLK + (2*(100000)) - 1) / (2*(100000))) - 5);
+    if (tmp_baud < 255 && tmp_baud > 0)
+    {
+        SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLA.reg |= SERCOM_I2CM_CTRLA_SPEED(0);
+        SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.BAUD.reg = SERCOM_I2CM_BAUD_BAUD(tmp_baud);
+    }
     while (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.SYNCBUSY.reg)
         ;
 
