@@ -25,7 +25,7 @@
 * I2C_CHAN1_PERHIPH_TX_MUX
 * I2C_CHAN1_PERHIPH_RX_MUX
 * I2C_CHAN1_SERCOM
-* 
+*
 */
 
 #include <delay.h>
@@ -77,8 +77,8 @@ void i2cInit(unsigned int UNUSED(baudRate))
         ;
 
     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLA.reg = SERCOM_I2CM_CTRLA_ENABLE |
-                                                   SERCOM_I2CM_CTRLA_MODE_I2C_MASTER |
-                                                   SERCOM_I2CM_CTRLA_SDAHOLD(3);
+            SERCOM_I2CM_CTRLA_MODE_I2C_MASTER |
+            SERCOM_I2CM_CTRLA_SDAHOLD(3);
     while (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.SYNCBUSY.reg)
         ;
 
@@ -115,9 +115,9 @@ static void i2cStop(void)
     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 }
 
-unsigned char i2cWrite(unsigned char address, unsigned char *data, unsigned char len, unsigned char stop)
+unsigned char i2cWrite(unsigned char address, unsigned char *data, unsigned int len, unsigned char stop)
 {
-    unsigned char i;
+    unsigned int i;
     unsigned long delayLast;
 
     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.ADDR.reg = (address << 1) | I2C_TRANSFER_WRITE;
@@ -169,9 +169,9 @@ unsigned char i2cWrite(unsigned char address, unsigned char *data, unsigned char
     return FALSE;
 }
 
-unsigned char i2cRead(unsigned char address, unsigned char *data, unsigned char len)
+unsigned char i2cRead(unsigned char address, unsigned char *data, unsigned int len)
 {
-    unsigned char i;
+    unsigned int i;
     unsigned long delayLast;
 
     /*Read*/

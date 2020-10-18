@@ -29,18 +29,18 @@ extern "C"
 #define I2C_BAUD_100K 0
 #define I2C_BAUD_400K 1
 
-	/* void i2cInit(unsigned char chan, unsigned int baudRate); */
-	/* unsigned char i2cWrite(unsigned char chan, unsigned char address, unsigned char *data, unsigned char len, unsigned char stop); */
-	/* unsigned char i2cRead(unsigned char chan, unsigned char address, unsigned char * data, unsigned char len); */
+/* void i2cInit(unsigned char chan, unsigned int baudRate); */
+/* unsigned char i2cWrite(unsigned char chan, unsigned char address, unsigned char *data, unsigned char len, unsigned char stop); */
+/* unsigned char i2cRead(unsigned char chan, unsigned char address, unsigned char * data, unsigned char len); */
 
-	void i2cInit(unsigned int baudRate);
-	unsigned char i2cWrite(unsigned char address, unsigned char *data,
-						   unsigned char len, unsigned char stop);
-	unsigned char i2cRead(unsigned char address, unsigned char *data,
-						  unsigned char len);
+void i2cInit(unsigned int baudRate);
+unsigned char i2cWrite(unsigned char address, unsigned char *data,
+                       unsigned int len, unsigned char stop);
+unsigned char i2cRead(unsigned char address, unsigned char *data,
+                      unsigned int len);
 
-	unsigned char i2cPing(unsigned char chan, unsigned char addr);
-	void i2cDetect(unsigned char UNUSED(chan));
+unsigned char i2cPing(unsigned char chan, unsigned char addr);
+void i2cDetect(unsigned char UNUSED(chan));
 
 #if defined(__SAMD21)
 #include "i2c_samd.h"
