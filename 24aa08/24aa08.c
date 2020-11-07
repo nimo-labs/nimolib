@@ -105,7 +105,7 @@ void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char 
 
         lBuf[0] = addr+(i*16);
         for(char j=0; j < dataLen; j++)
-            lBuf[j+1] = data[j];
+            lBuf[j+1] = data[j+(i*16)];
 
         i2cWrite(M24AA08_ADDR_BASE + memBank, lBuf, dataLen+1, 1); /*Write start address*/
         ackCheck();
