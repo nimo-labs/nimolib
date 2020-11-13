@@ -94,27 +94,27 @@ void i2cInit(unsigned int UNUSED(baudRate))
     printf("Done.\r\n");
 }
 
-static void i2cStart(unsigned char address)
-{
-    unsigned long delayLast;
-    SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.ADDR.reg = address | I2C_TRANSFER_WRITE;
-    delayLast = delayGetTicks();
+// static void i2cStart(unsigned char address)
+// {
+//     unsigned long delayLast;
+//     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.ADDR.reg = address | I2C_TRANSFER_WRITE;
+//     delayLast = delayGetTicks();
 
-    while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
-    {
-        if (delayMicros(delayLast, 1000))
-        {
-            SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-            printf("I2C timeout\r\n");
-            return;
-        }
-    }
+//     while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
+//     {
+//         if (delayMicros(delayLast, 1000))
+//         {
+//             SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+//             printf("I2C timeout\r\n");
+//             return;
+//         }
+//     }
 
-    if (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
-    {
-        SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-    }
-}
+//     if (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.STATUS.reg & SERCOM_I2CM_STATUS_RXNACK)
+//     {
+//         SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+//     }
+// }
 
 static void i2cStop(void)
 {

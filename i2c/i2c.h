@@ -39,7 +39,7 @@ unsigned char i2cRead(unsigned char address, unsigned char *data,
                       unsigned int len);
 
 unsigned char i2cPing(unsigned char chan, unsigned char addr);
-void i2cDetect(unsigned char UNUSED(chan));
+void i2cDetect(__attribute__((unused)) unsigned char (chan));
 
 #if defined(__SAMD21)
 #include "i2c_samd.h"
