@@ -55,7 +55,7 @@ void m24aa08Init(void)
     printf("Done.\r\n");
 }
 
-static ackCheck(void)
+static unsigned char ackCheck(void)
 {
     unsigned char ret;
     for (int i = 0; i < 10; i++)
@@ -63,6 +63,7 @@ static ackCheck(void)
         if(!i2cRead(M24AA08_ADDR_BASE, &ret, 1))
             break;
     }
+    return ret;
 }
 
 unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsigned char data)
@@ -71,7 +72,7 @@ unsigned char m24aa08WriteByte(unsigned char memBank, unsigned char addr, unsign
     pkt[0] = addr;
     pkt[1] = data;
     i2cWrite(M24AA08_ADDR_BASE + memBank, pkt, 2, 1);
-    ackCheck();
+    return ackCheck();
 }
 
 void m24aa08WriteBytes(unsigned char memBank, unsigned char addr, unsigned char *data, unsigned int dataLen)

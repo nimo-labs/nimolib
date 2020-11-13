@@ -26,9 +26,12 @@
 #include <uart.h>
 #endif
 
-int printf(const char *format, ...)
+#if (PRINTF_BUFF_SIZE == 0)
+int printf(__attribute__((unused)) const char *format, ...)
 {
-#if (PRINTF_BUFF_SIZE > 0)
+#else
+{
+    int printf(const char *format, ...)
     char tbuff[PRINTF_BUFF_SIZE];
     va_list aptr;
     int ret;
@@ -71,15 +74,21 @@ int printf(const char *format, ...)
             uartTx(PRINTF_UART, tbuff[i]);
         }
     }
+#endif
+#if (PRINTF_BUFF_SIZE > 0)
     return ret;
 #else
     return 0;
 #endif
 }
 
+#if (PRINTF_BUFF_SIZE == 0)
+void printfOutputHex(__attribute__((unused)) char *marker, __attribute__((unused)) unsigned char *data, __attribute__((unused)) unsigned char dataLen)
+{
+#else
 void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen)
 {
-#if (PRINTF_BUFF_SIZE > 0)
+
     printf("%s: ", marker);
     for (unsigned int i = 0; i < dataLen; i++)
         printf("%.02X ", data[i]);

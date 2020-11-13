@@ -82,22 +82,30 @@ void spiTxByte(unsigned char channel, unsigned char byte)
         {
 #ifdef SPIBB_USE_CHAN0
             if (SPI_CHAN0 == channel)
+            {
                 GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_HIGH);
+            }
 #endif
 #ifdef SPIBB_USE_CHAN1
             if (SPI_CHAN1 == channel)
+            {
                 GPIO_PIN_OUT(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_OUT_HIGH);
+            }
 #endif
         }
         else
         {
 #ifdef SPIBB_USE_CHAN0
             if (SPI_CHAN0 == channel)
+            {
                 GPIO_PIN_OUT(BBSPI_CHAN0_MOSI_PORT, BBSPI_CHAN0_MOSI_PIN, GPIO_OUT_LOW);
+            }
 #endif
 #ifdef SPIBB_USE_CHAN1
             if (SPI_CHAN1 == channel)
+            {
                 GPIO_PIN_OUT(BBSPI_CHAN1_MOSI_PORT, BBSPI_CHAN1_MOSI_PIN, GPIO_OUT_LOW);
+            }
 #endif
         }
 #ifdef SPIBB_USE_CHAN0
@@ -125,21 +133,29 @@ void spiTxByte(unsigned char channel, unsigned char byte)
 
 #ifdef SPIBB_USE_CHAN0
         if (SPI_CHAN0 == channel)
+        {
             GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_HIGH);
+        }
 #endif
 #ifdef SPIBB_USE_CHAN1
         if (SPI_CHAN1 == channel)
+        {
             GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_HIGH);
+        }
 #endif
 
         bitDelay();
 #ifdef SPIBB_USE_CHAN0
         if (SPI_CHAN0 == channel)
+        {
             GPIO_PIN_OUT(BBSPI_CHAN0_SCK_PORT, BBSPI_CHAN0_SCK_PIN, GPIO_OUT_LOW);
+        }
 #endif
 #ifdef SPIBB_USE_CHAN1
         if (SPI_CHAN1 == channel)
+        {
             GPIO_PIN_OUT(BBSPI_CHAN1_SCK_PORT, BBSPI_CHAN1_SCK_PIN, GPIO_OUT_LOW);
+        }
 #endif
         bitDelay();
     }
