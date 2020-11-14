@@ -30,8 +30,8 @@
 int printf(__attribute__((unused)) const char *format, ...)
 {
 #else
+int printf(const char *format, ...)
 {
-    int printf(const char *format, ...)
     char tbuff[PRINTF_BUFF_SIZE];
     va_list aptr;
     int ret;
