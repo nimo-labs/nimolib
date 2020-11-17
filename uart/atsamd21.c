@@ -32,7 +32,7 @@
 #define SERCOM_IRQn_(ID) SERCOM##ID##_IRQn
 #define SERCOM_IRQn(ID) SERCOM_IRQn_(ID)
 
-unsigned int baudDef[] = {9600};
+unsigned int baudDef[] = {9600, 115200};
 
 void uartInit(unsigned char uart, uint32_t baud)
 {

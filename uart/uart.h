@@ -18,6 +18,7 @@
 */
 
 #define UART_BAUD_9600 0
+#define UART_BAUD_115200 1
 
 void uartInit(unsigned char uart, uint32_t baud);
 unsigned char uartIsData(unsigned char uart);
