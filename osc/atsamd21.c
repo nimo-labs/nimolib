@@ -33,9 +33,6 @@ void oscSet(unsigned char oscillator)
 
     case OSC_48DFLL:
         /*Setup 48Mhz DFLL */
-
-        SYSCTRL->OSC8M.bit.PRESC = 0;
-
         NVMCTRL->CTRLB.bit.RWS = 2;
 
         coarse = NVM_READ_CAL(DFLL48M_COARSE_CAL);
@@ -55,7 +52,7 @@ void oscSet(unsigned char oscillator)
             ;
 
         GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(0) | GCLK_GENCTRL_SRC(GCLK_SOURCE_DFLL48M) |
-                            GCLK_GENCTRL_RUNSTDBY | GCLK_GENCTRL_GENEN;
+                            GCLK_GENCTRL_GENEN;
         while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
             ;
         break;
