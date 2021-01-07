@@ -51,7 +51,7 @@
 #define I2C_TRANSFER_WRITE 0
 #define I2C_TRANSFER_READ 1
 
-void i2cInit(unsigned int UNUSED(baudRate))
+void i2cInit(unsigned int baudRate)
 {
     printf("i2cInit()...");
     PORT->Group[I2C_CHAN1_PORT].DIRSET.reg |= (1 << I2C_CHAN1_SDA_PIN);  /*Tx as output*/
@@ -73,7 +73,10 @@ void i2cInit(unsigned int UNUSED(baudRate))
         ;
 
     int32_t tmp_baud;
-    tmp_baud = (int32_t)(((UP_CLK + (2*(100000)) - 1) / (2*(100000))) - 5);
+    if(I2C_BAUD_100K == baudRate)
+        tmp_baud = (int32_t)(((UP_CLK + (2*(100000)) - 1) / (2*(100000))) - 5);
+    else if(I2C_BAUD_400K == baudRate)
+        tmp_baud = (int32_t)(((UP_CLK + (2*(400000)) - 1) / (2*(400000))) - 5);
     if (tmp_baud < 255 && tmp_baud > 0)
     {
         SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLA.reg |= SERCOM_I2CM_CTRLA_SPEED(0);

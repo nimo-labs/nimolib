@@ -28,6 +28,7 @@
 #include <system.h>
 #include <nimolib.h>
 #include <printf.h>
+#include "i2c.h"
 
 #if defined(__SAMD21)
 #include <sam.h>
@@ -43,40 +44,40 @@
 
 unsigned char i2cPing(unsigned char UNUSED(chan), unsigned char addr)
 {
-	return i2cWrite(addr, (unsigned char *)"\0", 0, TRUE);
+    return i2cWrite(addr, (unsigned char *)"\0", 0, TRUE);
 }
 
 void i2cDetect(unsigned char UNUSED(chan))
 {
-	unsigned int i, j, res;
-	unsigned int first = 0x03, last = 0x77;
+    unsigned int i, j, res;
+    unsigned int first = 0x03, last = 0x77;
 
-	printf("        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
+    printf("        0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f\r\n");
 
-	for (i = 0; i < 127; i += 16)
-	{
-		printf("0x%.2X", i);
-		printf(": ");
-		for (j = 0; j < 16; j++)
-		{
-			/* Skip unwanted addresses */
-			if (i + j < first || i + j > last)
-			{
-				printf("     ");
-				continue;
-			}
+    for (i = 0; i < 127; i += 16)
+    {
+        printf("0x%.2X", i);
+        printf(": ");
+        for (j = 0; j < 16; j++)
+        {
+            /* Skip unwanted addresses */
+            if (i + j < first || i + j > last)
+            {
+                printf("     ");
+                continue;
+            }
 
-			/* Probe this address */
-			res = i2cPing(0, i + j);
+            /* Probe this address */
+            res = i2cPing(0, i + j);
 
-			if (res)
-				printf(" --  ");
-			else
-			{
-				printf(" %.2X", (i + j));
-				printf("  ");
-			}
-		}
-		printf("\r\n");
-	}
+            if (res)
+                printf(" --  ");
+            else
+            {
+                printf(" %.2X", (i + j));
+                printf("  ");
+            }
+        }
+        printf("\r\n");
+    }
 }
