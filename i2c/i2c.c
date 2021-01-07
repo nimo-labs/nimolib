@@ -42,9 +42,9 @@
 #error uC not defined
 #endif
 
-unsigned char i2cPing(unsigned char UNUSED(chan), unsigned char addr)
+unsigned char i2cPing(unsigned char chan, unsigned char addr)
 {
-    return i2cWrite(addr, (unsigned char *)"\0", 0, TRUE);
+    return i2cWrite(chan, addr, (unsigned char *)"\0", 0, TRUE);
 }
 
 void i2cDetect(unsigned char UNUSED(chan))
