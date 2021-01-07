@@ -32,10 +32,10 @@ extern "C"
 /* unsigned char i2cWrite(unsigned char chan, unsigned char address, unsigned char *data, unsigned char len, unsigned char stop); */
 /* unsigned char i2cRead(unsigned char chan, unsigned char address, unsigned char * data, unsigned char len); */
 
-void i2cInit(unsigned int baudRate);
-unsigned char i2cWrite(unsigned char address, unsigned char *data,
+void i2cInit(unsigned char channel, unsigned int baudRate);
+unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned char *data,
                        unsigned int len, unsigned char stop);
-unsigned char i2cRead(unsigned char address, unsigned char *data,
+unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned char *data,
                       unsigned int len);
 
 unsigned char i2cPing(unsigned char chan, unsigned char addr);
