@@ -49,12 +49,8 @@ void spiSdCardInit(void)
         spiTxByte(SPI_SDCARD_SPI_CHAN, 0xff);
 
     GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_LOW);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x40);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x00);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x00);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x00);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x00);
-    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x95);
+
+    spiSdCardSendCommand(0, 0);
 
     for(i =0; i < 5; i++)
     {
@@ -67,6 +63,18 @@ void spiSdCardInit(void)
         printf("SD Card timeout\r\n");
     GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_HIGH);
     printf("Done.\r\n");
+}
+
+void spiSdCardSendCommand(unsigned char command, uint32_t arg)
+{
+    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x40 | command);
+    spiTxByte(SPI_SDCARD_SPI_CHAN, (arg >> 24) & 0xFF);
+    spiTxByte(SPI_SDCARD_SPI_CHAN, (arg >> 16) & 0xFF);
+    spiTxByte(SPI_SDCARD_SPI_CHAN, (arg >> 8) & 0xFF);
+    spiTxByte(SPI_SDCARD_SPI_CHAN, arg & 0xFF);
+
+    /*Send CRC*/
+    spiTxByte(SPI_SDCARD_SPI_CHAN, 0x95);
 }
 
 void spiSdCardStoreData(uint32_t address, uint8_t *data, uint16_t dataLen)

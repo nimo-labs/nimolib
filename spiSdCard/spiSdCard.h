@@ -20,6 +20,7 @@
 #define at86rf23xH
 
 void spiSdCardInit(void);
+void spiSdCardSendCommand(unsigned char command, uint32_t arg);
 void spiSdCardStoreData(uint32_t address, uint8_t *data, uint16_t dataLen);
 void spiSdCardReadData(uint32_t address, uint8_t *data, uint16_t dataLen);
 #endif
