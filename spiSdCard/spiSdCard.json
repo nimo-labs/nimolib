@@ -1,0 +1,9 @@
+{
+	"book": "spiSdCard",
+	"files": [
+		{
+			"fileName": "spiSdCard.c",
+			"language": "c"
+		}
+	]
+}
