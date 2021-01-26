@@ -15,6 +15,9 @@
 *
 * File: spiSdCard.c
 * Description: SPI based SD card driver
+*
+* Inspiration: http://elm-chan.org/fsw/ff/pfsample.zip
+*
 */
 
 /*Required defines in nimolib.h
@@ -117,12 +120,12 @@ void spiSdCardInit(void)
 
     if(buf[0] & 0x40)
     {
-        cardType = SD_CARD_SD2;
+        cardType = SD_CARD_CT_SD2;
         printf("Card Type is SD V2\r\n");
     }
     else
     {
-        cardType = SD_CARD_BLOCK;
+        cardType = SD_CARD_CT_BLOCK;
         printf("Card Type is Block\r\n");
     }
 
@@ -168,12 +171,124 @@ uint8_t spiSdCardSendCommand(unsigned char command, uint32_t arg)
     return data;
 }
 
-void spiSdCardStoreData(uint32_t address, uint8_t *data, uint16_t dataLen)
-{
+/*-----------------------------------------------------------------------*/
+/* Read partial sector                                                   */
+/*-----------------------------------------------------------------------*/
 
+DRESULT spiSdCardReadData (
+    uint8_t *buff,		/* Pointer to the read buffer (NULL:Read bytes are forwarded to the stream) */
+    uint32_t sector,	/* Sector number (LBA) */
+    uint16_t offset,	/* Byte offset to read from (0..511) */
+    uint16_t count		/* Number of bytes to read (ofs + cnt mus be <= 512) */
+)
+{
+    DRESULT res;
+    uint8_t d;
+    uint16_t bc, tmr;
+    uint16_t i;
+
+
+    if (!(cardType & SD_CARD_CT_BLOCK)) sector *= 512;	/* Convert to byte address if needed */
+
+    res = RES_ERROR;
+    GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_LOW);
+    if (spiSdCardSendCommand(SD_CARD_CMD17, sector) == 0)  		/* READ_SINGLE_BLOCK */
+    {
+        printf("Read succeed\r\n");
+        tmr = 1000;
+        do  							/* Wait for data packet in timeout of 100ms */
+        {
+            delayMs(1); /*Might get away with 0.1mS?*/
+            d = spiRxByte(SPI_SDCARD_SPI_CHAN);
+        }
+        while (d == 0xFF && --tmr);
+
+        if (d == 0xFE)  				/* A data packet arrived */
+        {
+            printf("Found FE\r\n");
+            bc = 514 - offset - count;
+
+            /* Skip leading bytes */
+            if (offset)
+                for(i=0; i < offset; i++)
+                    spiRxByte(SPI_SDCARD_SPI_CHAN);
+
+            /* Receive a part of the sector */
+            if (buff)  	/* Store data to the memory */
+            {
+                do
+                    *buff++ = spiRxByte(SPI_SDCARD_SPI_CHAN);
+                while (--count);
+            }
+
+            /* Skip trailing bytes and CRC */
+            for(i=0; i < bc; i++)
+                spiRxByte(SPI_SDCARD_SPI_CHAN);
+
+            res = RES_OK;
+        }
+    }
+    GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_HIGH);
+
+
+    return res;
 }
 
-void spiSdCardReadData(uint32_t address, uint8_t *data, uint16_t dataLen)
-{
 
+
+/*-----------------------------------------------------------------------*/
+/* Write partial sector                                                  */
+/*-----------------------------------------------------------------------*/
+DRESULT spiSdCardStoreData (
+    const uint8_t *buff,	/* Pointer to the bytes to be written (NULL:Initiate/Finalize sector write) */
+    uint32_t sc			/* Number of bytes to send, Sector number (LBA) or zero */
+)
+{
+    DRESULT res;
+    uint16_t bc, tmr;
+    static uint16_t wc;
+
+
+    res = RES_ERROR;
+
+    GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_LOW);
+
+    if (buff)  		/* Send data bytes */
+    {
+        bc = (uint16_t)sc;
+        while (bc && wc)  		/* Send data bytes to the card */
+        {
+            spiTxByte(SPI_SDCARD_SPI_CHAN,*buff++);
+            wc--;
+            bc--;
+        }
+        res = RES_OK;
+    }
+    else
+    {
+        if (sc)  	/* Initiate sector write transaction */
+        {
+            if (!(cardType & SD_CARD_CT_BLOCK)) sc *= 512;	/* Convert to byte address if needed */
+            if (spiSdCardSendCommand(SD_CARD_CMD24, sc) == 0)  			/* WRITE_SINGLE_BLOCK */
+            {
+                spiTxByte(SPI_SDCARD_SPI_CHAN,0xFF);
+                spiTxByte(SPI_SDCARD_SPI_CHAN,0xFE);		/* Data block header */
+                wc = 512;							/* Set byte counter */
+                res = RES_OK;
+            }
+        }
+        else  	/* Finalize sector write transaction */
+        {
+            bc = wc + 2;
+            while (bc--) spiTxByte(SPI_SDCARD_SPI_CHAN,0);	/* Fill left bytes and CRC with zeros */
+            if ((spiRxByte(SPI_SDCARD_SPI_CHAN) & 0x1F) == 0x05)  	/* Receive data resp and wait for end of write process in timeout of 300ms */
+            {
+                for (tmr = 10000; spiRxByte(SPI_SDCARD_SPI_CHAN) != 0xFF && tmr; tmr--)	/* Wait for ready (max 1000ms) */
+                    delayMs(1); /*Might get away with 0.1mS?*/
+                if (tmr) res = RES_OK;
+            }
+        }
+    }
+    GPIO_PIN_OUT(SPI_SDCARD_CS_PORT, SPI_SDCARD_CS_PIN, GPIO_OUT_HIGH);
+    return res;
 }
