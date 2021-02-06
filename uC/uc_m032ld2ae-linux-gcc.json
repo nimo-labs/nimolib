@@ -1,0 +1,21 @@
+{
+    "microcontroller": "m032ld2ae",
+    "ucFamily": "m032",
+    "linkerFile": "./umake/nimolib/uC/m032/linker/gcc_arm_64K.ld",
+    "startupFile": "umake/nimolib/uC/m032/startup_M031Series.S",
+    "defines": [],
+    "cflags": [
+        "-I ./umake/nimolib/uC/m032/include",
+        "-I ./umake/nimolib/uC/m032/include/cmsis",
+        "-I ./umake/nimolib/uC/m032/include/moduleHeaders",
+        "-W -Wall --std=gnu99 -Os",
+        "-fno-diagnostics-show-caret",
+        "-fdata-sections -ffunction-sections",
+        "-funsigned-char -funsigned-bitfields",
+        "-mcpu=cortex-m0plus -mthumb -specs=nano.specs -specs=nosys.specs"
+    ],
+    "ldflags": [
+        "-mcpu=cortex-m0plus -mthumb",
+        "-Wl,--gc-sections -specs=nano.specs -specs=nosys.specs"
+    ]
+}
