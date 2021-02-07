@@ -23,4 +23,6 @@
 #include "atsamd21.c"
 #elif defined(__SAMD21)
 #include "atsamd21.c"
+#elif defined(__NUVO_M032K)
+#include "m032k.c"
 #endif
