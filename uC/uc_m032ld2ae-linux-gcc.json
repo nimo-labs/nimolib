@@ -3,7 +3,9 @@
     "ucFamily": "m032",
     "linkerFile": "./umake/nimolib/uC/m032/linker/gcc_arm_64K.ld",
     "startupFile": "umake/nimolib/uC/m032/startup_M031Series.S",
-    "defines": [],
+    "defines": [
+        "__NUVO_M032K"
+    ],
     "cflags": [
         "-I ./umake/nimolib/uC/m032/include",
         "-I ./umake/nimolib/uC/m032/include/cmsis",
