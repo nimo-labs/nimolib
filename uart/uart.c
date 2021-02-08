@@ -17,7 +17,33 @@
 * Description: ATSAMD UART API provider
 */
 
-#include <sam.h>
+/*
+* ATSAM21D nimolib.h example:
+*
+* #define UART_CHAN0 0
+* #define UART_CHAN0_SERCOM 3
+* #define UART_CHAN0_IRQ void irq_handler_sercom3(void)
+* #define UART_CHAN0_FIFO_LEN 10
+* #define UART_CHAN0_PORT SAM_GPIO_PORTA
+* #define UART_CHAN0_RX_PIN 25
+* #define UART_CHAN0_TX_PIN 24
+* #define UART_CHAN0_RX_PAD 3
+* #define UART_CHAN0_TX_PAD 1
+* #define UART_CHAN0_PERHIPH_RX_MUX SAM_GPIO_PMUX_C
+* #define UART_CHAN0_PERHIPH_TX_MUX SAM_GPIO_PMUX_C
+*
+*
+* M032K nimolib.h example:
+*
+* #define UART_CHAN0 0
+* #define UART_CHAN0_SERCOM 3
+* #define UART_CHAN0_IRQ void irq_handler_sercom3(void)
+* #define UART_CHAN0_FIFO_LEN 10
+* #define UART_CHAN0_PORT SAM_GPIO_PORTA
+* #define UART_CHAN0_RX_PIN 25
+* #define UART_CHAN0_TX_PIN 24
+*/
+
 #include <nimolib.h>
 #include "uart.h"
 
@@ -215,4 +241,6 @@ unsigned char uartGetData(unsigned char uart)
 #include "atsamd21.c"
 #elif defined(__SAMD21)
 #include "atsamd21.c"
+#elif defined(__NUVO_M032K)
+#include "m032.c"
 #endif

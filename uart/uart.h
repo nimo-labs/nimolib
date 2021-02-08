@@ -16,6 +16,7 @@
 * File: uart.h
 * Description: ATSAMD UART API provider
 */
+#include <stdint.h>
 
 #define UART_BAUD_9600 0
 #define UART_BAUD_115200 1
@@ -25,3 +26,4 @@ unsigned char uartIsData(unsigned char uart);
 /** returns a byte if there is data available or 0 if no data is available */
 unsigned char uartGetData(unsigned char uart);
 void uartTx(unsigned char uart, unsigned char data);
+

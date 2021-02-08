@@ -1078,6 +1078,111 @@ typedef struct
 /**@}*/ /* end of UART register group */
 /**@}*/ /* end of REGISTER group */
 
+
+/* UART constants*/
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART FIFO size constants definitions                                                                    */
+/*---------------------------------------------------------------------------------------------------------*/
+
+#define UART0_FIFO_SIZE 16ul /*!< UART0 supports separated receive/transmit 16/16 bytes entry FIFO \hideinitializer */
+#define UART1_FIFO_SIZE 16ul /*!< UART1 supports separated receive/transmit 16/16 bytes entry FIFO \hideinitializer */
+#define UART2_FIFO_SIZE 1ul  /*!< UART2 supports separated receive/transmit 1/1 bytes entry FIFO \hideinitializer */
+#define UART3_FIFO_SIZE 1ul  /*!< UART3 supports separated receive/transmit 1/1 bytes entry FIFO \hideinitializer */
+#define UART4_FIFO_SIZE 16ul /*!< UART4 supports separated receive/transmit 16/16 bytes entry FIFO \hideinitializer */
+#define UART5_FIFO_SIZE 16ul /*!< UART5 supports separated receive/transmit 16/16 bytes entry FIFO \hideinitializer */
+#define UART6_FIFO_SIZE 1ul  /*!< UART6 supports separated receive/transmit 1/1 bytes entry FIFO \hideinitializer */
+#define UART7_FIFO_SIZE 1ul  /*!< UART7 supports separated receive/transmit 1/1 bytes entry FIFO \hideinitializer */
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART_FIFO constants definitions                                                                         */
+/*---------------------------------------------------------------------------------------------------------*/
+
+#define UART_FIFO_RFITL_1BYTE      (0x0ul << UART_FIFO_RFITL_Pos)   /*!< UART_FIFO setting to set RX FIFO Trigger Level to 1 byte \hideinitializer */
+#define UART_FIFO_RFITL_4BYTES     (0x1ul << UART_FIFO_RFITL_Pos)   /*!< UART_FIFO setting to set RX FIFO Trigger Level to 4 bytes \hideinitializer */
+#define UART_FIFO_RFITL_8BYTES     (0x2ul << UART_FIFO_RFITL_Pos)   /*!< UART_FIFO setting to set RX FIFO Trigger Level to 8 bytes \hideinitializer */
+#define UART_FIFO_RFITL_14BYTES    (0x3ul << UART_FIFO_RFITL_Pos)   /*!< UART_FIFO setting to set RX FIFO Trigger Level to 14 bytes \hideinitializer */
+
+#define UART_FIFO_RTSTRGLV_1BYTE      (0x0ul << UART_FIFO_RTSTRGLV_Pos)  /*!< UART_FIFO setting to set RTS Trigger Level to 1 byte \hideinitializer */
+#define UART_FIFO_RTSTRGLV_4BYTES     (0x1ul << UART_FIFO_RTSTRGLV_Pos)  /*!< UART_FIFO setting to set RTS Trigger Level to 4 bytes \hideinitializer */
+#define UART_FIFO_RTSTRGLV_8BYTES     (0x2ul << UART_FIFO_RTSTRGLV_Pos)  /*!< UART_FIFO setting to set RTS Trigger Level to 8 bytes \hideinitializer */
+#define UART_FIFO_RTSTRGLV_14BYTES    (0x3ul << UART_FIFO_RTSTRGLV_Pos)  /*!< UART_FIFO setting to set RTS Trigger Level to 14 bytes \hideinitializer */
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART_LINE constants definitions                                                                         */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UART_WORD_LEN_5     (0ul) /*!< UART_LINE setting to set UART word length to 5 bits \hideinitializer */
+#define UART_WORD_LEN_6     (1ul) /*!< UART_LINE setting to set UART word length to 6 bits \hideinitializer */
+#define UART_WORD_LEN_7     (2ul) /*!< UART_LINE setting to set UART word length to 7 bits \hideinitializer */
+#define UART_WORD_LEN_8     (3ul) /*!< UART_LINE setting to set UART word length to 8 bits \hideinitializer */
+
+#define UART_PARITY_NONE    (0x0ul << UART_LINE_PBE_Pos) /*!< UART_LINE setting to set UART as no parity   \hideinitializer */
+#define UART_PARITY_ODD     (0x1ul << UART_LINE_PBE_Pos) /*!< UART_LINE setting to set UART as odd parity  \hideinitializer */
+#define UART_PARITY_EVEN    (0x3ul << UART_LINE_PBE_Pos) /*!< UART_LINE setting to set UART as even parity \hideinitializer */
+#define UART_PARITY_MARK    (0x5ul << UART_LINE_PBE_Pos) /*!< UART_LINE setting to keep parity bit as '1'  \hideinitializer */
+#define UART_PARITY_SPACE   (0x7ul << UART_LINE_PBE_Pos) /*!< UART_LINE setting to keep parity bit as '0'  \hideinitializer */
+
+#define UART_STOP_BIT_1     (0x0ul << UART_LINE_NSB_Pos) /*!< UART_LINE setting for one stop bit  \hideinitializer */
+#define UART_STOP_BIT_1_5   (0x1ul << UART_LINE_NSB_Pos) /*!< UART_LINE setting for 1.5 stop bit when 5-bit word length  \hideinitializer */
+#define UART_STOP_BIT_2     (0x1ul << UART_LINE_NSB_Pos) /*!< UART_LINE setting for two stop bit when 6, 7, 8-bit word length \hideinitializer */
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART RTS ACTIVE LEVEL constants definitions                                                             */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UART_RTS_IS_LOW_LEV_ACTIVE   (0x1ul << UART_MODEM_RTSACTLV_Pos) /*!< Set RTS is Low Level Active \hideinitializer */
+#define UART_RTS_IS_HIGH_LEV_ACTIVE  (0x0ul << UART_MODEM_RTSACTLV_Pos) /*!< Set RTS is High Level Active \hideinitializer */
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART_IRDA constants definitions                                                                         */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UART_IRDA_TXEN      (0x1ul << UART_IRDA_TXEN_Pos) /*!< Set IrDA function Tx mode \hideinitializer */
+#define UART_IRDA_RXEN      (0x0ul << UART_IRDA_TXEN_Pos) /*!< Set IrDA function Rx mode \hideinitializer */
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART_FUNCSEL constants definitions                                                                      */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UART_FUNCSEL_UART  (0x0ul << UART_FUNCSEL_FUNCSEL_Pos) /*!< UART_FUNCSEL setting to set UART Function  (Default) \hideinitializer */
+#define UART_FUNCSEL_LIN   (0x1ul << UART_FUNCSEL_FUNCSEL_Pos) /*!< UART_FUNCSEL setting to set LIN Function             \hideinitializer */
+#define UART_FUNCSEL_IrDA  (0x2ul << UART_FUNCSEL_FUNCSEL_Pos) /*!< UART_FUNCSEL setting to set IrDA Function            \hideinitializer */
+#define UART_FUNCSEL_RS485 (0x3ul << UART_FUNCSEL_FUNCSEL_Pos) /*!< UART_FUNCSEL setting to set RS485 Function           \hideinitializer */
+#define UART_FUNCSEL_SINGLE_WIRE (0x4ul << UART_FUNCSEL_FUNCSEL_Pos) /*!< UART_FUNCSEL setting to set Single Wire Function           \hideinitializer */
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* UART BAUDRATE MODE constants definitions                                                                */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UART_BAUD_MODE0     (0ul) /*!< Set UART Baudrate Mode is Mode0 \hideinitializer */
+#define UART_BAUD_MODE2     (UART_BAUD_BAUDM1_Msk | UART_BAUD_BAUDM0_Msk) /*!< Set UART Baudrate Mode is Mode2 \hideinitializer */
+
+/**
+ *    @brief        Calculate UART baudrate mode0 divider
+ *
+ *    @param[in]    u32SrcFreq      UART clock frequency
+ *    @param[in]    u32BaudRate     Baudrate of UART module
+ *
+ *    @return       UART baudrate mode0 divider
+ *
+ *    @details      This macro calculate UART baudrate mode0 divider.
+ *    \hideinitializer
+ */
+#define UART_BAUD_MODE0_DIVIDER(u32SrcFreq, u32BaudRate)    ((((u32SrcFreq) + ((u32BaudRate)*8ul)) / (u32BaudRate) >> 4ul)-2ul)
+
+
+/**
+ *    @brief        Calculate UART baudrate mode2 divider
+ *
+ *    @param[in]    u32SrcFreq      UART clock frequency
+ *    @param[in]    u32BaudRate     Baudrate of UART module
+ *
+ *    @return       UART baudrate mode2 divider
+ *
+ *    @details      This macro calculate UART baudrate mode2 divider.
+ *    \hideinitializer
+ */
+#define UART_BAUD_MODE2_DIVIDER(u32SrcFreq, u32BaudRate)    ((((u32SrcFreq) + ((u32BaudRate)/2ul)) / (u32BaudRate))-2ul)
+
 #if defined ( __CC_ARM   )
 #pragma no_anon_unions
 #endif

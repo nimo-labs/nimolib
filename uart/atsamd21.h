@@ -17,8 +17,3 @@
 * Description: ATSAMD UART device driver
 */
 
-#if defined(__SAMD21)
-#include "atsamd21.h"
-#elif defined(__SAMR21)
-#include "atsamd21.h"
-#endif
