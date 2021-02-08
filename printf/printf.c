@@ -99,7 +99,12 @@ void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen)
 #if (PRINTF_BUFF_SIZE > 0)
 void *_sbrk(int32_t incr)
 {
+#if defined(__NUVO_M032K)
+    extern char StackTop;
+    char _stack_top = StackTop;
+#else
     extern char _stack_top; /* Set by linker.  */
+#endif
     static char *heap_end;
     char *prev_heap_end;
     if (heap_end == 0)
