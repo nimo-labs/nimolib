@@ -18,7 +18,6 @@
 */
 
 #include "M031Series.h"
-#include "clk.h"
 
 #define ISR_CONCAT_(ID) SERCOM##ID##_Handler()
 #define ISR_CONCAT(ID) ISR_CONCAT_(ID)
@@ -92,6 +91,11 @@ void uartInit(unsigned char uart, uint32_t baud)
                 SERCOM_PTR(UART_CHAN0_SERCOM)->BAUD = (UART_BAUD_MODE2 | u32Baud_Div);
             }
         }
+
+        /*Enable RX interrupt*/
+        NVIC_EnableIRQ(UART02_IRQn);
+        SERCOM_PTR(UART_CHAN0_SERCOM)->INTEN = UART_INTEN_RDAIEN_Msk;
+
         break;
 //#endif
 #ifdef UART_CHAN1
@@ -187,45 +191,17 @@ void uartTx(unsigned char uart, unsigned char data)
     }
 }
 
-/*ext_usart handler*/
-// #ifdef UART_CHAN0
-// UART_CHAN0_IRQ
-// {
-//     if (SERCOM_PTR(UART_CHAN0_SERCOM)->USART.INTFLAG.bit.RXC)
-//     {
-//         uartChan0Fifo[uartChan0FifoWrite] = SERCOM_PTR(UART_CHAN0_SERCOM)->USART.DATA.reg;
-//         if (uartChan0FifoWrite < UART_CHAN0_FIFO_LEN)
-//             uartChan0FifoWrite++;
-//         else
-//             uartChan0FifoWrite = 0;
-//     }
-// }
-// #endif
 
-// #ifdef UART_CHAN1
-// UART_CHAN1_IRQ
-// {
-//     if (SERCOM_PTR(UART_CHAN1_SERCOM)->USART.INTFLAG.bit.RXC)
-//     {
-//         uartChan1Fifo[uartChan1FifoWrite] = SERCOM_PTR(UART_CHAN1_SERCOM)->USART.DATA.reg;
-//         if (uartChan1FifoWrite < UART_CHAN1_FIFO_LEN)
-//             uartChan1FifoWrite++;
-//         else
-//             uartChan1FifoWrite = 0;
-//     }
-// }
-// #endif
-
-// #ifdef UART_CHAN2
-// UART_CHAN2_IRQ
-// {
-//     if (SERCOM_PTR(UART_CHAN2_SERCOM)->USART.INTFLAG.bit.RXC)
-//     {
-//         uartChan2Fifo[uartChan2FifoWrite] = SERCOM_PTR(UART_CHAN2_SERCOM)->USART.DATA.reg;
-//         if (uartChan2FifoWrite < UART_CHAN2_FIFO_LEN)
-//             uartChan2FifoWrite++;
-//         else
-//             uartChan2FifoWrite = 0;
-//     }
-// }
-// #endif
+/* Handle int for UART0 or UART 2*/
+void UART02_IRQHandler(void)
+{
+    /*Check for UART0 RX int*/
+    if(UART0->INTSTS & UART_INTSTS_RDAINT_Msk)
+    {
+        uartChan0Fifo[uartChan0FifoWrite] = UART0->DAT & 0xff;
+        if (uartChan0FifoWrite < UART_CHAN0_FIFO_LEN)
+            uartChan0FifoWrite++;
+        else
+            uartChan0FifoWrite = 0;
+    }
+}
