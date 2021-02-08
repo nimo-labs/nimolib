@@ -24,4 +24,4 @@ void delaySetup(unsigned int baseTimer);
 void delayMs(unsigned int delay);
 unsigned long delayGetTicks(void);
 unsigned long delayGetDiff(unsigned long start, unsigned long end);
-unsigned char delayMicros(unsigned long last, unsigned long target);
+unsigned char delayMillis(unsigned long last, unsigned long target);
