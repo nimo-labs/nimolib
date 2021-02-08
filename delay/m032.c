@@ -21,16 +21,6 @@
 //#include <printf.h>
 #include "delay.h"
 
-static volatile unsigned long sysTickTicks = 0;
-
-unsigned long delayGetDiff(unsigned long start, unsigned long end)
-{
-    if (end > start)
-        return (end - start);
-    else
-        return sysTickTicks - (start + 4294967295);
-}
-
 void delaySetup(unsigned int baseTimer)
 {
     unsigned long divisor;
@@ -52,28 +42,6 @@ void delaySetup(unsigned int baseTimer)
     SysTick->LOAD = (UP_CLK /2) / divisor;
     SysTick->VAL = 0;
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
-}
-
-void delayMs(unsigned int delay)
-{
-    unsigned long ticks;
-
-    ticks = delayGetTicks();
-    while (delayGetDiff(ticks, delayGetTicks()) < delay)
-        ;
-}
-
-unsigned long delayGetTicks(void)
-{
-    return sysTickTicks;
-}
-
-unsigned char delayMicros(unsigned long last, unsigned long target)
-{
-    if (delayGetDiff(last, sysTickTicks) > target)
-        return 1;
-    else
-        return 0;
 }
 
 void SysTick_Handler(void)

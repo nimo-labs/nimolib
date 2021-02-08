@@ -19,6 +19,8 @@
 
 #include <nimolib.h>
 
+static volatile unsigned long sysTickTicks = 0;
+
 #if defined(__SAMR21)
 #include "atsamd21.c"
 #elif defined(__SAMD21)
@@ -26,3 +28,24 @@
 #elif defined(__NUVO_M032K)
 #include "m032.c"
 #endif
+
+unsigned long delayGetDiff(unsigned long start, unsigned long end)
+{
+    if (end > start)
+        return (end - start);
+    else
+        return sysTickTicks - (start + 4294967295);
+}
+
+unsigned long delayGetTicks(void)
+{
+    return sysTickTicks;
+}
+
+unsigned char delayMillis(unsigned long last, unsigned long target)
+{
+    if (delayGetDiff(last, sysTickTicks) > target)
+        return 1;
+    else
+        return 0;
+}
