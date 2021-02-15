@@ -17,6 +17,23 @@
 * Description: ATSAMD USB HID API provider
 */
 
+
+#if defined(__SAMR21) || defined(__SAMD21)
 #include <usbHid.h>
+#elif defined(__NUVO_M032K)
+#include "M031Series.h"
+#include <stdint.h>
+#include "m032/usbd.h"
+#include "m032/hid_transfer.h"
+
+#define usbInit() HID_Init()
+
+#endif
+
+/********** Definitions to be provided by nimolib.h *************
+ *
+ * USB_BUFFER_SIZE
+ *
+ */
 
 void usbSendWait(int ep, uint8_t *data, int size);
