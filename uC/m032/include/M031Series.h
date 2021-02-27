@@ -181,6 +181,7 @@ extern void SystemInit(void);
 #include "uuart_reg.h"
 #include "wdt_reg.h"
 #include "wwdt_reg.h"
+#include "sys.h"
 
 
 /******************************************************************************/

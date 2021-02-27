@@ -53,8 +53,9 @@ void USBD_IRQHandler(void)
         if (u32State & USBD_STATE_USBRST)
         {
             /* Bus reset */
-            USBD_ENABLE_USB();
+
             USBD_SwReset();
+            USBD_ENABLE_USB();
             g_u8Suspend = 0;
         }
         if (u32State & USBD_STATE_SUSPEND)
@@ -200,7 +201,7 @@ void HID_Init(void)
     //SystemCoreClockUpdate();
 
     /* Setup USB device */
-    USBD_Open(&gsInfo, HID_ClassRequest, NULL);
+    USBD_Open(&gsInfo, NULL, NULL);
 
     /* Init setup packet buffer */
     /* Buffer range for setup packet -> [0 ~ 0x7] */
@@ -236,91 +237,6 @@ void HID_Init(void)
     NVIC_EnableIRQ(USBD_IRQn);
     USBD->INTEN = USBD_INTEN_USBIEN_Msk;
 }
-
-void HID_ClassRequest(void)
-{
-    uint8_t buf[8];
-    USBD_GetSetupPacket(buf);
-
-    if(buf[0] & 0x80)    /* request data transfer direction */
-    {
-        /* Device to host */
-        switch(buf[1])
-        {
-        case GET_IDLE:
-        {
-            USBD_SET_PAYLOAD_LEN(EP1, buf[6]);
-            /* Data stage */
-            USBD_PrepareCtrlIn(&g_u8Idle, buf[6]);
-            /* Status stage */
-            USBD_PrepareCtrlOut(0, 0);
-            break;
-        }
-        case GET_PROTOCOL:
-        {
-            USBD_SET_PAYLOAD_LEN(EP1, buf[6]);
-            /* Data stage */
-            USBD_PrepareCtrlIn(&g_u8Protocol, buf[6]);
-            /* Status stage */
-            USBD_PrepareCtrlOut(0, 0);
-            break;
-        }
-        case GET_REPORT:
-//             {
-//                 break;
-//             }
-        default:
-        {
-            /* Setup error, stall the device */
-            USBD_SetStall(EP0);
-            USBD_SetStall(EP1);
-            break;
-        }
-        }
-    }
-    else
-    {
-        /* Host to device */
-        switch(buf[1])
-        {
-        case SET_REPORT:
-        {
-            if(buf[3] == 3)
-            {
-                /* Request Type = Feature */
-                USBD_SET_DATA1(EP1);
-                USBD_SET_PAYLOAD_LEN(EP1, 0);
-            }
-            break;
-        }
-        case SET_IDLE:
-        {
-            g_u8Idle = buf[3];
-            /* Status stage */
-            USBD_SET_DATA1(EP0);
-            USBD_SET_PAYLOAD_LEN(EP0, 0);
-            break;
-        }
-        case SET_PROTOCOL:
-        {
-            g_u8Protocol = buf[2];
-            /* Status stage */
-            USBD_SET_DATA1(EP0);
-            USBD_SET_PAYLOAD_LEN(EP0, 0);
-            break;
-        }
-        default:
-        {
-            /* Stall */
-            /* Setup error, stall the device */
-            USBD_SetStall(EP0);
-            USBD_SetStall(EP1);
-            break;
-        }
-        }
-    }
-}
-
 
 void usbSend(uint8_t ep, uint8_t *data, uint32_t size)
 {

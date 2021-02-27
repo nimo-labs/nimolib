@@ -420,7 +420,8 @@ void USBD_StandardRequest(void)
 
             if(g_usbd_pfnSetConfigCallback)
             {
-                g_usbd_pfnSetConfigCallback();
+#warning need to look at this at some point as it is being called in error from a cold boot
+                //g_usbd_pfnSetConfigCallback();
             }
 
             /* Status stage */
