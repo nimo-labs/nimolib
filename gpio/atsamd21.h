@@ -17,6 +17,14 @@
 * Description: SAMD21 GPIO device driver
 */
 
+#define PORTA SAM_GPIO_PMUX_A
+#define PORTB SAM_GPIO_PMUX_B
+#define PORTC SAM_GPIO_PMUX_C
+#define PORTD SAM_GPIO_PMUX_D
+#define PORTE SAM_GPIO_PMUX_E
+#define PORTF SAM_GPIO_PMUX_F
+#define PORTG SAM_GPIO_PMUX_G
+
 #define GPIO_PIN_DIR(lPORT, PIN, lDIR)                     \
 	if (GPIO_DIR_OUT == lDIR)                              \
 	{													\

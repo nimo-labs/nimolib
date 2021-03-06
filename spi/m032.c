@@ -18,9 +18,7 @@
 */
 
 #include "printf.h"
-
 static uint8_t rxData;
-
 void spiInit(unsigned char channel)
 {
     printf("spiInit()...");
@@ -76,16 +74,19 @@ void spiTxByte(unsigned char channel, unsigned char byte)
     }
     SPI0->TX = byte;
 
-    while(!SPI0->STATUS & SPI_STATUS_UNITIF_Msk);
+    while(0 ==(SPI0->STATUS & SPI_STATUS_UNITIF_Msk)); /*Wait for transaction to finish*/
+    SPI0->STATUS |= SPI_STATUS_UNITIF_Msk; /*Clear status flag*/
     rxData = SPI0->RX;
 }
 
 unsigned char spiRxByte(unsigned char channel)
 {
+
     if(SPI_CHAN0 != channel)
     {
         printf("spiRxByte: Incorrect channel selected!");
         return;
     }
+    spiTxByte(channel, 0x00);
     return rxData;
 }
