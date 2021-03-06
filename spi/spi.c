@@ -17,22 +17,29 @@
 * Description: ATSAMD21 SPI API provider
 */
 
-#include <sam.h>
-#include <system.h>
+
+//#include <system.h>
 #include <nimolib.h>
+#include "spi.h"
 
 #if defined(__SAMR21)
+#include <sam.h>
 #if defined(SPI_USE_BB)
 #include "samSpiBB.c"
 #else
 #include "spi_samd.c"
 #endif
 #elif defined(__SAMD21)
+#include <sam.h>
 #if defined(SPI_USE_BB)
 #include "samSpiBB.c"
 #else
 #include "spi_samd.c"
 #endif
+#elif defined(__NUVO_M032K)
+#include "NuMicro.h"
+#include "m032.c"
 #else
 #include "i2c_xmega.c"
+
 #endif

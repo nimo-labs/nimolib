@@ -911,6 +911,21 @@ typedef struct
 /**@}*/ /* end of CLK register group */
 /**@}*/ /* end of REGISTER group */
 
+
+/* Added by NIMO */
+#define CLK_CLKSEL1_UART0_SRC_HXT 0
+#define CLK_CLKSEL1_UART0_SRC_PLL 1
+#define CLK_CLKSEL1_UART0_SRC_LXT 2
+#define CLK_CLKSEL1_UART0_SRC_HIRC 3
+#define CLK_CLKSEL1_UART0_SRC_PCLK0 4
+#define CLK_CLKSEL1_UART0_SRC_LIRC 5
+
+
+#define CLK_CLKSEL2_SPI0_SRC_HXT 0
+#define CLK_CLKSEL2_SPI0_SRC_PLL 1
+#define CLK_CLKSEL2_SPI0_SRC_PCLK1 2
+#define CLK_CLKSEL2_SPI0_SRC_HIRC 3
+
 #if defined ( __CC_ARM   )
 #pragma no_anon_unions
 #endif
