@@ -60,6 +60,9 @@ void uartInit(unsigned char uart, uint32_t baud)
         /*Enable UART0 CLK*/
         CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
 
+        /*Clock UART0 from HIRC*/
+        CLK->CLKSEL1 |= CLK_CLKSEL1_UART0_SRC_PCLK0 << CLK_CLKSEL1_UART0SEL_Pos;
+
         /* Set PB multi-function pins for UART0 RXD=PB.12 and TXD=PB.13 */
         SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk)) |
                         (SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD);
