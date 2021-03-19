@@ -58,8 +58,8 @@ void spiInit(unsigned char channel)
     /* Default setting: slave selection signal is active low; disable automatic slave selection function. */
     // SPI0->SSCTL = SPI_SS;
 
-    /* Default setting: MSB first, Master and 8 data bits */
-    SPI0->CTL = (8 << SPI_CTL_DWIDTH_Pos) | SPI_CTL_SPIEN_Msk;
+    /* Default setting: MSB first, Master and 8 data bits, clock data out on rising CLK edge */
+    SPI0->CTL = (8 << SPI_CTL_DWIDTH_Pos) | SPI_CTL_SPIEN_Msk | SPI_CTL_TXNEG_Msk;
 
 
     printf("Done.\r\n");

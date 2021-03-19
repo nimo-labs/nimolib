@@ -20,13 +20,36 @@
 #define at86rf23xH
 
 void xn297lInit(void);
+void xn297lEnRxMode(void);
+void xn297lReadStatus(void);
+void xn297lSetChannel(uint8_t rfChannel);
+void xn297lSetDataRate(uint8_t dataRate);
+
+/*Commands */
 
 #define XN297L_CMD_READ_REG 0x00
 #define XN297L_CMD_WRITE_REG 0x20
 #define XN297L_CMD_RX_PAYLOAD 0x60
 #define XN297L_CMD_TX_PAYLOAD 0xA0
 
+/*Registers*/
+
 #define XN297L_REG_CONFIG 0x00
 #define XN297L_REG_EN_AA 0x01
+
+#define XN297L_REG_SETUP_AW 0x03
+#define XN297L_REG_SETUP_RETR 0x04
+
+#define XN297L_REG_RFSETUP 0x06
+#define XN297L_REG_STATUS 0x07
+
+#define XN297L_REG_DYNPD 0x1C
+#define XN297L_REG_FEATURE 0x1D
+
+
+
+#define XN297L_DATARATE_1M 0
+#define XN297L_DATARATE_2M 1
+#define XN297L_DATARATE_250k 3
 
 #endif

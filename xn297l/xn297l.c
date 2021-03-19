@@ -45,6 +45,7 @@
 #include "xn297l.h"
 
 static uint8_t xn297lReadReg(uint8_t reg);
+static uint8_t xn297lWriteReg(uint8_t reg, uint8_t value);
 
 void xn297lInit(void)
 {
@@ -54,41 +55,66 @@ void xn297lInit(void)
     GPIO_PIN_DIR(XN297L_SS_PORT, XN297L_SS_PIN, GPIO_DIR_OUT);
     GPIO_PIN_OUT(XN297L_SS_PORT, XN297L_SS_PIN, GPIO_OUT_HIGH);
 
-    // /*Set SLPTR pin as output and low*/
-    // GPIO_PIN_DIR(AT86RF23X_SLP_TR_PORT, AT86RF23X_SLP_TR_PIN, GPIO_DIR_OUT);
-    // GPIO_PIN_OUT(AT86RF23X_SLP_TR_PORT, AT86RF23X_SLP_TR_PIN, GPIO_OUT_LOW);
+    /*Force normal burst mode*/
+    xn297lWriteReg(XN297L_REG_EN_AA, 0x00);
+    xn297lWriteReg(XN297L_REG_SETUP_RETR, 0x00);
+    xn297lWriteReg(XN297L_REG_DYNPD, 0x00);
+    uint8_t featureReg=xn297lReadReg(XN297L_REG_FEATURE);
+    xn297lWriteReg(XN297L_REG_FEATURE, featureReg & 0x07);
 
-    // /*Set RESET pin as output and low*/
-    // GPIO_PIN_DIR(AT86RF23X_RESET_PORT, AT86RF23X_RESET_PIN, GPIO_DIR_OUT);
-    // GPIO_PIN_OUT(AT86RF23X_RESET_PORT, AT86RF23X_RESET_PIN, GPIO_OUT_LOW);
 
-    // delayMs(100);
-    // GPIO_PIN_OUT(AT86RF23X_RESET_PORT, AT86RF23X_RESET_PIN, GPIO_OUT_HIGH);
-    // delayMs(100);
+    /*Set address len to 3 bytes */
+    xn297lWriteReg(XN297L_REG_SETUP_AW, 0x01);
 
-    // at86rf23xWriteReg(AT86RF23X_REG_TRX_STATE, AT86RF23X_TRX_CMD_FORCE_TRX_OFF);
 
-    // while (AT86RF23X_TRX_STATUS_TRX_OFF != (at86rf23xReadReg(AT86RF23X_REG_TRX_STATUS) & AT86RF23X_TRX_STATUS_TRX_STATUS_MASK))
-    //     ;
+    printf("Config reg: 0x%.2X\r\n", xn297lReadReg(XN297L_REG_CONFIG));
+    printf("Status reg: 0x%.2X\r\n", xn297lReadReg(XN297L_REG_STATUS));
 
-    // //asm("WDR");
+    printf("Done.\r\n");
+}
 
-    // at86rf23xWriteReg(AT86RF23X_REG_TRX_CTRL_1, (1 << 5)); /*TX_AUTO_CRC_ON*/
-    // //  AT86RF23XWriteReg(AT86RF23X_REG_PHY_TX_PWR, 0x00); /*+3dB*/
+void xn297lEnRxMode(void)
+{
+    uint8_t configReg=xn297lReadReg(XN297L_REG_CONFIG);
 
-    // at86rf23xWriteReg(AT86RF23X_REG_RX_CTRL, 0x07); /*Set sensitivity to 3 when using Ant diversity, otherwise it should be 7*/
-    // //    AT86RF23XWriteReg(AT86RF23XREG_ANT_DIV, (1 << 3) | (1 << 2)); /*Enable antenna diversity and ext switch*/
+    configReg |= (1 << 7 /*EN_PM*/) | (1 << 3 /*PWR_UP*/);
+    xn297lWriteReg(XN297L_REG_CONFIG, configReg);
+}
 
-    // at86rf23xWriteReg(AT86RF23X_REG_IRQ_MASK, 0x00);
-    // at86rf23xReadReg(AT86RF23X_REG_IRQ_STATUS);
-    // at86rf23xWriteReg(AT86RF23X_REG_IRQ_MASK, AT86RF23X_TRX_END_MASK);
-    // //at86rf23xWriteReg(AT86RF23XREG_IRQ_MASK, 0xff);
+void xn297lReadStatus(void)
+{
+    printf("Status reg: 0x%.2X\r\n", xn297lReadReg(XN297L_REG_STATUS));
+}
 
-    // at86rf23xWriteReg(AT86RF23X_REG_TRX_CTRL_2, (1 << 7)); /*Set RX safe mode*/
+void xn297lSetChannel(uint8_t rfChannel)
+{
+    uint8_t rfSetupReg=xn297lReadReg(XN297L_REG_RFSETUP);
 
-    // printf("Done.\r\n");
-    // printf("TRX Stat: 0x%.2X\r\n", at86rf23xReadReg(AT86RF23X_REG_TRX_STATUS));
-    printf("Config reg: 0x%.2X\r\n", xn297lReadReg(XN297L_REG_EN_AA));
+    rfSetupReg &= ~(0x3F << 0); /*Clear channel*/
+    rfSetupReg |= (rfChannel << 0); /*Set channel*/
+    xn297lWriteReg(XN297L_REG_RFSETUP, rfSetupReg);
+}
+
+void xn297lSetDataRate(uint8_t dataRate)
+{
+    uint8_t rfSetupReg=xn297lReadReg(XN297L_REG_RFSETUP);
+
+    rfSetupReg &= ~(0x03 << 6); /*Clear channel*/
+    rfSetupReg |= (dataRate << 6); /*Set channel*/
+    xn297lWriteReg(XN297L_REG_RFSETUP, rfSetupReg);
+}
+
+
+uint8_t xn297lWriteReg(uint8_t reg, uint8_t value)
+{
+    uint8_t regData=0;
+
+    GPIO_PIN_OUT(XN297L_SS_PORT, XN297L_SS_PIN, GPIO_OUT_LOW);
+    spiTxByte(XN297L_SPI_CHAN, XN297L_CMD_WRITE_REG | reg);
+    spiTxByte(XN297L_SPI_CHAN, value);
+    GPIO_PIN_OUT(XN297L_SS_PORT, XN297L_SS_PIN, GPIO_OUT_HIGH);
+
+    return regData;
 }
 
 uint8_t xn297lReadReg(uint8_t reg)
