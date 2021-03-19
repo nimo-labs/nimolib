@@ -59,6 +59,12 @@ SET_INTERFACE_REQ g_usbd_pfnSetInterface = NULL;    /*!< USB Set Interface Funct
 SET_CONFIG_CB g_usbd_pfnSetConfigCallback = NULL;   /*!< USB Set configuration callback function pointer */
 uint32_t g_u32EpStallLock                = 0ul;     /*!< Bit map flag to lock specified EP when SET_FEATURE */
 
+
+extern uint8_t gu8SerialNumStringDesc[];
+
+
+static unsigned char toHex[] = "0123456789ABCDEF";
+
 /**
   * @brief      This function makes USBD module to be ready to use
   *
@@ -75,6 +81,15 @@ void USBD_Open(const S_USBD_INFO_T *param, CLASS_REQ pfnClassReq, SET_INTERFACE_
     g_usbd_sInfo = param;
     g_usbd_pfnClassRequest = pfnClassReq;
     g_usbd_pfnSetInterface = pfnSetInterface;
+
+    gu8SerialNumStringDesc[6] = toHex[(SYS->PDID >>28)&0xf];
+    gu8SerialNumStringDesc[8] = toHex[(SYS->PDID >>24)&0xf];
+    gu8SerialNumStringDesc[10] = toHex[(SYS->PDID >>20)&0xf];
+    gu8SerialNumStringDesc[12] = toHex[(SYS->PDID >>16)&0xf];
+    gu8SerialNumStringDesc[14] = toHex[(SYS->PDID >>12)&0xf];
+    gu8SerialNumStringDesc[16] = toHex[(SYS->PDID >>8)&0xf];
+    gu8SerialNumStringDesc[18] = toHex[(SYS->PDID >>4)&0xf];
+    gu8SerialNumStringDesc[20] = toHex[(SYS->PDID >>0)&0xf];
 
     /* get EP0 maximum packet size */
     g_usbd_CtrlMaxPktSize = g_usbd_sInfo->gu8DevDesc[7];

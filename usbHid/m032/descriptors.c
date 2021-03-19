@@ -56,7 +56,7 @@ uint8_t gu8DeviceDescriptor[] =
     0x00, 0x00,     /* bcdDevice */
     0x01,           /* iManufacture */
     0x02,           /* iProduct */
-    0x00,           /* iSerialNumber - no serial */
+    0x03,           /* iSerialNumber - no serial */
     0x01            /* bNumConfigurations */
 };
 
@@ -141,6 +141,14 @@ uint8_t gu8ProductStringDesc[] =
     'H', 0, 'I', 0, 'D', 0, ' ', 0, 'T', 0, 'r', 0, 'a', 0, 'n', 0, 's', 0, 'f', 0, 'e', 0, 'r', 0
 };
 
+/*!<USB Product String Descriptor */
+uint8_t gu8SerialNumStringDesc[] =
+{
+    22,             /* bLength          */
+    DESC_STRING,    /* bDescriptorType  */
+    '0', 0, 'x', 0, 'D', 0, 'E', 0, 'T', 0, 'r', 0, 'a', 0, 'n', 0, 's', 0, 'f', 0
+};
+
 /*!<USB BOS Descriptor */
 uint8_t gu8BOSDescriptor[] =
 {
@@ -163,7 +171,7 @@ uint8_t *gpu8UsbString[4] =
     gu8StringLang,
     gu8VendorStringDesc,
     gu8ProductStringDesc,
-    0,
+    gu8SerialNumStringDesc,
 };
 
 uint8_t *gu8UsbHidReport[3] =
