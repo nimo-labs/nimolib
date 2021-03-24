@@ -1,7 +1,7 @@
 {
     "microcontroller": "m032lg6ae",
     "ucFamily": "m032",
-    "linkerFile": "./umake/nimolib/uC/m032/linker/gcc_arm_256K.ld",
+    "linkerFile": "./umake/nimolib/uC/m032/linker/gcc_arm_256k.ld",
     "startupFile": "umake/nimolib/uC/m032/startup_M031Series.S",
     "defines": [
         "__NUVO_M032K"
