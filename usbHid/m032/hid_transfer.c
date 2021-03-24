@@ -17,7 +17,6 @@ uint8_t volatile g_u8Suspend = 0;
 uint8_t g_u8Idle = 0, g_u8Protocol = 0;
 
 static uint8_t  g_hidRecvBuf[USB_BUFFER_SIZE] = {0};    /* HID Receive buffer*/
-static uint8_t  g_hidSendBuf[USB_BUFFER_SIZE] = {0};    /* HID Send buffer*/
 
 void HID_ClassRequest(void);
 void EP2_Handler(void);
