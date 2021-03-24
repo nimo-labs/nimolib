@@ -163,12 +163,12 @@ void USBD_IRQHandler(void)
 
 void EP2_Handler(void)  /* Interrupt IN (to host) handler */
 {
-    uint8_t *ptr; /*EP ptr*/
-    /* Prepare the data for next HID IN transfer */
-    ptr = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2));
-    USBD_MemCopy(ptr, (void *)g_hidSendBuf, USB_BUFFER_SIZE);
-    USBD_SET_PAYLOAD_LEN(EP2, USB_BUFFER_SIZE);
-    usbSendDirty = 0;
+    // uint8_t *ptr; /*EP ptr*/
+    // /* Prepare the data for next HID IN transfer */
+    // ptr = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2));
+    // USBD_MemCopy(ptr, (void *)g_hidSendBuf, USB_BUFFER_SIZE);
+    // USBD_SET_PAYLOAD_LEN(EP2, USB_BUFFER_SIZE);
+    // usbSendDirty = 0;
 }
 
 void EP3_Handler(void)  /* Interrupt OUT (from host) handler */
@@ -243,11 +243,14 @@ void usbSend(uint8_t ep, uint8_t *data, uint32_t size)
     (void) ep;
     if(size <= USB_BUFFER_SIZE)
     {
-        memcpy(g_hidSendBuf, data, size);
+        //memcpy(g_hidSendBuf, data, size);
+        USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), data, size);
+        USBD_SET_PAYLOAD_LEN(EP2, size);
     }
     else
     {
         printf("usbSend Error\r\n");
     }
+    usbSendDirty = 0;
 }
 /***************************************************************/
