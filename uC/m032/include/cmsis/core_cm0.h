@@ -390,7 +390,7 @@ typedef struct
 {
     __IM  uint32_t CPUID;                  /*!< Offset: 0x000 (R/ )  CPUID Base Register */
     __IOM uint32_t ICSR;                   /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register */
-    __IOM uint32_t VTOR;
+    uint32_t RESERVED0;
     __IOM uint32_t AIRCR;                  /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register */
     __IOM uint32_t SCR;                    /*!< Offset: 0x010 (R/W)  System Control Register */
     __IOM uint32_t CCR;                    /*!< Offset: 0x014 (R/W)  Configuration Control Register */
