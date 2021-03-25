@@ -26,7 +26,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <delay.h>
 
 //-----------------------------------------------------------------------------
 #define DUMMY __attribute__ ((weak, alias ("irq_handler_dummy")))
