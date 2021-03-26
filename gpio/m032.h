@@ -42,4 +42,4 @@
 	else                                            \
 		lPORT->DOUT &= ~(1 << PIN);
 #define GPIO_PIN_TGL(lPORT, PIN) (lPORT->DOUT ^= (1 << PIN))
-//#define GPIO_PIN_READ(lPORT, PIN) (PORT->Group[lPORT].IN.reg & (1 << PIN))
+#define GPIO_PIN_READ(lPORT, lPIN) ((lPORT->PIN >> lPIN) & 0x1)
