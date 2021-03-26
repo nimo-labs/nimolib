@@ -69,7 +69,7 @@
 
 /*-------------------------------------------------------------*/
 void HID_Init(void);
-void usbSend(uint8_t ep, uint8_t *data, uint32_t size);
+uint8_t usbSend(uint8_t ep, uint8_t *data, uint32_t size);
 #endif  /* __USBD_HID_H_ */
 
 /*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
