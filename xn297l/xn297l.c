@@ -44,17 +44,8 @@
 
 #include "xn297l.h"
 
-//static
-uint8_t xn297lReadReg(uint8_t reg);
+static uint8_t xn297lReadReg(uint8_t reg);
 static uint8_t xn297lWriteReg(uint8_t reg, uint8_t value);
-
-
-static const uint8_t xn297Preamble[] =
-{
-    0b01110001,
-    0b00001111,
-    0b01010101
-};
 
 void xn297lInit(void)
 {
