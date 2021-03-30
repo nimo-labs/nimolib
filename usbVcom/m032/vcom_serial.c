@@ -115,11 +115,11 @@ void USBD_IRQHandler(void)
             USBD_CtrlOut();
 
             /* In ACK of SET_LINE_CODE */
-            if(g_usbd_SetupPacket[1] == SET_LINE_CODE)
-            {
-                if(g_usbd_SetupPacket[4] == 0)  /* VCOM-1 */
-                    VCOM_LineCoding(0); /* Apply UART settings */
-            }
+            // if(g_usbd_SetupPacket[1] == SET_LINE_CODE)
+            // {
+            //     if(g_usbd_SetupPacket[4] == 0)  /* VCOM-1 */
+            //         VCOM_LineCoding(0); /* Apply UART settings */
+            // }
         }
 
         if (u32IntSts & USBD_INTSTS_EP2)
@@ -317,74 +317,7 @@ void VCOM_ClassRequest(void)
     }
 }
 
-void VCOM_LineCoding(uint8_t port)
-{
-    uint32_t u32Reg;
-    uint32_t u32Baud_Div;
 
-    if (port == 0)
-    {
-        NVIC_DisableIRQ(UART02_IRQn);
-
-        /* Reset software FIFO */
-        comRbytes = 0;
-        comRhead = 0;
-        comRtail = 0;
-
-        comTbytes = 0;
-        comThead = 0;
-        comTtail = 0;
-
-        /* Reset hardware FIFO */
-        UART0->FIFO = UART0->FIFO | (UART_FIFO_RXRST_Msk | UART_FIFO_TXRST_Msk);
-
-        /* Set baudrate */
-        u32Baud_Div = UART_BAUD_MODE2_DIVIDER(__HIRC, gLineCoding.u32DTERate);
-
-        if(u32Baud_Div > 0xFFFF)
-            UART0->BAUD = (UART_BAUD_MODE0 | UART_BAUD_MODE0_DIVIDER(__HIRC, gLineCoding.u32DTERate));
-        else
-            UART0->BAUD = (UART_BAUD_MODE2 | u32Baud_Div);
-
-        /* Set parity */
-        if(gLineCoding.u8ParityType == 0)
-            u32Reg = UART_PARITY_NONE;
-        else if(gLineCoding.u8ParityType == 1)
-            u32Reg = UART_PARITY_ODD;
-        else if(gLineCoding.u8ParityType == 2)
-            u32Reg = UART_PARITY_EVEN;
-        else
-            u32Reg = 0;
-
-        /* Bit width */
-        switch(gLineCoding.u8DataBits)
-        {
-        case 5:
-            u32Reg |= UART_WORD_LEN_5;
-            break;
-        case 6:
-            u32Reg |= UART_WORD_LEN_6;
-            break;
-        case 7:
-            u32Reg |= UART_WORD_LEN_7;
-            break;
-        case 8:
-            u32Reg |= UART_WORD_LEN_8;
-            break;
-        default:
-            break;
-        }
-
-        /* Stop bit */
-        if(gLineCoding.u8CharFormat > 0)
-            u32Reg |= UART_STOP_BIT_2; /* 2 or 1.5 bits */
-
-        UART0->LINE = u32Reg;
-
-        /* Re-enable UART interrupt */
-        NVIC_EnableIRQ(UART02_IRQn);
-    }
-}
 
 uint8_t vcomSend(uint8_t *data, uint32_t size)
 {
