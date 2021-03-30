@@ -45,11 +45,6 @@ volatile uint16_t comRbytes = 0;
 volatile uint16_t comRhead = 0;
 volatile uint16_t comRtail = 0;
 
-volatile uint8_t comTbuf[SIMPLE_VCOM_TX_BUFSIZE];
-volatile uint16_t comTbytes = 0;
-volatile uint16_t comThead = 0;
-volatile uint16_t comTtail = 0;
-
 uint8_t gRxBuf[64] = {0};
 uint8_t *gpu8RxBuf = 0;
 uint32_t gu32RxSize = 0;

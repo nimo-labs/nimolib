@@ -2,7 +2,7 @@
 	"book": "usbVcom",
 	"files": [
 		{
-			"fileName": "simpleVcom.c",
+			"fileName": "usbVcom.c",
 			"language": "c"
 		}
 	]

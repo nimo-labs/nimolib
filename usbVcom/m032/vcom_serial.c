@@ -386,4 +386,16 @@ void VCOM_LineCoding(uint8_t port)
     }
 }
 
-
+uint8_t vcomSend(uint8_t *data, uint32_t size)
+{
+    if(size <= USB_BUFFER_SIZE)
+    {
+        //memcpy(g_hidSendBuf, data, size);
+        USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), data, size);
+        USBD_SET_PAYLOAD_LEN(EP2, size);
+        //  usbSendDirty = 0;
+        return 0;
+    }
+    else
+        return 1;
+}

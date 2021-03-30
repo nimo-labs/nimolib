@@ -26,7 +26,7 @@
 #include "m032/usbd.h"
 #include "m032/vcom_serial.h"
 
-#define usbInit() HID_Init()
+#define usbVcomInit() VCOM_Init()
 
 #endif
 
@@ -37,3 +37,4 @@
  */
 
 void usbSendWait(int ep, uint8_t *data, int size);
+uint8_t vcomSend(uint8_t *data, uint32_t size);

@@ -241,6 +241,5 @@ uint8_t usbSend(uint8_t ep, uint8_t *data, uint32_t size)
     }
     else
         return 1;
-
 }
 /***************************************************************/
