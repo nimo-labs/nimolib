@@ -34,7 +34,7 @@ uint8_t gu8DeviceDescriptor[] =
     0x00, 0x03,     /* bcdDevice */
     0x01,           /* iManufacture */
     0x02,           /* iProduct */
-    0x00,           /* iSerialNumber - no serial */
+    0x03,           /* iSerialNumber - no serial */
     0x01            /* bNumConfigurations */
 };
 
