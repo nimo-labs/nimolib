@@ -96,6 +96,16 @@ void USBD_IRQHandler(void)
             USBD_STOP_TRANSACTION(EP1);
 
             USBD_ProcessSetupPacket();
+            if(g_usbd_SetupPacket[1] == SET_LINE_CODE)
+            {
+                uartTx(PRINTF_UART, 'L');
+                USBD_SetStall(EP0);
+            }
+            if(g_usbd_SetupPacket[1] == SET_CONTROL_LINE_STATE)
+            {
+                uartTx(PRINTF_UART, 'L');
+                USBD_SetStall(EP0);
+            }
         }
 
         /* EP events */
@@ -105,6 +115,25 @@ void USBD_IRQHandler(void)
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP0);
             /* control IN */
             USBD_CtrlIn();
+            uartTx(PRINTF_UART, '0');
+            if(g_usbd_SetupPacket[1] == 0x20)
+            {
+                uartTx(PRINTF_UART, 'L');
+                uartTx(PRINTF_UART, 'C');
+                uartTx(PRINTF_UART, '0');
+                uartTx(PRINTF_UART, '\r');
+                uartTx(PRINTF_UART, '\n');
+                if(g_usbd_SetupPacket[4] == 0)  /* VCOM-1 */
+                {
+                    USBD->ATTR |= USBD_ATTR_LPMACK_Msk;
+                    uartTx(PRINTF_UART, 'L');
+                    uartTx(PRINTF_UART, 'c');
+                    uartTx(PRINTF_UART, '0');
+                    uartTx(PRINTF_UART, '\r');
+                    uartTx(PRINTF_UART, '\n');
+                }
+                //VCOM_LineCoding(0); /* Apply UART settings */
+            }
         }
 
         if (u32IntSts & USBD_INTSTS_EP1)
@@ -115,11 +144,24 @@ void USBD_IRQHandler(void)
             USBD_CtrlOut();
 
             /* In ACK of SET_LINE_CODE */
-            // if(g_usbd_SetupPacket[1] == SET_LINE_CODE)
-            // {
-            //     if(g_usbd_SetupPacket[4] == 0)  /* VCOM-1 */
-            //         VCOM_LineCoding(0); /* Apply UART settings */
-            // }
+            if(g_usbd_SetupPacket[1] == 0x21)
+            {
+                uartTx(PRINTF_UART, 'L');
+                uartTx(PRINTF_UART, 'C');
+                uartTx(PRINTF_UART, '1');
+                uartTx(PRINTF_UART, '\r');
+                uartTx(PRINTF_UART, '\n');
+                if(g_usbd_SetupPacket[4] == 0)  /* VCOM-1 */
+                {
+                    USBD->ATTR |= USBD_ATTR_LPMACK_Msk;
+                    uartTx(PRINTF_UART, 'L');
+                    uartTx(PRINTF_UART, 'c');
+                    uartTx(PRINTF_UART, '1');
+                    uartTx(PRINTF_UART, '\r');
+                    uartTx(PRINTF_UART, '\n');
+                }
+                //VCOM_LineCoding(0); /* Apply UART settings */
+            }
         }
 
         if (u32IntSts & USBD_INTSTS_EP2)
@@ -128,6 +170,7 @@ void USBD_IRQHandler(void)
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP2);
             /* Bulk IN */
             EP2_Handler();
+            printf("EP2\r\n");
         }
 
         if (u32IntSts & USBD_INTSTS_EP3)
@@ -136,30 +179,35 @@ void USBD_IRQHandler(void)
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP3);
             /* Bulk Out */
             EP3_Handler();
+            printf("EP3\r\n");
         }
 
         if (u32IntSts & USBD_INTSTS_EP4)
         {
             /* Clear event flag */
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP4);
+            printf("EP4\r\n");
         }
 
         if (u32IntSts & USBD_INTSTS_EP5)
         {
             /* Clear event flag */
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP5);
+            printf("EP5\r\n");
         }
 
         if (u32IntSts & USBD_INTSTS_EP6)
         {
             /* Clear event flag */
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP6);
+            printf("EP6\r\n");
         }
 
         if (u32IntSts & USBD_INTSTS_EP7)
         {
             /* Clear event flag */
             USBD_CLR_INT_FLAG(USBD_INTSTS_EP7);
+            printf("EP7\r\n");
         }
     }
 }
