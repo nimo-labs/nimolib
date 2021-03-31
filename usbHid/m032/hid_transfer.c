@@ -99,6 +99,10 @@ void USBD_IRQHandler(void)
             USBD_STOP_TRANSACTION(EP1);
 
             USBD_ProcessSetupPacket();
+            if(g_usbd_SetupPacket[1] == 0x0a)
+            {
+                USBD_SetStall(EP0);
+            }
         }
 
         /* EP events */
