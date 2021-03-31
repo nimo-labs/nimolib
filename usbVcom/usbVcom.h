@@ -27,6 +27,7 @@
 #include "m032/vcom_serial.h"
 
 #define usbVcomInit() VCOM_Init()
+#define USB_VCOM 0
 
 #endif
 
