@@ -13,18 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: printf.h
-* Description: Simple printf library
+* File: simpleHid.h
+* Description: ATSAMD USB HID API provider
 */
 
-/* This driver requires PRINTF_UART to be defined in nimolib.h
-*
-* Examples:
-*
-* #define PRINTF_UART UART_CHAN0 directs printf output to UART 0 as defined by the uart driver
-*
-* #define PRINTF_UART USB_VCOM directs printf output to to USB virtual com port driver
-*/
 
-int printf(const char *format, ...);
-void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen);
+#if defined(__SAMR21) || defined(__SAMD21)
+#include <usbHid.h>
+#elif defined(__NUVO_M032K)
+#include "M031Series.h"
+#include <stdint.h>
+#include "m032/usbd.h"
+#include "m032/vcom_serial.h"
+
+#define usbVcomInit() VCOM_Init()
+#define USB_VCOM 0
+
+#endif
+
+/********** Definitions to be provided by nimolib.h *************
+ *
+ * USB_BUFFER_SIZE
+ *
+ */
+
+void usbSendWait(int ep, uint8_t *data, int size);
+uint8_t vcomSend(uint8_t *data, uint32_t size);
