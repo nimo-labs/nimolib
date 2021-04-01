@@ -18,7 +18,9 @@
 */
 
 #if defined(__SAMR21)
-#include "atsamd21.c"
+#include "atsamd21/atsamd21.c"
 #elif defined(__SAMD21)
-#include "atsamd21.c"
+#include "atsamd21/atsamd21.c"
+#elif defined(__NUVO_M032K)
+#include "m032/m032.c"
 #endif

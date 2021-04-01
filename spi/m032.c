@@ -32,6 +32,7 @@ void spiInit(unsigned char channel)
     CLK->APBCLK0 |= CLK_APBCLK0_SPI0CKEN_Msk;
 
     /*Clock UART0 from HIRC*/
+#warning FIX ME!
     CLK->CLKSEL1 |= CLK_CLKSEL2_SPI0_SRC_HIRC << CLK_CLKSEL1_UART0SEL_Pos;
 
 

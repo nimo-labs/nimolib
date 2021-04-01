@@ -926,6 +926,25 @@ typedef struct
 #define CLK_CLKSEL2_SPI0_SRC_PCLK1 2
 #define CLK_CLKSEL2_SPI0_SRC_HIRC 3
 
+#define CLK_CLKSEL2_ADC_SRC_HXT 0
+#define CLK_CLKSEL2_ADC_SRC_PLL 1
+#define CLK_CLKSEL2_ADC_SRC_PCLK1 2
+#define CLK_CLKSEL2_ADC_SRC_HIRC 3
+#define CLK_CLKDIV0_ADC(x)   (((x)-1) << CLK_CLKDIV0_ADCDIV_Pos)    /*!< CLKDIV Setting for ADC clock divider.   It could be 1~256  \hideinitializer */
+
+#define CLK_PCLKDIV_APB0DIV_DIV1 (1 << 0)
+#define CLK_PCLKDIV_APB0DIV_DIV2 (1 << 0)
+#define CLK_PCLKDIV_APB0DIV_DIV4 (1 << 0)
+#define CLK_PCLKDIV_APB0DIV_DIV8 (1 << 0)
+#define CLK_PCLKDIV_APB0DIV_DIV16 (1 << 0)
+
+#define CLK_PCLKDIV_APB1DIV_DIV1 (1 << 4)
+#define CLK_PCLKDIV_APB1DIV_DIV2 (1 << 4)
+#define CLK_PCLKDIV_APB1DIV_DIV4 (1 << 4)
+#define CLK_PCLKDIV_APB1DIV_DIV8 (1 << 4)
+#define CLK_PCLKDIV_APB1DIV_DIV16 (1 << 4)
+
+
 #if defined ( __CC_ARM   )
 #pragma no_anon_unions
 #endif
