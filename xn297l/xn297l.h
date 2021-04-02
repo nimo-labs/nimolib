@@ -24,12 +24,15 @@ void xn297lEnRxMode(void);
 void xn297lReadStatus(void);
 void xn297lSetChannel(uint8_t rfChannel);
 void xn297lSetDataRate(uint8_t dataRate);
+void xn297lSetTxPower(uint8_t power);
+uint8_t xn297lTransmitData(uint8_t *data, uint8_t len);
+int8_t xn297lReceiveData(uint8_t *data, uint8_t bufMaxLen);
 
 /*Commands */
 
 #define XN297L_CMD_READ_REG 0x00
 #define XN297L_CMD_WRITE_REG 0x20
-#define XN297L_CMD_RX_PAYLOAD 0x60
+#define XN297L_CMD_RX_PAYLOAD 0x61
 #define XN297L_CMD_TX_PAYLOAD 0xA0
 
 /*Registers*/
@@ -42,6 +45,8 @@ void xn297lSetDataRate(uint8_t dataRate);
 
 #define XN297L_REG_RFSETUP 0x06
 #define XN297L_REG_STATUS 0x07
+
+#define XN297L_REG_RX_PW_P0 0x11
 
 #define XN297L_REG_DYNPD 0x1C
 #define XN297L_REG_FEATURE 0x1D
