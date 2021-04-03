@@ -14,9 +14,11 @@
 #include <string.h>
 #include "NuMicro.h"
 #include "usbd.h"
-#include "vcom_serial.h"
 
 uint8_t volatile g_u8Suspend = 0;
+static uint8_t txBuf[SIMPLE_VCOM_TX_BUFSIZE];
+static uint32_t txBufHead = 0;
+static uint32_t txBufTail = 0;
 
 /*--------------------------------------------------------------------------*/
 void USBD_IRQHandler(void)
@@ -168,21 +170,58 @@ void USBD_IRQHandler(void)
 
 void EP2_Handler(void)
 {
-    gu32TxSize = 0;
+    /*TX handler*/
+    if(txBufHead != txBufTail)
+        usbTriggerSend();
 }
 
 
 void EP3_Handler(void)
 {
-    /* Bulk OUT */
-    gu32RxSize = USBD_GET_PAYLOAD_LEN(EP3);
-    gpu8RxBuf = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP3));
-
-    /* Set a flag to indicate bulk out ready */
-    gi8BulkOutReady = 1;
+    /* RX Handler */
 }
 
+void usbTriggerSend(void)
+{
+    uint8_t sendDataSize=0;
 
+    if(txBufHead != txBufTail)
+    {
+        if((txBufHead > txBufTail /*txBufHead hasn't wrapped yet*/))
+        {
+            sendDataSize = txBufHead-txBufTail;
+            USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), &txBuf[txBufTail], sendDataSize);
+            txBufTail+=sendDataSize;
+        }
+        else if((SIMPLE_VCOM_TX_BUFSIZE - txBufTail) >= 64) /*txBufHead has wrapped, but txBufTail is > 64 bytes from end of buf*/
+        {
+            sendDataSize = 64;
+            USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), &txBuf[txBufTail], sendDataSize);
+            txBufTail+=sendDataSize;
+        }
+        else /*txBufHead has wrapped, but txBufTail is <= 64 bytes from end of buf*/
+        {
+            sendDataSize = SIMPLE_VCOM_TX_BUFSIZE - txBufTail;
+            USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), &txBuf[txBufTail], sendDataSize);
+            txBufTail=0;
+            // if(txBufHead <= (64-sendDataSize)) /*Unsent data <= 64 bytes*/
+            // {
+            //     USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], txBufHead);
+            //     txBufTail+=txBufHead;
+            //     sendDataSize += txBufHead;
+            // }
+            // else /*Unsent data > 64 bytes*/
+            // {
+            //     USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], 64-sendDataSize);
+            //     txBufTail+=64-sendDataSize;
+            //     sendDataSize =64;
+            // }
+        }
+
+
+        USBD_SET_PAYLOAD_LEN(EP2, sendDataSize);
+    }
+}
 
 
 /*--------------------------------------------------------------------------*/
@@ -325,10 +364,26 @@ uint8_t vcomSend(uint8_t *data, uint32_t size)
 {
     if(size <= USB_BUFFER_SIZE)
     {
-        //memcpy(g_hidSendBuf, data, size);
-        USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), data, size);
-        USBD_SET_PAYLOAD_LEN(EP2, size);
-        //  usbSendDirty = 0;
+        if((SIMPLE_VCOM_TX_BUFSIZE - txBufHead) >= size)
+        {
+            /*New data fits in buffer without wrapping*/
+            memcpy(&txBuf[txBufHead], data, size);
+            txBufHead+= size;
+            if(txBufHead >= SIMPLE_VCOM_TX_BUFSIZE)
+                txBufHead=0;
+        }
+        else
+        {
+            /*Fill buffer then wrap to accept remaining data*/
+            uint16_t spaceLeft = (SIMPLE_VCOM_TX_BUFSIZE- txBufHead);
+            memcpy(&txBuf[txBufHead], data, spaceLeft);
+            txBufHead=0;
+            memcpy(&txBuf[txBufHead], &data[spaceLeft], size-spaceLeft);
+            txBufHead= size-spaceLeft;
+        }
+        usbTriggerSend();
+        //   USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), data, size);
+        //   USBD_SET_PAYLOAD_LEN(EP2, size);
         return 0;
     }
     else
