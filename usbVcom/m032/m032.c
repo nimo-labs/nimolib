@@ -209,18 +209,18 @@ void usbTriggerSend(void)
                 sendDataSize = SIMPLE_VCOM_TX_BUFSIZE - txBufTail;
                 USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), &txBuf[txBufTail], sendDataSize);
                 txBufTail=0;
-                // if(txBufHead <= (64-sendDataSize)) /*Unsent data <= 64 bytes*/
-                // {
-                //     USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], txBufHead);
-                //     txBufTail+=txBufHead;
-                //     sendDataSize += txBufHead;
-                // }
-                // else /*Unsent data > 64 bytes*/
-                // {
-                //     USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], 64-sendDataSize);
-                //     txBufTail+=64-sendDataSize;
-                //     sendDataSize =64;
-                // }
+                if(txBufHead <= (64-sendDataSize)) /*Unsent data <= 64 bytes*/
+                {
+                    USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], txBufHead);
+                    txBufTail+=txBufHead;
+                    sendDataSize += txBufHead;
+                }
+                else /*Unsent data > 64 bytes*/
+                {
+                    USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], 64-sendDataSize);
+                    txBufTail+=64-sendDataSize;
+                    sendDataSize =64;
+                }
             }
             USBD_SET_PAYLOAD_LEN(EP2, sendDataSize);
             txLock=1;
