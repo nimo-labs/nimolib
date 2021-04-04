@@ -16,10 +16,12 @@
         "-fno-diagnostics-show-caret",
         "-fdata-sections -ffunction-sections",
         "-funsigned-char -funsigned-bitfields",
-        "-mcpu=cortex-m0plus -mthumb"
+        "-mcpu=cortex-m0plus -mthumb",
+        "-specs=nano.specs -specs=nosys.specs"
     ],
     "ldflags": [
         "-mcpu=cortex-m0plus -mthumb",
-        "-Wl,--gc-sections"
+        "-Wl,--gc-sections",
+        "-specs=nano.specs -specs=nosys.specs"
     ]
 }
