@@ -21,8 +21,6 @@
 #include <nimolib.h>
 #include <printf.h>
 
-#include "adc.h"
-
 unsigned char adcOffset = 190; /*ADC single ended offset*/
 
 /** \brief returns the value of the requested ADC channel

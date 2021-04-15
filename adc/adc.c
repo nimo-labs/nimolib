@@ -17,6 +17,8 @@
 * Description: ADC API provider
 */
 
+#include "adc.h"
+
 #if defined(__SAMR21)
 #include "atsamd21/atsamd21.c"
 #elif defined(__SAMD21)
