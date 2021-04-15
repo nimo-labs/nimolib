@@ -41,6 +41,9 @@ int printf(const char *format, ...)
     va_end(aptr);
     if ((unsigned int)ret > sizeof(tbuff) - 1)
     {
+#if USB_VCOM == PRINTF_UART
+        vcomSend("PRINTF_BUFF Too Small\r\n",23);
+#else
         uartTx(PRINTF_UART, 'P');
         uartTx(PRINTF_UART, 'R');
         uartTx(PRINTF_UART, 'I');
@@ -64,15 +67,20 @@ int printf(const char *format, ...)
         uartTx(PRINTF_UART, 'l');
         uartTx(PRINTF_UART, '\r');
         uartTx(PRINTF_UART, '\n');
+#endif
     }
     else
     {
+#if USB_VCOM == PRINTF_UART
+        vcomSend(tbuff,ret);
+#else
         for (unsigned int i = 0; i < sizeof(tbuff); i++)
         {
             if (!tbuff[i])
                 break;
             uartTx(PRINTF_UART, tbuff[i]);
         }
+#endif
     }
 #endif
 #if (PRINTF_BUFF_SIZE > 0)
@@ -99,7 +107,12 @@ void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen)
 #if (PRINTF_BUFF_SIZE > 0)
 void *_sbrk(int32_t incr)
 {
+#if defined(__NUVO_M032K)
+    extern char StackTop;
+    char _stack_top = StackTop;
+#else
     extern char _stack_top; /* Set by linker.  */
+#endif
     static char *heap_end;
     char *prev_heap_end;
     if (heap_end == 0)

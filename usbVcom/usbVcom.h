@@ -13,33 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: spi.c
-* Description: ATSAMD21 SPI API provider
+* File: simpleHid.h
+* Description: ATSAMD USB HID API provider
 */
 
 
-//#include <system.h>
-#include <nimolib.h>
-#include "spi.h"
-
-#if defined(__SAMR21)
-#include <sam.h>
-#if defined(SPI_USE_BB)
-#include "samSpiBB.c"
-#else
-#include "spi_samd.c"
-#endif
-#elif defined(__SAMD21)
-#include <sam.h>
-#if defined(SPI_USE_BB)
-#include "samSpiBB.c"
-#else
-#include "spi_samd.c"
-#endif
+#if defined(__SAMR21) || defined(__SAMD21)
+#include <usbHid.h>
 #elif defined(__NUVO_M032K)
-#include "NuMicro.h"
-#include "m032.c"
-#else
-#include "i2c_xmega.c"
+#include "M031Series.h"
+#include <stdint.h>
+#include "m032/usbd.h"
+#include "m032/m032.h"
+
+#define usbVcomInit() VCOM_Init()
+#define USB_VCOM 0
 
 #endif
+
+/********** Definitions to be provided by nimolib.h *************
+ *
+ * USB_BUFFER_SIZE
+ *
+ */
+
+void usbSendWait(int ep, uint8_t *data, int size);
+uint8_t vcomSend(uint8_t *data, uint32_t size);

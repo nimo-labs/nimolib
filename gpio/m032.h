@@ -19,6 +19,14 @@
 
 #include "M031Series.h"
 
+#define PORTA PA
+#define PORTB PB
+#define PORTC PC
+#define PORTD PD
+#define PORTE PE
+#define PORTF PF
+#define PORTG PG
+
 #define GPIO_PIN_DIR(lPORT, PIN, lDIR)                     \
 	if (GPIO_DIR_OUT == lDIR)                              \
 	{													\
@@ -34,4 +42,4 @@
 	else                                            \
 		lPORT->DOUT &= ~(1 << PIN);
 #define GPIO_PIN_TGL(lPORT, PIN) (lPORT->DOUT ^= (1 << PIN))
-//#define GPIO_PIN_READ(lPORT, PIN) (PORT->Group[lPORT].IN.reg & (1 << PIN))
+#define GPIO_PIN_READ(lPORT, lPIN) ((lPORT->PIN >> lPIN) & 0x1)

@@ -49,3 +49,12 @@ unsigned char delayMillis(unsigned long last, unsigned long target)
     else
         return 0;
 }
+
+void delayMs(unsigned int delay)
+{
+    unsigned long ticks;
+
+    ticks = delayGetTicks();
+    while (delayGetDiff(ticks, delayGetTicks()) < delay)
+        ;
+}

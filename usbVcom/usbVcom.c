@@ -13,33 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: spi.c
-* Description: ATSAMD21 SPI API provider
+* File: simpleHid.c
+* Description: USB HID API provider
 */
-
-
-//#include <system.h>
 #include <nimolib.h>
-#include "spi.h"
+#include <stdint.h>
 
-#if defined(__SAMR21)
-#include <sam.h>
-#if defined(SPI_USE_BB)
-#include "samSpiBB.c"
-#else
-#include "spi_samd.c"
-#endif
-#elif defined(__SAMD21)
-#include <sam.h>
-#if defined(SPI_USE_BB)
-#include "samSpiBB.c"
-#else
-#include "spi_samd.c"
-#endif
+#if defined(__SAMR21) || defined(__SAMD21)
+#include "sam.h"
+#include "atsamd21/usb_descriptors.c"
+#include "atsamd21/usb_std.c"
+#include "atsamd21/usb_hid.c"
 #elif defined(__NUVO_M032K)
-#include "NuMicro.h"
-#include "m032.c"
-#else
-#include "i2c_xmega.c"
+#include "M031Series.h"
 
+#include <string.h>
+#include <stdio.h>
+#include "NuMicro.h"
+#include "m032/m032.h"
+#include "m032/usbd.h"
+#include "m032/usbd.c"
+#include "m032/descriptors.c"
+#include "m032/m032.c"
 #endif
+
+//-----------------------------------------------------------------------------
+

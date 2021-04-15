@@ -2,18 +2,6 @@
 	"book": "usbHid",
 	"files": [
 		{
-			"fileName": "usbHid.c",
-			"language": "c"
-		},
-		{
-			"fileName": "usb_descriptors.c",
-			"language": "c"
-		},
-		{
-			"fileName": "usb_std.c",
-			"language": "c"
-		},
-		{
 			"fileName": "simpleHid.c",
 			"language": "c"
 		}
