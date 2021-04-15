@@ -155,7 +155,7 @@ void i2cInit(unsigned char channel, unsigned int baudRate)
 
 //     while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
 //     {
-//         if (delayMicros(delayLast, 1000))
+//         if (delayMillis(delayLast, 1000))
 //         {
 //             SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 //             printf("I2C timeout\r\n");
@@ -201,7 +201,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
         delayLast = delayGetTicks();
         while (0 == (SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
         {
-            if (delayMicros(delayLast, 1000))
+            if (delayMillis(delayLast, 1000))
             {
                 SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                 printf("I2C timeout\r\n");
@@ -225,7 +225,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
             delayLast = delayGetTicks();
             while (0 == (SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
             {
-                if (delayMicros(delayLast, 1000))
+                if (delayMillis(delayLast, 1000))
                 {
                     SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                     printf("I2C timeout\r\n");
@@ -253,7 +253,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
         delayLast = delayGetTicks();
         while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
         {
-            if (delayMicros(delayLast, 1000))
+            if (delayMillis(delayLast, 1000))
             {
                 SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                 printf("I2C timeout\r\n");
@@ -277,7 +277,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
             delayLast = delayGetTicks();
             while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_MB))
             {
-                if (delayMicros(delayLast, 1000))
+                if (delayMillis(delayLast, 1000))
                 {
                     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                     printf("I2C timeout\r\n");
@@ -317,7 +317,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
         delayLast = delayGetTicks();
         while (0 == (SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB))
         {
-            if (delayMicros(delayLast, 4000))
+            if (delayMillis(delayLast, 4000))
             {
                 SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                 printf("I2C read timeout\r\n");
@@ -342,7 +342,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
             delayLast = delayGetTicks();
             while (0 == (SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB))
             {
-                if (delayMicros(delayLast, 4000))
+                if (delayMillis(delayLast, 4000))
                 {
                     SERCOM_PTR(I2C_CHAN0_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                     printf("I2C read timeout\r\n");
@@ -371,7 +371,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
         delayLast = delayGetTicks();
         while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB))
         {
-            if (delayMicros(delayLast, 4000))
+            if (delayMillis(delayLast, 4000))
             {
                 SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                 printf("I2C read timeout\r\n");
@@ -396,7 +396,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
             delayLast = delayGetTicks();
             while (0 == (SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB))
             {
-                if (delayMicros(delayLast, 4000))
+                if (delayMillis(delayLast, 4000))
                 {
                     SERCOM_PTR(I2C_CHAN1_SERCOM)->I2CM.CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
                     printf("I2C read timeout\r\n");
