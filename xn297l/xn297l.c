@@ -29,10 +29,7 @@
  *
  *Basic setup of the chip involves the following:
  *\code
- * at86rf23xInit();
- * at86rf23xSetChannel(radioChan);
- * at86rf23xSetPanId(1);
- * at86rf23xSetAddr(1);
+
  *\endcode
  */
 
@@ -167,7 +164,7 @@ uint8_t xn297lTransmitData(uint8_t *data, uint8_t len)
         if(statusReg & (1 << 5))
         {
             // TX_DATA_SENT
-            printf("data sent\r\n");
+            // printf("data sent\r\n");
             // clear TX_DATA_SENT (write 1 to clear)
             statusReg |= (1 << 5);
             xn297lWriteReg(XN297L_REG_STATUS, statusReg);
