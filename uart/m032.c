@@ -52,16 +52,15 @@ void uartInit(unsigned char uart, uint32_t baud)
 //#ifdef UART_CHAN0
     case UART_CHAN0:
 
-        /* Get UART clock source selection */
-        u32UartClkSrcSel = ((uint32_t)(CLK->CLKSEL1 & CLK_CLKSEL1_UART0SEL_Msk)) >> CLK_CLKSEL1_UART0SEL_Pos;
-        /* Get UART clock divider number */
-        u32UartClkDivNum = (CLK->CLKDIV0 & CLK_CLKDIV0_UART0DIV_Msk) >> CLK_CLKDIV0_UART0DIV_Pos;
+        /*Clock UART0 from HIRC*/
+        CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | (7 << CLK_CLKSEL0_HCLKSEL_Pos);
+        CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | (0 << CLK_CLKDIV0_HCLKDIV_Pos);
 
         /*Enable UART0 CLK*/
         CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
 
-        /*Clock UART0 from HIRC*/
-        CLK->CLKSEL1 |= CLK_CLKSEL1_UART0_SRC_PCLK0 << CLK_CLKSEL1_UART0SEL_Pos;
+        CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART0SEL_Msk)) | (3 << CLK_CLKSEL1_UART0SEL_Pos);
+        CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_UART0DIV_Msk)) | (0 <<CLK_CLKDIV0_UART0DIV_Pos);
 
         /* Set PB multi-function pins for UART0 RXD=PB.12 and TXD=PB.13 */
         SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk)) |
@@ -80,20 +79,7 @@ void uartInit(unsigned char uart, uint32_t baud)
         /* Set UART Rx and RTS trigger level to 1 byte*/
         SERCOM_PTR(UART_CHAN0_SERCOM)->FIFO &= ~(UART_FIFO_RFITL_Msk | UART_FIFO_RTSTRGLV_Msk);
 
-        /* Set UART baud rate */
-        if (baud != 0ul)
-        {
-            u32Baud_Div = UART_BAUD_MODE2_DIVIDER(UP_CLK / (0 + 1ul), baudDef[baud]);
-
-            if (u32Baud_Div > 0xFFFFul)
-            {
-                SERCOM_PTR(UART_CHAN0_SERCOM)->BAUD = (UART_BAUD_MODE0 | UART_BAUD_MODE0_DIVIDER((u32ClkTbl[u32UartClkSrcSel]) / (u32UartClkDivNum + 1ul), baud));
-            }
-            else
-            {
-                SERCOM_PTR(UART_CHAN0_SERCOM)->BAUD = (UART_BAUD_MODE2 | u32Baud_Div);
-            }
-        }
+        UART0->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, baudDef[baud]);
 
         /*Enable RX interrupt*/
         NVIC_EnableIRQ(UART02_IRQn);
