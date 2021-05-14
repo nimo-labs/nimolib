@@ -22,8 +22,15 @@
 #include <stdarg.h>
 
 #include <nimolib.h>
+
+#include "printf.h"
+
 #if (PRINTF_BUFF_SIZE > 0)
 #include <uart.h>
+#endif
+
+#if PRINTF_USB_VCOM == PRINTF_UART
+#include <usbVcom.h>
 #endif
 
 #if (PRINTF_BUFF_SIZE == 0)
@@ -41,8 +48,8 @@ int printf(const char *format, ...)
     va_end(aptr);
     if ((unsigned int)ret > sizeof(tbuff) - 1)
     {
-#if USB_VCOM == PRINTF_UART
-        vcomSend("PRINTF_BUFF Too Small\r\n",23);
+#if PRINTF_USB_VCOM == PRINTF_UART
+        vcomSend((uint8_t*)"PRINTF_BUFF Too Small\r\n",23);
 #else
         uartTx(PRINTF_UART, 'P');
         uartTx(PRINTF_UART, 'R');
@@ -71,8 +78,8 @@ int printf(const char *format, ...)
     }
     else
     {
-#if USB_VCOM == PRINTF_UART
-        vcomSend(tbuff,ret);
+#if PRINTF_USB_VCOM == PRINTF_UART
+        vcomSend((uint8_t*)tbuff,ret);
 #else
         for (unsigned int i = 0; i < sizeof(tbuff); i++)
         {

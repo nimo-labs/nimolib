@@ -11,6 +11,9 @@
  *****************************************************************************/
 /*!<Includes */
 
+/* These must be defined by the application */
+extern uint8_t gu8VendorStringDesc[];
+extern uint8_t gu8ProductStringDesc[];
 
 /*!<USB HID Report Descriptor */
 uint8_t HID_DeviceReportDescriptor[] =
@@ -125,21 +128,6 @@ uint8_t gu8StringLang[4] =
     0x09, 0x04
 };
 
-/*!<USB Vendor String Descriptor */
-uint8_t gu8VendorStringDesc[] =
-{
-    16,
-    DESC_STRING,
-    'N', 0, 'u', 0, 'v', 0, 'o', 0, 't', 0, 'o', 0, 'n', 0
-};
-
-/*!<USB Product String Descriptor */
-uint8_t gu8ProductStringDesc[] =
-{
-    26,             /* bLength          */
-    DESC_STRING,    /* bDescriptorType  */
-    'H', 0, 'I', 0, 'D', 0, ' ', 0, 'T', 0, 'r', 0, 'a', 0, 'n', 0, 's', 0, 'f', 0, 'e', 0, 'r', 0
-};
 
 /*!<USB Product String Descriptor */
 uint8_t gu8SerialNumStringDesc[] =

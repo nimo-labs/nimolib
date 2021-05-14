@@ -21,6 +21,8 @@ static volatile uint32_t txBufHead = 0;
 static volatile uint32_t txBufTail = 0;
 static volatile uint8_t txLock=0;
 
+void usbTriggerSend(void);
+
 /*--------------------------------------------------------------------------*/
 void USBD_IRQHandler(void)
 {

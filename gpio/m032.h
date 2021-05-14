@@ -19,13 +19,13 @@
 
 #include "M031Series.h"
 
-#define PORTA PA
-#define PORTB PB
-#define PORTC PC
-#define PORTD PD
-#define PORTE PE
-#define PORTF PF
-#define PORTG PG
+#define GPIO_PORTA PA
+#define GPIO_PORTB PB
+#define GPIO_PORTC PC
+#define GPIO_PORTD PD
+#define GPIO_PORTE PE
+#define GPIO_PORTF PF
+#define GPIO_PORTG PG
 
 #define GPIO_PIN_DIR(lPORT, PIN, lDIR)                     \
 	if (GPIO_DIR_OUT == lDIR)                              \

@@ -26,5 +26,7 @@
 * #define PRINTF_UART USB_VCOM directs printf output to to USB virtual com port driver
 */
 
+#define PRINTF_USB_VCOM 99
+
 int printf(const char *format, ...);
 void printfOutputHex(char *marker, unsigned char *data, unsigned char dataLen);
