@@ -8,8 +8,5 @@
 	],
 	"cflags": [
 		"-fno-builtin-printf"
-	],
-	"ldflags": [
-		"--specs=nano.specs"
 	]
 }
