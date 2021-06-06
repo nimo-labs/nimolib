@@ -17,14 +17,6 @@
 * Description: NMEA GPS decoding library
 */
 
-//remove from here
-#include <sam.h>
-#include <nimolib.h>
-#include <printf.h>
-#include <uart.h>
-
-// to here
-
 #include <string.h>
 #include "nmeaDecode.h"
 #include "nmeaDefines.h"
@@ -114,6 +106,8 @@ unsigned char nmeaDecode(struct s_nmeaDecode *view, unsigned char data)
                 if (token)
                     view->qual = *token;
                 token = nimotok(NULL, ','); /*Get num sat*/
+                if(token)
+                    view->numSats = *token;
                 token = nimotok(NULL, ','); /*Get HDOP*/
                 token = nimotok(NULL, ','); /*Get Alt*/
                 if (token)
