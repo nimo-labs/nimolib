@@ -45,10 +45,10 @@ void spiInit(unsigned char channel)
                                        SYS_GPA_MFPL_PA2MFP_Msk |
                                        SYS_GPA_MFPL_PA1MFP_Msk |
                                        SYS_GPA_MFPL_PA0MFP_Msk)) |
-                    (SYS_GPA_MFPL_PA3MFP_SPI0_SS |
-                     SYS_GPA_MFPL_PA2MFP_SPI0_CLK |
-                     SYS_GPA_MFPL_PA1MFP_SPI0_MISO |
-                     SYS_GPA_MFPL_PA0MFP_SPI0_MOSI);
+                    (
+                        SYS_GPA_MFPL_PA2MFP_SPI0_CLK |
+                        SYS_GPA_MFPL_PA1MFP_SPI0_MISO |
+                        SYS_GPA_MFPL_PA0MFP_SPI0_MOSI);
 
     /* Disable I2S mode */
     SPI0->I2SCTL &= ~SPI_I2SCTL_I2SEN_Msk;
@@ -88,6 +88,6 @@ unsigned char spiRxByte(unsigned char channel)
         printf("spiRxByte: Incorrect channel selected!");
         return;
     }
-    spiTxByte(channel, 0x00);
+    spiTxByte(channel, 0xFF);
     return rxData;
 }
