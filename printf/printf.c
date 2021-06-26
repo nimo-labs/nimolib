@@ -33,6 +33,10 @@
 #include <usbVcom.h>
 #endif
 
+#if PRINTF_USB_HID == PRINTF_UART
+#include <simpleHid.h>
+#endif
+
 #if (PRINTF_BUFF_SIZE == 0)
 int printf(__attribute__((unused)) const char *format, ...)
 {
@@ -50,6 +54,8 @@ int printf(const char *format, ...)
     {
 #if PRINTF_USB_VCOM == PRINTF_UART
         vcomSend((uint8_t*)"PRINTF_BUFF Too Small\r\n",23);
+#elif PRINTF_USB_HID == PRINTF_UART
+        usbSend(EP_INPUT, (uint8_t*)"PRINTF_BUFF Too Small\r\n",23);
 #else
         uartTx(PRINTF_UART, 'P');
         uartTx(PRINTF_UART, 'R');
@@ -80,6 +86,8 @@ int printf(const char *format, ...)
     {
 #if PRINTF_USB_VCOM == PRINTF_UART
         vcomSend((uint8_t*)tbuff,ret);
+#elif PRINTF_USB_HID == PRINTF_UART
+        usbSend(EP_INPUT,(uint8_t*)tbuff,ret);
 #else
         for (unsigned int i = 0; i < sizeof(tbuff); i++)
         {
