@@ -2,7 +2,7 @@
 MEMORY
 {
   FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 0x3000   /* 12k */
-  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x8000    /* 64k  */
+  RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 0x8000 - 0x0004   /* 32k - 4bytes for App -> Bootloader communication*/
 }
 
 /* Library configurations */
@@ -154,7 +154,7 @@ SECTIONS
 		. = ALIGN(4);
 		/* All data end */
 		__data_end__ = .;
-
+		PROVIDE(BOOT_MAGIC_ADDRESS = __StackTop + 1);
 	} > RAM
 
 	.bss :
@@ -189,6 +189,7 @@ SECTIONS
 	__StackTop = ORIGIN(RAM) + LENGTH(RAM);
 	__StackLimit = __StackTop - SIZEOF(.stack_dummy);
 	PROVIDE(__stack = __StackTop);
+	PROVIDE (BOOT_MAGIC_ADDRESS = ORIGIN(RAM) + LENGTH(RAM));
 
 	/* Check if data + heap + stack exceeds RAM limit */
 	ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")
