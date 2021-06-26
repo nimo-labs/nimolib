@@ -154,7 +154,6 @@ SECTIONS
 		. = ALIGN(4);
 		/* All data end */
 		__data_end__ = .;
-		PROVIDE(BOOT_MAGIC_ADDRESS = __StackTop + 1);
 	} > RAM
 
 	.bss :
