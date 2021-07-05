@@ -269,7 +269,7 @@ void usb_set_address(int address)
 }
 
 //-----------------------------------------------------------------------------
-void usb_send(int ep, uint8_t *data, int size)
+void usbSend(int ep, uint8_t *data, int size)
 {
     udc_mem[ep].in.ADDR.reg = (uint32_t)data;
     udc_mem[ep].in.PCKSIZE.bit.BYTE_COUNT = size;
