@@ -19,7 +19,7 @@
 
 
 #if defined(__SAMR21) || defined(__SAMD21)
-#include <usbHid.h>
+#include <atsamd21/usbHid.h>
 #elif defined(__NUVO_M032K)
 #include "M031Series.h"
 #include <stdint.h>
