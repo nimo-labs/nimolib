@@ -20,6 +20,10 @@
 #define SPI_CHAN0 0
 #define SPI_CHAN1 1
 
+#ifndef SPI_PADDING_BYTE
+#define SPI_PADDING_BYTE 0x00
+#endif
+
 void spiInit(unsigned char channel);
 void spiTxByte(unsigned char channel, unsigned char byte);
 unsigned char spiRxByte(unsigned char channel);
