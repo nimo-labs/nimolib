@@ -163,6 +163,6 @@ void spiTxByte(unsigned char channel, unsigned char byte)
 
 unsigned char spiRxByte(unsigned char channel)
 {
-    spiTxByte(channel, 0x00); /*Write dummy byte*/
+    spiTxByte(channel, SPI_PADDING_BYTE); /*Write dummy byte*/
     return rxByte;
 }
