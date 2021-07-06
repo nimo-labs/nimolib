@@ -19,6 +19,11 @@
 #ifndef at86rf23xH
 #define at86rf23xH
 
+#if 0xFF != SPI_PADDING_BYTE
+#error "spiSdCard requires #define SPI_PADDING_BYTE 0xFF in nimolib.h"
+#endif
+
+
 #define SD_CARD_CMD0 0x40 + 0
 #define SD_CARD_CMD8 0x40 + 8
 #define SD_CARD_CMD16 0x40 + 16
