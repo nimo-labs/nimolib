@@ -21,13 +21,13 @@
 
 extern void usbHidProcess(uint8_t *req); /*This MUST be provided by the application*/
 volatile unsigned char usbSendDirty = 0;
-//static uint8_t app_request_buffer[USB_BUFFER_SIZE];
+static uint8_t app_request_buffer[USB_BUFFER_SIZE];
 
 #if defined(__SAMR21) || defined(__SAMD21)
 #include "sam.h"
 #include "atsamd21/usb_descriptors.c"
 #include "atsamd21/usb_std.c"
-#include "atsamd21/usb_hid.c"
+#include "atsamd21/usbHid.c"
 #elif defined(__NUVO_M032K)
 #include "M031Series.h"
 
