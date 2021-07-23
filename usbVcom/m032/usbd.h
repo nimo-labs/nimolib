@@ -567,7 +567,7 @@ void USBD_LockEpStall(uint32_t u32EpBitmap);
 
 
 
-void USBD_MemCopy(uint8_t dest[], uint8_t src[], uint32_t size);
+void USBD_MemCopy(uint8_t dest[], volatile uint8_t src[], uint32_t size);
 void USBD_SetStall(uint8_t epnum);
 void USBD_ClearStall(uint8_t epnum);
 uint32_t USBD_GetStall(uint8_t epnum);

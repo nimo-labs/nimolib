@@ -720,7 +720,7 @@ void USBD_LockEpStall(uint32_t u32EpBitmap)
   * @details    This function will copy the number of data specified by size and src parameters to the address specified by dest parameter.
   *
   */
-void USBD_MemCopy(uint8_t dest[], uint8_t src[], uint32_t size)
+void USBD_MemCopy(uint8_t dest[], volatile uint8_t src[], uint32_t size)
 {
     uint32_t volatile i=0ul;
 

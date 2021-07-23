@@ -22,6 +22,7 @@ static volatile uint32_t txBufTail = 0;
 static volatile uint8_t txLock=0;
 
 void usbTriggerSend(void);
+__attribute__((weak)) void vcomRecv(uint8_t *data, uint32_t size);
 
 /*--------------------------------------------------------------------------*/
 void USBD_IRQHandler(void)
@@ -181,7 +182,11 @@ void EP2_Handler(void)
 
 void EP3_Handler(void)
 {
+    uint32_t u32RxSize = USBD_GET_PAYLOAD_LEN(EP3);
+    uint8_t * pu8RxBuf = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP3));
     /* RX Handler */
+    vcomRecv(pu8RxBuf, u32RxSize);
+    USBD_SET_PAYLOAD_LEN(EP3, EP3_MAX_PKT_SIZE);
 }
 
 void usbTriggerSend(void)
@@ -365,7 +370,10 @@ void VCOM_ClassRequest(void)
     }
 }
 
+__attribute__((weak)) void vcomRecv(uint8_t *data, uint32_t size)
+{
 
+}
 
 uint8_t vcomSend(uint8_t *data, uint32_t size)
 {
