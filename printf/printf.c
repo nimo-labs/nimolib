@@ -26,15 +26,15 @@
 #include "printf.h"
 
 #if (PRINTF_BUFF_SIZE > 0)
-#include <uart.h>
+
 #endif
 
 #if PRINTF_USB_VCOM == PRINTF_UART
 #include <usbVcom.h>
-#endif
-
-#if PRINTF_USB_HID == PRINTF_UART
+#elif PRINTF_USB_HID == PRINTF_UART
 #include <simpleHid.h>
+#else
+#include <uart.h>
 #endif
 
 #if (PRINTF_BUFF_SIZE == 0)
