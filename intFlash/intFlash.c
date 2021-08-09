@@ -22,4 +22,6 @@
 
 #if defined(__NUVO_M032K)
 #include "m032/m032.c"
+#elif defined(__SAMR21) || defined(__SAMD21)
+#include "atsamd21/atsamd21.c"
 #endif
