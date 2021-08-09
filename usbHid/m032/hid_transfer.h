@@ -13,8 +13,13 @@
 #define __USBD_HID_H__
 
 /* Define the vendor id and product id */
-#define USBD_VID        0x0416
-#define USBD_PID        0x5020
+#ifndef USB_VID
+#error USB_VID must be defined in nimolib.h
+#endif
+
+#ifndef USB_PID
+#error USB_PID must be defined in nimolib.h
+#endif
 
 /*!<Define HID Class Specific Request */
 #define GET_REPORT          0x01
