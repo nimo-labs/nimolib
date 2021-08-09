@@ -36,4 +36,5 @@
  *
  */
 
-void usbSendWait(int ep, uint8_t *data, int size);
+void usbSend(uint8_t *data, int size);
+void usbSendWait(uint8_t *data, int size);

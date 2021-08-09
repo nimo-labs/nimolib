@@ -53,7 +53,7 @@ int usb_endpoint_get_status(int ep, int dir);
 void usb_endpoint_set_feature(int ep, int dir);
 void usb_endpoint_clear_feature(int ep, int dir);
 void usb_set_address(int address);
-void usbSend(int ep, uint8_t *data, int size);
+void usb_send(int ep, uint8_t *data, int size);
 void usb_recv(int ep, uint8_t *data, int size);
 void usb_control_send_zlp(void);
 void usb_control_stall(void);

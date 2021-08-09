@@ -28,6 +28,9 @@ static uint8_t app_request_buffer[USB_BUFFER_SIZE];
 #include "atsamd21/usb_descriptors.c"
 #include "atsamd21/usb_std.c"
 #include "atsamd21/usbHid.c"
+
+#define SIMPLEHID_EP_TO_HOST USB_IN_ENDPOINT
+#define SIMPLEHID_EP_FROM_HOST USB_OUT_ENDPOINT
 #elif defined(__NUVO_M032K)
 #include "M031Series.h"
 
@@ -40,13 +43,21 @@ static uint8_t app_request_buffer[USB_BUFFER_SIZE];
 #include "m032/descriptors.c"
 #include "m032/hid_transfer.c"
 
+#define SIMPLEHID_EP_TO_HOST EP_INPUT
+#define SIMPLEHID_EP_FROM_HOST EP_OUTPUT
+
 #endif
 
 //-----------------------------------------------------------------------------
 
-void usbSendWait(int ep, uint8_t *data, int size)
+void usbSend(uint8_t *data, int size)
 {
-    usbSend(ep, data, size);
+    usb_send(SIMPLEHID_EP_TO_HOST, data, size);
+}
+
+void usbSendWait(uint8_t *data, int size)
+{
+    usb_send(SIMPLEHID_EP_TO_HOST, data, size);
     usbSendDirty = 1;
 
 #if defined(__SAMR21) || defined(__SAMD21)
@@ -66,7 +77,7 @@ __attribute__((weak)) void usbHidProcess(uint8_t *req)
 #if defined(__SAMR21) || defined(__SAMD21)
 __attribute__((weak)) void usb_configuration_callback(int config)
 {
-    usb_recv(INT_IN_EP_NUM, app_request_buffer, sizeof(app_request_buffer));
+    usb_recv(USB_IN_ENDPOINT, app_request_buffer, sizeof(app_request_buffer));
     (void)config;
 }
 
@@ -78,9 +89,9 @@ __attribute__((weak)) void usb_send_callback(int ep)
 
 __attribute__((weak)) void usb_recv_callback(int ep)
 {
-    if (INT_IN_EP_NUM == ep)
+    if (USB_IN_ENDPOINT == ep)
     {
-        usb_recv(INT_IN_EP_NUM, app_request_buffer, sizeof(app_request_buffer));
+        usb_recv(USB_IN_ENDPOINT, app_request_buffer, sizeof(app_request_buffer));
         usbHidProcess(app_request_buffer);
     }
 }
