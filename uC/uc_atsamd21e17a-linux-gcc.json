@@ -2,7 +2,9 @@
 	"microcontroller": "atsamd21e17a",
 	"ucFamily": "atsamd",
 	"linkerFile": "./umake/nimolib/uC/sam/linker/samd21e17a.ld",
-	"startupFile": "umake/nimolib/uC/sam/samd21/startup_samd21.c",
+	"supportFiles": [
+		"umake/nimolib/uC/sam/samd21/startup_samd21.c"
+	],
 	"defines": [
 		"__SAMD21",
 		"__ATSAMD21E18A__",
