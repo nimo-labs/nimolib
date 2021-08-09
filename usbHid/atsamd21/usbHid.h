@@ -64,4 +64,7 @@ void usb_configuration_callback(int config);
 void usb_recv_callback(int ep);
 void usb_send_callback(int ep);
 
+#define USB_EP_SEND           1
+#define USB_EP_RECV           2
+
 #endif // _USB_H_
