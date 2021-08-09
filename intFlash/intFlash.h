@@ -21,6 +21,8 @@
 #if defined(__NUVO_M032K)
 #include "NuMicro.h"
 #include "m032/m032.h"
+#elif defined(__SAMR21) || defined(__SAMD21)
+#include "atsamd21/atsamd21.h"
 #endif
 
 void intFlashClose(void);
