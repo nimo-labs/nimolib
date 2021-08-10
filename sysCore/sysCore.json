@@ -1,0 +1,9 @@
+{
+	"book": "sysCore",
+	"files": [
+		{
+			"fileName": "sysCore.c",
+			"language": "c"
+		}
+	]
+}

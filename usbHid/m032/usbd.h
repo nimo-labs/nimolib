@@ -124,6 +124,9 @@ extern const S_USBD_INFO_T gsInfo;
 #define EP_INPUT            0x80
 #define EP_OUTPUT           0x00
 
+#define USB_EP_SEND           1
+#define USB_EP_RECV           2
+
 /* USB Feature Selector */
 #define FEATURE_DEVICE_REMOTE_WAKEUP    0x01ul
 #define FEATURE_ENDPOINT_HALT           0x00ul

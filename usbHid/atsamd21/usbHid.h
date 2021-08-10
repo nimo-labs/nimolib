@@ -53,7 +53,7 @@ int usb_endpoint_get_status(int ep, int dir);
 void usb_endpoint_set_feature(int ep, int dir);
 void usb_endpoint_clear_feature(int ep, int dir);
 void usb_set_address(int address);
-void usbSend(int ep, uint8_t *data, int size);
+void usb_send(int ep, uint8_t *data, int size);
 void usb_recv(int ep, uint8_t *data, int size);
 void usb_control_send_zlp(void);
 void usb_control_stall(void);
@@ -63,5 +63,8 @@ void usbTask(void);
 void usb_configuration_callback(int config);
 void usb_recv_callback(int ep);
 void usb_send_callback(int ep);
+
+#define USB_EP_SEND           1
+#define USB_EP_RECV           2
 
 #endif // _USB_H_

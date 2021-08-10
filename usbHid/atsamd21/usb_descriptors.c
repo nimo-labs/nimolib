@@ -52,9 +52,19 @@
 #include "usbHid.h"
 #include "usb_descriptors.h"
 
+#ifndef USB_VID
+#error USB_VID must be defined in nimolib.h
+#endif
+
+#ifndef USB_PID
+#error USB_PID must be defined in nimolib.h
+#endif
+
+#define USB_HID_CONFIG_VID USB_VID
+#define USB_HID_CONFIG_PID USB_PID
+
 #ifndef USB_HID_CONFIG
-#define USB_HID_CONFIG_VID 0x6666
-#define USB_HID_CONFIG_PID 0x6666
+
 #define USB_HID_CONFIG_MANUFACTURER "Nimolib"
 #define USB_HID_CONFIG_PRODUCT "Generic HID"
 #endif

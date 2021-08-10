@@ -13,28 +13,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: simpleHid.h
-* Description: ATSAMD USB HID API provider
+* File: uart.c
+* Description: ATSAMD UART API provider
 */
 
 
-#if defined(__SAMR21) || defined(__SAMD21)
-#include <atsamd21/usbHid.h>
+#include <nimolib.h>
+#include "sysCore.h"
+
+#if defined(__SAMR21)
+#include "atsamd21.c"
+#elif defined(__SAMD21)
+#include "atsamd21.c"
 #elif defined(__NUVO_M032K)
-#include "M031Series.h"
-#include <stdint.h>
-#include "m032/usbd.h"
-#include "m032/hid_transfer.h"
-
-#define usbInit() HID_Init()
-
+#include "m032.c"
 #endif
-
-/********** Definitions to be provided by nimolib.h *************
- *
- * USB_BUFFER_SIZE
- *
- */
-
-void usbSend(uint8_t *data, int size);
-void usbSendWait(uint8_t *data, int size);

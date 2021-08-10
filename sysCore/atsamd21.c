@@ -13,28 +13,12 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: simpleHid.h
-* Description: ATSAMD USB HID API provider
+* File: atsamd21.c
+* Description: ATSAMD sysCore device driver
 */
 
-
-#if defined(__SAMR21) || defined(__SAMD21)
-#include <atsamd21/usbHid.h>
-#elif defined(__NUVO_M032K)
-#include "M031Series.h"
-#include <stdint.h>
-#include "m032/usbd.h"
-#include "m032/hid_transfer.h"
-
-#define usbInit() HID_Init()
-
-#endif
-
-/********** Definitions to be provided by nimolib.h *************
- *
- * USB_BUFFER_SIZE
- *
- */
-
-void usbSend(uint8_t *data, int size);
-void usbSendWait(uint8_t *data, int size);
+#include <sam.h>
+void sysCoreuCReset(void)
+{
+    NVIC_SystemReset();
+}

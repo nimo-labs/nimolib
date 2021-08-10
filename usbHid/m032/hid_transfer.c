@@ -232,7 +232,7 @@ void HID_Init(void)
     USBD->INTEN = USBD_INTEN_USBIEN_Msk;
 }
 
-uint8_t usbSend(uint8_t ep, uint8_t *data, uint32_t size)
+uint8_t usb_send(uint8_t ep, uint8_t *data, uint32_t size)
 {
     (void) ep;
     if(size <= USB_BUFFER_SIZE)
