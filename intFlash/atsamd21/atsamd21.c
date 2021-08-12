@@ -198,6 +198,7 @@ void intFlashWrite(uint32_t u32Addr, uint32_t u32Data)
 {
     //int block_index = (addr % FLASH_SIZE) / ERASE_BLOCK_SIZE;
     unsigned int block_index = (u32Addr % 0x40000) / ERASE_BLOCK_SIZE;
+    unsigned int wordAddr = 0;
     if (block_index != app_block_index)
     {
         uint32_t block_addr = FLASH_ADDR + block_index * ERASE_BLOCK_SIZE;
@@ -209,7 +210,11 @@ void intFlashWrite(uint32_t u32Addr, uint32_t u32Data)
         app_block_index = block_index;
     }
 
-    app_flash_buf[u32Addr % ERASE_BLOCK_SIZE] = u32Data;
+    wordAddr = (u32Addr % ERASE_BLOCK_SIZE);
+    app_flash_buf[wordAddr] = u32Data>>0;
+    app_flash_buf[wordAddr+1] = u32Data>>8;
+    app_flash_buf[wordAddr+2] = u32Data>>16;
+    app_flash_buf[wordAddr+3] = u32Data>>24;
 }
 
 /**
