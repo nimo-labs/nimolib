@@ -28,7 +28,7 @@
 
 MEMORY
 {
-  flash (rx) : ORIGIN = 0x00000000, LENGTH = 0x20000 /* 128k */
+  flash (rx) : ORIGIN = 0x00003000, LENGTH = 0x1D000 /* 128k */
   ram  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x4000 - 0x0004/* 32k - 4 bytes for bootloader / app communication*/
 }
 
