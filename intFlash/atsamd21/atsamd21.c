@@ -18,7 +18,44 @@
 */
 
 #include <stdio.h>
-#include "intFlash.h"
+#include <sam.h>
+#include <stdalign.h>
+
+static int app_block_index = -1;
+static alignas(4) uint8_t app_flash_buf[ERASE_BLOCK_SIZE];
+
+
+static void flash_flush(void)
+{
+    uint32_t addr = FLASH_ADDR + app_block_index * ERASE_BLOCK_SIZE;
+    uint32_t *flash_offset = (uint32_t *)addr;
+    uint32_t *flash_data = (uint32_t *)app_flash_buf;
+
+    if (-1 == app_block_index)
+        return;
+
+    NVMCTRL->ADDR.reg = addr >> 1;
+
+    NVMCTRL->CTRLA.reg = NVMCTRL_CTRLA_CMDEX_KEY | NVMCTRL_CTRLA_CMD_UR;
+    while (0 == NVMCTRL->INTFLAG.bit.READY)
+        ;
+
+    NVMCTRL->CTRLA.reg = NVMCTRL_CTRLA_CMDEX_KEY | NVMCTRL_CTRLA_CMD_ER;
+    while (0 == NVMCTRL->INTFLAG.bit.READY)
+        ;
+
+    for (int page = 0; page < PAGES_IN_ERASE_BLOCK; page++)
+    {
+        for (int i = 0; i < FLASH_PAGE_SIZE_WORDS; i++)
+            *flash_offset++ = *flash_data++;
+
+        while (0 == NVMCTRL->INTFLAG.bit.READY)
+            ;
+    }
+
+    app_block_index = -1;
+}
+
 
 /**
   * @brief Disable FMC ISP function.
@@ -41,7 +78,6 @@ void intFlashClose(void)
 int32_t intFlashErase(uint32_t u32PageAddr)
 {
     int32_t  ret = 0;
-
 
     return ret;
 }
@@ -72,7 +108,7 @@ int32_t intFlashErase_Bank(uint32_t u32BankAddr)
   */
 int32_t intFlashErase_SPROM(void)
 {
-    int32_t  ret = 0;
+    int32_t  ret = -1;
 
     return ret;
 }
@@ -85,7 +121,7 @@ int32_t intFlashErase_SPROM(void)
  */
 int32_t intFlashRemapBank(uint32_t u32BankIdx)
 {
-    int32_t ret = 0;
+    int32_t ret = -1;
 
     return ret;
 }
@@ -98,7 +134,7 @@ int32_t intFlashRemapBank(uint32_t u32BankIdx)
   */
 int32_t intFlashGetBootSource (void)
 {
-    int32_t  ret = 0;
+    int32_t  ret = -1;
 
 
     return ret;
@@ -160,7 +196,25 @@ void intFlashSetBootSource(int32_t i32BootSrc)
   */
 void intFlashWrite(uint32_t u32Addr, uint32_t u32Data)
 {
+    //int block_index = (addr % FLASH_SIZE) / ERASE_BLOCK_SIZE;
+    unsigned int block_index = (u32Addr % 0x40000) / ERASE_BLOCK_SIZE;
+    unsigned int wordAddr = 0;
+    if (block_index != app_block_index)
+    {
+        uint32_t block_addr = FLASH_ADDR + block_index * ERASE_BLOCK_SIZE;
 
+        flash_flush();
+
+        for (unsigned int i = 0; i < ERASE_BLOCK_SIZE; i++)
+            app_flash_buf[i] = ((uint8_t *)block_addr)[i];
+        app_block_index = block_index;
+    }
+
+    wordAddr = (u32Addr % ERASE_BLOCK_SIZE);
+    app_flash_buf[wordAddr] = u32Data>>0;
+    app_flash_buf[wordAddr+1] = u32Data>>8;
+    app_flash_buf[wordAddr+2] = u32Data>>16;
+    app_flash_buf[wordAddr+3] = u32Data>>24;
 }
 
 /**

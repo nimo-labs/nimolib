@@ -27,7 +27,7 @@
 
 #if (PRINTF_BUFF_SIZE > 0)
 
-#endif
+
 
 #if PRINTF_USB_VCOM == PRINTF_UART
 #include <usbVcom.h>
@@ -36,6 +36,8 @@
 #else
 #include <uart.h>
 #endif
+#endif
+
 
 #if (PRINTF_BUFF_SIZE == 0)
 int printf(__attribute__((unused)) const char *format, ...)

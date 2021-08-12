@@ -18,7 +18,7 @@ extern "C"
 {
 #endif
 
-//#define PAGE_SIZE_2048                        /*!< Please enable the compiler option for 2K page size     */
+#define PAGE_SIZE_2048                        /*!< Please enable the compiler option for 2K page size     */
 
 /*----------------------------------------------------------------------------------------------------------*/
 /* Define Base Address                                                                                      */
@@ -44,6 +44,8 @@ extern "C"
 #endif
 
 #define FMC_MULTI_WORD_PROG_LEN (256UL)         /*!< The length of a multi-word program.   \hideinitializer */
+
+#define INT_FLASH_PAGE_SIZE FMC_FLASH_PAGE_SIZE
 
 /*----------------------------------------------------------------------------------------------------------*/
 /*  ISPCMD constant definitions                                                                             */
