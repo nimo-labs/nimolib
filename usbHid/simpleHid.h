@@ -16,7 +16,7 @@
 * File: simpleHid.h
 * Description: ATSAMD USB HID API provider
 */
-
+#include <nimolib.h>
 
 #if defined(__SAMR21) || defined(__SAMD21)
 #include <atsamd21/usbHid.h>
