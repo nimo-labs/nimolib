@@ -39,6 +39,9 @@ unsigned int baudDef[] = {9600, 115200};
 #define SYS_GPB_MFPH_PB12MFP_UART0_RXD   (0x06UL<<SYS_GPB_MFPH_PB12MFP_Pos)/*!< GPB_MFPH PB12 setting for UART0_RXD  \hideinitializer */
 #define SYS_GPB_MFPH_PB13MFP_UART0_TXD   (0x06UL<<SYS_GPB_MFPH_PB13MFP_Pos)/*!< GPB_MFPH PB13 setting for UART0_TXD  \hideinitializer */
 
+#define SYS_GPF_MFPL_PF2MFP_UART0_RXD   (0x03UL<<SYS_GPF_MFPL_PF2MFP_Pos)/*!< GPB_MFPH PB12 setting for UART0_RXD  \hideinitializer */
+#define SYS_GPF_MFPL_PF3MFP_UART0_TXD   (0x03UL<<SYS_GPF_MFPL_PF3MFP_Pos)/*!< GPB_MFPH PB13 setting for UART0_TXD  \hideinitializer */
+
 void uartInit(unsigned char uart, uint32_t baud)
 {
     //uint64_t br = (uint64_t)65536 * (UP_CLK - 16 * baudDef[baud]) / UP_CLK;
@@ -62,13 +65,17 @@ void uartInit(unsigned char uart, uint32_t baud)
         CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART0SEL_Msk)) | (3 << CLK_CLKSEL1_UART0SEL_Pos);
         CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_UART0DIV_Msk)) | (0 <<CLK_CLKDIV0_UART0DIV_Pos);
 
+#ifdef UART_0_USE_PF2_3
+        /* Set PF multi-function pins for UART0 RXD=PF.2 and TXD=PF.3 */
+        SYS->GPF_MFPL = (SYS->GPF_MFPL & ~(SYS_GPF_MFPL_PF2MFP_Msk | SYS_GPF_MFPL_PF3MFP_Msk)) |
+                        (SYS_GPF_MFPL_PF2MFP_UART0_RXD | SYS_GPF_MFPL_PF3MFP_UART0_TXD);
+#else
         /* Set PB multi-function pins for UART0 RXD=PB.12 and TXD=PB.13 */
-        SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk)) |
+        SYS->GPB_MFPH = (SYS->GPB_MFPH & ~(SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD)) |
                         (SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD);
+#endif
 
-        // /* Set UUART0 multi-function pins */
-        // SYS->GPA_MFPH = (SYS->GPA_MFPH & ~(SYS_GPA_MFPH_PA9MFP_Msk | SYS_GPA_MFPH_PA10MFP_Msk)) |
-        //                 (SYS_GPA_MFPH_PA9MFP_USCI0_DAT1 | SYS_GPA_MFPH_PA10MFP_USCI0_DAT0);
+
 
         /* Select UART function */
         SERCOM_PTR(UART_CHAN0_SERCOM)->FUNCSEL = UART_FUNCSEL_UART;
