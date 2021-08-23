@@ -86,7 +86,7 @@ unsigned char spiRxByte(unsigned char channel)
     if(SPI_CHAN0 != channel)
     {
         printf("spiRxByte: Incorrect channel selected!");
-        return;
+        return 0;
     }
     spiTxByte(channel, SPI_PADDING_BYTE);
     return rxData;
