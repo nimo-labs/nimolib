@@ -17,7 +17,6 @@
 * Description: SPI Dataflash API provider
 */
 
-#include <sam.h>
 #include <gpio.h>
 #include <nimolib.h>
 #include "uart.h"

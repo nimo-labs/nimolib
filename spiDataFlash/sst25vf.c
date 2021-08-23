@@ -16,8 +16,6 @@
 * File: at25pe80.c
 * Description: AT25PE80 dataflash chip device driver
 */
-#include <sam.h>
-#include <nimolib.h>
 #include <gpio.h>
 #include <spi.h>
 #include <printf.h>
