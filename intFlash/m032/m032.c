@@ -453,7 +453,7 @@ __attribute__ ((used, long_call, section(".fastcode"))) int32_t intFlashWriteMul
 int32_t intFlashWriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
 #endif
 {
-
+    (void)(u32Len);
     uint32_t i, idx, u32OnProg, retval = 0;
     int32_t err;
 
