@@ -21,7 +21,7 @@
 
 extern void usbHidProcess(uint8_t *req); /*This MUST be provided by the application*/
 volatile unsigned char usbSendDirty = 0;
-static uint8_t app_request_buffer[USB_BUFFER_SIZE];
+//static uint8_t app_request_buffer[USB_BUFFER_SIZE];
 
 #if defined(__SAMR21) || defined(__SAMD21)
 #include "sam.h"
