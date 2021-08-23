@@ -44,12 +44,6 @@ unsigned int baudDef[] = {9600, 115200};
 
 void uartInit(unsigned char uart, uint32_t baud)
 {
-    //uint64_t br = (uint64_t)65536 * (UP_CLK - 16 * baudDef[baud]) / UP_CLK;
-
-    uint32_t u32UartClkSrcSel = 0ul, u32UartClkDivNum = 0ul;
-    uint32_t u32ClkTbl[6ul] = {__HXT, 0ul, __LXT, __HIRC, 0ul, __LIRC};
-    uint32_t u32Baud_Div = 0ul;
-
     switch (uart)
     {
 //#ifdef UART_CHAN0
