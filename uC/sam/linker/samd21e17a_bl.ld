@@ -35,6 +35,9 @@ MEMORY
 __top_flash = ORIGIN(flash) + LENGTH(flash);
 __top_ram = ORIGIN(ram) + LENGTH(ram);
 
+APP_INT_FLASH_START = ORIGIN(FLASH) + LENGTH(FLASH);;
+APP_INT_FLASH_LENGTH = 0x1D000;
+
 ENTRY(irq_handler_reset)
 
 SECTIONS
