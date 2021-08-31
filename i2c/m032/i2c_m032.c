@@ -110,5 +110,64 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
 
 unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned char *data, unsigned int len)
 {
-    return (uint8_t)(I2C0->DAT);
+    UI2C_T * ui2c = UI2C0;
+    uint8_t u8Xfering = 1U, u8Err = 0U, rdata = 0U, u8Ctrl = 0U;
+    enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    UI2C_START(ui2c);                                                       /* Send START */
+
+    while (u8Xfering)
+    {
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                     /* Wait UI2C new status occur */
+
+        switch (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+        {
+        case UI2C_PROTSTS_STARIF_Msk:
+            UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
+            UI2C_SET_DATA(ui2c, (address << 1U) | 0x01U);             /* Write SLA+R to Register UI2C_TXDAT */
+            eEvent = MASTER_SEND_H_RD_ADDRESS;
+            u8Ctrl = UI2C_CTL_PTRG;
+            break;
+
+        case UI2C_PROTSTS_ACKIF_Msk:
+            UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
+            eEvent = MASTER_READ_DATA;
+            break;
+
+        case UI2C_PROTSTS_NACKIF_Msk:
+            UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);     /* Clear NACK INT Flag */
+
+            if (eEvent == MASTER_SEND_H_RD_ADDRESS)
+            {
+                u8Err = 1U;
+            }
+            else
+            {
+                rdata = (unsigned char) UI2C_GET_DATA(ui2c);            /* Receive Data */
+            }
+
+            u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                        /* Clear SI and send STOP */
+
+            break;
+
+        case UI2C_PROTSTS_STORIF_Msk:
+            UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);     /* Clear STOP INT Flag */
+            u8Ctrl = UI2C_CTL_PTRG;                                     /* Clear SI */
+            u8Xfering = 0U;
+            break;
+
+        case UI2C_PROTSTS_ARBLOIF_Msk:                                  /* Arbitration Lost */
+        default:                                                        /* Unknow status */
+            u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                    /* Clear SI and send STOP */
+            u8Err = 1U;
+            break;
+        }
+
+        UI2C_SET_CONTROL_REG(ui2c, u8Ctrl);                                 /* Write controlbit to UI2C_PROTCTL register */
+    }
+
+    if (u8Err)
+        rdata = 0U;
+
+    return rdata;                                                           /* Return read data */
 }
