@@ -24,7 +24,6 @@
  *
  */
 
-#include <sam.h>
 #include <system.h>
 #include <nimolib.h>
 #include <printf.h>
@@ -32,12 +31,14 @@
 
 #if defined(__SAMD21)
 #include <sam.h>
-#include "i2c_samd.c"
+#include "samd/i2c_samd.c"
 #elif defined(__SAMR21)
 #include <sam.h>
-#include "i2c_samd.c"
+#include "samd/i2c_samd.c"
 #elif defined(__XMEGA)
-#include "i2c_xmega.c"
+#include "xmega/i2c_xmega.c"
+#elif defined(__NUVO_M032K)
+#include "m032/i2c_m032.c"
 #else
 #error uC not defined
 #endif
@@ -47,7 +48,7 @@ unsigned char i2cPing(unsigned char chan, unsigned char addr)
     return i2cWrite(chan, addr, (unsigned char *)"\0", 0, TRUE);
 }
 
-void i2cDetect(unsigned char UNUSED(chan))
+void i2cDetect(__attribute__((unused)) unsigned char (chan))
 {
     unsigned int i, j, res;
     unsigned int first = 0x03, last = 0x77;

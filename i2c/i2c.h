@@ -42,11 +42,15 @@ unsigned char i2cPing(unsigned char chan, unsigned char addr);
 void i2cDetect(__attribute__((unused)) unsigned char (chan));
 
 #if defined(__SAMD21)
-#include "i2c_samd.h"
+#include "samd/i2c_samd.h"
 #elif defined(__SAMD21)
-#include "i2c_samd.h"
+#include "samd/i2c_samd.h"
+#elif defined(__NUVO_M032K)
+#include "m032/i2c_m032.h"
+#elif defined(__XMEGA)
+#include "xmega/i2c_xmega.h"
 #else
-#include "i2c_xmega.h"
+#error uC not defined
 #endif
 
 #ifdef __cplusplus
