@@ -58,22 +58,32 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
         return 1;
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);
 
-    /*Send Start */
+    /*Send Chip address */
     UI2C_SET_DATA(ui2c, (address << 1U) | 0x00U);
     UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-    if(UI2C_PROTSTS_ACKIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+
+    if(UI2C_PROTSTS_ACKIF_Msk == (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
+    {
+        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
+        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
+        //return 1;
+    }
+
+    if(UI2C_PROTSTS_NACKIF_Msk == (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
+    {
+        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);      /* Clear NACK INT Flag */
+        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
         return 1;
-    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
+    }
 
     /*Send Data */
     for(uint32_t i=0; i < len; i++)
     {
-        printf("H\r\n");
         UI2C_SET_DATA(ui2c, data[i]);
         UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
         while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-        if(UI2C_PROTSTS_ACKIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+        if(UI2C_PROTSTS_ACKIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
             return 1;
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
     }
@@ -83,13 +93,12 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
     {
         UI2C_STOP(ui2c);
         while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-        if(UI2C_PROTSTS_STORIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+        if(UI2C_PROTSTS_STORIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
             return 1;
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);      /* Clear ACK INT Flag */
     }
 
     /*Cleanup */
-    printf("W PROT_STAT: 0x%.8X\r\n", UI2C_GET_PROT_STATUS(ui2c));
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);
     return 0;
@@ -103,7 +112,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STA));
     //UI2C_START(ui2c);
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-    if(UI2C_PROTSTS_STARIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+    if(UI2C_PROTSTS_STARIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
         return 1;
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);
 
@@ -111,7 +120,7 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
     UI2C_SET_DATA(ui2c, (address << 1U) | 0x01U);
     UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-    if(UI2C_PROTSTS_ACKIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+    if(UI2C_PROTSTS_ACKIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
         return 1;
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
 
@@ -121,13 +130,11 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
     /*Get Data */
     for(uint32_t i=0; i < len; i++)
     {
-        printf("H\r\n");
-
         data[i] = (uint8_t) UI2C_GET_DATA(ui2c);
         UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
 
         while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-        if(UI2C_PROTSTS_ACKIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+        if(UI2C_PROTSTS_ACKIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
             return 1;
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
     }
@@ -135,13 +142,12 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
     /*Send stop */
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STO));
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-    if(UI2C_PROTSTS_STORIF_Msk != UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
+    if(UI2C_PROTSTS_STORIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
         return 1;
 
     /*Cleanup */
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);      /* Clear ACK INT Flag */
 
-    printf("R PROT_STAT: 0x%.8X\r\n", UI2C_GET_PROT_STATUS(ui2c));
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);
     return 0;
