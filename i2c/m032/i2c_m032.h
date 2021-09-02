@@ -23,6 +23,7 @@ enum UI2C_MASTER_EVENT
 #define UI2C_CTL_AA                0x02UL    /*!< USCI_CTL setting for I2C control bits. It would set AA bit  \hideinitializer */
 
 #define UI2C_START(ui2c) ((ui2c)->PROTCTL = ((ui2c)->PROTCTL & ~UI2C_PROTCTL_PTRG_Msk) | UI2C_PROTCTL_STA_Msk)
+#define UI2C_STOP(ui2c) ((ui2c)->PROTCTL = ((ui2c)->PROTCTL & ~0x2E) | (UI2C_PROTCTL_PTRG_Msk | UI2C_PROTCTL_STO_Msk))
 #define UI2C_GET_PROT_STATUS(ui2c)    ((ui2c)->PROTSTS)
 #define UI2C_CLR_PROT_INT_FLAG(ui2c,u32IntTypeFlag)    ((ui2c)->PROTSTS = (u32IntTypeFlag))
 #define UI2C_SET_CONTROL_REG(ui2c, u8Ctrl) ((ui2c)->PROTCTL = ((ui2c)->PROTCTL & ~0x2EU) | (u8Ctrl))
