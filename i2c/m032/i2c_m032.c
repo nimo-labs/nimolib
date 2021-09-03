@@ -44,8 +44,13 @@ void i2cInit(unsigned char channel, unsigned int baudRate)
 
 static void i2cStop(unsigned char channel)
 {
-    // I2C0->CTL0 = (I2C0->CTL0 & 0x3C) | I2C_CTL_STO_SI;
+    UI2C_T * ui2c = UI2C0;
+    UI2C_STOP(ui2c);
+    while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);      /* Clear Stop INT Flag */
 }
+
+
 
 unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned char *data, unsigned int len, unsigned char stop)
 {
@@ -74,6 +79,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
     {
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);      /* Clear NACK INT Flag */
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
+        i2cStop(channel);
         return 1;
     }
 
@@ -91,11 +97,7 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
     /*Send Stop */
     if(stop)
     {
-        UI2C_STOP(ui2c);
-        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-        if(UI2C_PROTSTS_STORIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
-            return 1;
-        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);      /* Clear ACK INT Flag */
+        i2cStop(channel);
     }
 
     /*Cleanup */
@@ -108,12 +110,16 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
 {
     UI2C_T * ui2c = UI2C0;
 
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
     /*Send Re Start */
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STA));
-    //UI2C_START(ui2c);
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
+
     if(UI2C_PROTSTS_STARIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
+    {
+        i2cStop(channel);
         return 1;
+    }
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);
 
     /*Send Chip address */
@@ -121,34 +127,34 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
     UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
     if(UI2C_PROTSTS_ACKIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
+    {
+        i2cStop(channel);
+        UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);      /* Clear NACK INT Flag */
         return 1;
+    }
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
-
-    data[0] = (uint8_t) UI2C_GET_DATA(ui2c);
-    UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
 
     /*Get Data */
     for(uint32_t i=0; i < len; i++)
     {
+        if(i+1 < len)
+            UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG| UI2C_CTL_AA);
+        else
+            UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
         data[i] = (uint8_t) UI2C_GET_DATA(ui2c);
-        UI2C_SET_CONTROL_REG(ui2c,UI2C_CTL_PTRG);
 
         while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-        if(UI2C_PROTSTS_ACKIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
-            return 1;
         UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
     }
 
     /*Send stop */
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STO));
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
-    if(UI2C_PROTSTS_STORIF_Msk != (UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))
-        return 1;
-
     /*Cleanup */
-    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);      /* Clear ACK INT Flag */
 
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);
+    while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
     return 0;
 }
