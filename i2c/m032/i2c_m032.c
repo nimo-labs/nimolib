@@ -56,6 +56,10 @@ unsigned char i2cWrite(unsigned char channel, unsigned char address, unsigned ch
 {
     UI2C_T * ui2c = UI2C0;
 
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
+
     /*Send Start */
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STA));
     while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));
@@ -110,6 +114,8 @@ unsigned char i2cRead(unsigned char channel, unsigned char address, unsigned cha
 {
     UI2C_T * ui2c = UI2C0;
 
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);
+    UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);
     UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STORIF_Msk);
     /*Send Re Start */
     UI2C_SET_CONTROL_REG(ui2c,(UI2C_CTL_PTRG | UI2C_CTL_STA));
