@@ -28,6 +28,8 @@ extern "C"
 #define I2C_BAUD_100K 0
 #define I2C_BAUD_400K 1
 
+#define I2C_CHAN0 0
+
 /* void i2cInit(unsigned char chan, unsigned int baudRate); */
 /* unsigned char i2cWrite(unsigned char chan, unsigned char address, unsigned char *data, unsigned char len, unsigned char stop); */
 /* unsigned char i2cRead(unsigned char chan, unsigned char address, unsigned char * data, unsigned char len); */
