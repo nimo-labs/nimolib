@@ -24,7 +24,6 @@
  *
  */
 
-#include <system.h>
 #include <nimolib.h>
 #include <printf.h>
 #include "i2c.h"
