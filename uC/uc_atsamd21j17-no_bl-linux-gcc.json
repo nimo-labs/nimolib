@@ -1,0 +1,29 @@
+{
+	"microcontroller": "atsamd21j17-no_bl",
+	"ucFamily": "atsamd",
+	"linkerFile": "./umake/nimolib/uC/sam/linker/samd21j17_no_bl.ld",
+	"supportFiles": [
+		"umake/nimolib/uC/sam/samd21/startup_samd21.c"
+	],
+	"defines": [
+		"__SAMD21",
+		"__ATSAMD21J18A__",
+		"DONT_USE_CMSIS_INIT"
+	],
+	"cflags": [
+		"-I ./umake/nimolib/uC/sam/",
+		"-I ./umake/nimolib/uC/sam/samd21/include",
+		"-I ./umake/nimolib/uC/sam/samd21/include/component",
+		"-W -Wall --std=gnu99 -Os",
+		"-fno-diagnostics-show-caret",
+		"-fdata-sections -ffunction-sections",
+		"-funsigned-char -funsigned-bitfields",
+		"-mcpu=cortex-m0plus -mthumb",
+		"-specs=nano.specs"
+	],
+	"ldflags": [
+		"-mcpu=cortex-m0plus -mthumb",
+		"-Wl,--gc-sections",
+		"-specs=nano.specs"
+	]
+}
