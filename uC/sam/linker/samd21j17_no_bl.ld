@@ -28,15 +28,12 @@
 
 MEMORY
 {
-  flash (rx) : ORIGIN = 0x00000000, LENGTH = 0x3000 /* 12k */
-  ram  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x4000 - 0x0004/* 32k - 4 bytes for bootloader / app communication*/
+  flash (rx) : ORIGIN = 0x00000000, LENGTH = 0x20000 /* 128k */
+  ram  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x4000 /* 16k */
 }
 
 __top_flash = ORIGIN(flash) + LENGTH(flash);
 __top_ram = ORIGIN(ram) + LENGTH(ram);
-
-APP_INT_FLASH_START = ORIGIN(FLASH) + LENGTH(FLASH);;
-APP_INT_FLASH_LENGTH = 0x1D000;
 
 ENTRY(irq_handler_reset)
 
@@ -82,5 +79,4 @@ SECTIONS
   } > ram
 
   PROVIDE(_stack_top = __top_ram - 0);
-  PROVIDE (BOOT_MAGIC_ADDRESS = ORIGIN(RAM) + LENGTH(RAM));
 }

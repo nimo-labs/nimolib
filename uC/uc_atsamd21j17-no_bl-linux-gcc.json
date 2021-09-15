@@ -1,7 +1,7 @@
 {
-	"microcontroller": "atsamd21j18a",
+	"microcontroller": "atsamd21j17-no_bl",
 	"ucFamily": "atsamd",
-	"linkerFile": "./umake/nimolib/uC/sam/linker/samd21e18a.ld",
+	"linkerFile": "./umake/nimolib/uC/sam/linker/samd21j17_no_bl.ld",
 	"supportFiles": [
 		"umake/nimolib/uC/sam/samd21/startup_samd21.c"
 	],
