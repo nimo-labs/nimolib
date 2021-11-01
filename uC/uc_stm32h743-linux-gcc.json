@@ -1,0 +1,38 @@
+{
+	"microcontroller": "stm32h743",
+	"ucFamily": "stm32",
+	"linkerFile": "./umake/nimolib/uC/stm32h743/linker/STM32H743ZITx_FLASH.ld",
+	"supportFiles": [
+		"umake/nimolib/uC/stm32h743/startup_stm32h743xx.S"
+	],
+	"includes": [
+		"umake/nimolib/uC/stm32h743/include/stm32Hal"
+	],
+	"defines": [
+		"STM32H743xx",
+		"USE_HAL_DRIVER",
+		"USE_STM32H7XX_NUCLEO_144_MB1364"
+	],
+	"cflags": [
+		"-Os",
+		"-ffunction-sections ",
+		"-Wall ",
+		"-fstack-usage ",
+		"-specs=nano.specs ",
+		"-mfpu=fpv5-d16 ",
+		"-mfloat-abi=hard ",
+		"-mthumb ",
+		"-mcpu=cortex-m7",
+		"-specs=nosys.specs"
+	],
+	"ldflags": [
+		"-mcpu=cortex-m7",
+		"-Wl,--gc-sections ",
+		"-mfloat-abi=hard -mfpu=fpv5-d16 -mthumb",
+		"-specs=nano.specs",
+		"-specs=nosys.specs",
+		"-Wl,--start-group -lc -lm",
+		"-Wl,--end-group",
+		"-static"
+	]
+}
