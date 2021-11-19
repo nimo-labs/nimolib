@@ -1,5 +1,5 @@
 /*
-* Copyright 2020 NimoLabs Ltd.
+* Copyright 2021 NimoLabs Ltd.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,15 +13,30 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: osc.h
-* Description: ATSAMD21 oscillator API provider
+* File: m032.c
+* Description: Nuvoton M032 oscillator device driver
 */
 
+#include "NuMicro.h"
 
-void oscSet(unsigned char oscillator);
+void oscSet(unsigned char oscillator)
+{
+    SYS_UnlockReg();
 
-#if defined(__SAMD21) || defined(__SAMR21)
-#include "atsamd21.h"
-#elif defined(__NUVO_M032K)
-#include "m032.h"
-#endif
+    switch(oscillator)
+    {
+    case OSC_HXTEN:
+        CLK->PWRCTL = CLK_PWRCTL_HXTEN_Msk;
+        break;
+    case OSC_LXTEN:
+        CLK->PWRCTL = CLK_PWRCTL_LXTEN_Msk;
+        break;
+    case OSC_HIRCEN:
+        CLK->PWRCTL = CLK_PWRCTL_HIRCEN_Msk;
+        break;
+    case OSC_LIRCEN:
+        CLK->PWRCTL = CLK_PWRCTL_LIRCEN_Msk;
+        break;
+    }
+    SYS_LockReg();
+}

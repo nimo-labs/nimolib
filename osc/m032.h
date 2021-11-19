@@ -1,5 +1,5 @@
 /*
-* Copyright 2020 NimoLabs Ltd.
+* Copyright 2021 NimoLabs Ltd.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,16 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: osc.c
-* Description: ATSAMD21 oscillator API provider
+* File: m032.h
+* Description: Nuvoton M032 oscillator device driver
 */
 
-#include "osc.h"
-
-#if defined(__SAMR21)
-#include "atsamd21.c"
-#elif defined(__SAMD21)
-#include "atsamd21.c"
-#elif defined(__NUVO_M032K)
-#include "m032.c"
-#endif
+#define OSC_HXTEN 0 /*External high speed Oscillator*/
+#define OSC_LXTEN 1 /*External low speed Oscillator*/
+#define OSC_HIRCEN 2 /*Internal high speed Oscillator*/
+#define OSC_LIRCEN 3 /*Internal low speed Oscillator*/

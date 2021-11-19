@@ -20,7 +20,6 @@
 #include <sam.h>
 #include <nimolib.h>
 
-#include "osc.h"
 void oscSet(unsigned char oscillator)
 {
     uint32_t coarse, fine;

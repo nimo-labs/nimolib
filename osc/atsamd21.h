@@ -13,16 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *
-* File: osc.c
-* Description: ATSAMD21 oscillator API provider
+* File: atsamd21.h
+* Description: ATSAMD21 oscillator device driver
 */
 
-#include "osc.h"
-
-#if defined(__SAMR21)
-#include "atsamd21.c"
-#elif defined(__SAMD21)
-#include "atsamd21.c"
-#elif defined(__NUVO_M032K)
-#include "m032.c"
-#endif
+#define OSC_INT8 0   /*Internal 8MHz Oscillator*/
+#define OSC_48DFLL 1 /*Internal 48MHz PLL*/
