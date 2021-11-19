@@ -6,7 +6,15 @@ void i2cInit(unsigned char channel, unsigned int baudRate)
     if(I2C_CHAN0 == channel)
     {
         UI2C_T * ui2c = UI2C0;
-        uint32_t u32BusClock = 100000; /* 100kHz */
+
+        uint32_t u32BusClock = 0;
+        if(I2C_BAUD_100K == baudRate)
+            u32BusClock = 100000; /* 100kHz */
+        else
+        {
+            printf("Error, i2cInit(): invalid Baudrate specified\r\n");
+            return;
+        }
         /*Enable USCI0 CLK*/
         CLK->APBCLK1 |= CLK_APBCLK1_USCI0CKEN_Msk;
 
