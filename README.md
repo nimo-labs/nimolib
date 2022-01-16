@@ -1,3 +1,5 @@
+[![Testsuite - Main](https://github.com/nimo-labs/nimolib/actions/workflows/build_main.yml/badge.svg)](https://github.com/nimo-labs/nimolib/actions/workflows/build_main.yml)
+[![Testsuite - Dev](https://github.com/nimo-labs/nimolib/actions/workflows/build_dev.yml/badge.svg)](https://github.com/nimo-labs/nimolib/actions/workflows/build_dev.yml)
 # NIMOLIB - NIMO micro controller library
 
 This library provides low level device drivers for supported micro controllers (currently ATSAMD21) via a common API. Whilst the library can be used as a standalone repository, it is intended to be included and configured via the umake tool (<https://github.com/nimo-labs/umake>).

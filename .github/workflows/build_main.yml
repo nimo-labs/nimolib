@@ -1,0 +1,21 @@
+name: Testsuite
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/nimo-labs/nimobuild:latest 
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: 'nimo-labs/microNIMO-examples'
+        path: 'microNIMO-examples'
+      name: Checkout latest examples
+    - run: |
+        cd microNIMO-examples
+        ./buildall.sh
+      name: Run tests
