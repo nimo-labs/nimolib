@@ -214,3 +214,11 @@ int8_t xn297lReceiveData(uint8_t *data, uint8_t bufMaxLen)
         return dataLen;
     }
 }
+
+void xn297lPwrDown(void)
+{
+    uint8_t configReg = xn297lReadReg(XN297L_REG_CONFIG);
+    configReg &= ~(1 << 7); /*Clear EN_PM bit*/
+    configReg &= ~(1 << 1); /*Clear PWR_UP bit*/
+    xn297lWriteReg(XN297L_REG_CONFIG, configReg);
+}

@@ -25,6 +25,7 @@ void xn297lReadStatus(void);
 void xn297lSetChannel(uint8_t rfChannel);
 void xn297lSetDataRate(uint8_t dataRate);
 void xn297lSetTxPower(uint8_t power);
+void xn297lPwrDown(void);
 uint8_t xn297lTransmitData(uint8_t *data, uint8_t len);
 int8_t xn297lReceiveData(uint8_t *data, uint8_t bufMaxLen);
 
