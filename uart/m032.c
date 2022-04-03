@@ -46,7 +46,7 @@ void uartInit(unsigned char uart, uint32_t baud)
 {
     switch (uart)
     {
-//#ifdef UART_CHAN0
+#ifdef UART_CHAN0
     case UART_CHAN0:
 
         /*Clock UART0 from HIRC*/
@@ -87,7 +87,7 @@ void uartInit(unsigned char uart, uint32_t baud)
         SERCOM_PTR(UART_CHAN0_SERCOM)->INTEN = UART_INTEN_RDAIEN_Msk;
 
         break;
-//#endif
+#endif
 #ifdef UART_CHAN1
     case UART_CHAN1:
         PORT->Group[UART_CHAN1_PORT].DIRSET.reg |= (1 << UART_CHAN1_TX_PIN);  /*Tx as output*/
@@ -121,34 +121,37 @@ void uartInit(unsigned char uart, uint32_t baud)
 #endif
 #ifdef UART_CHAN2
     case UART_CHAN2:
-        PORT->Group[UART_CHAN2_PORT].DIRSET.reg |= (1 << UART_CHAN2_TX_PIN);  /*Tx as output*/
-        PORT->Group[UART_CHAN2_PORT].DIRSET.reg &= ~(1 << UART_CHAN2_RX_PIN); /*Rx as input */
 
-        PORT->Group[UART_CHAN2_PORT].PMUX[UART_CHAN2_TX_PIN >> 1].reg |= (UART_CHAN2_PERHIPH_TX_MUX << SAM_GPIO_MUXE);
-        PORT->Group[UART_CHAN2_PORT].PMUX[UART_CHAN2_RX_PIN >> 1].reg |= (UART_CHAN2_PERHIPH_RX_MUX << SAM_GPIO_MUXO);
+        /*Clock UART2 from HIRC*/
+        CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | (7 << CLK_CLKSEL0_HCLKSEL_Pos);
+        CLK->CLKDIV0 = (CLK->CLKDIV0 & (~CLK_CLKDIV0_HCLKDIV_Msk)) | (0 << CLK_CLKDIV0_HCLKDIV_Pos);
 
-        PORT->Group[UART_CHAN2_PORT].PINCFG[UART_CHAN2_TX_PIN].reg |= (1 << 0); /*PMUX EN */
-        PORT->Group[UART_CHAN2_PORT].PINCFG[UART_CHAN2_RX_PIN].reg |= (1 << 0); /*PMUX EN */
+        /*Enable UART2 CLK*/
+        CLK->APBCLK0 |= CLK_APBCLK0_UART2CKEN_Msk;
 
-        PM->APBCMASK.reg |= SERCOM_APBCMASK(UART_CHAN2_SERCOM);
+        CLK->CLKSEL3 = (CLK->CLKSEL1 & (~CLK_CLKSEL3_UART2SEL_Msk)) | (3 << CLK_CLKSEL3_UART2SEL_Pos);
+        CLK->CLKDIV4 = (CLK->CLKDIV4 & (~CLK_CLKDIV4_UART2DIV_Msk)) | (0 <<CLK_CLKDIV4_UART2DIV_Pos);
 
-        GCLK->CLKCTRL.reg = GCLK_CLKCTRL_ID(SERCOM_CLOCK_ID(UART_CHAN2_SERCOM)) |
-                            GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN(PERHIP_CLK_GEN);
+        /* Set PB multi-function pins for UART0 RXD=PB.4 and TXD=PB.5 */
+        SYS->GPB_MFPL = (SYS->GPB_MFPL & ~(SYS_GPB_MFPL_PB4MFP_UART2_RXD | SYS_GPB_MFPL_PB5MFP_UART2_TXD)) |
+                        (SYS_GPB_MFPL_PB4MFP_UART2_RXD | SYS_GPB_MFPL_PB5MFP_UART2_TXD);
 
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.CTRLA.reg =
-            SERCOM_USART_CTRLA_DORD | SERCOM_USART_CTRLA_MODE_USART_INT_CLK |
-            SERCOM_USART_CTRLA_RXPO(UART_CHAN2_RX_PAD) | SERCOM_USART_CTRLA_TXPO(UART_CHAN2_TX_PAD);
 
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.CTRLB.reg = SERCOM_USART_CTRLB_RXEN | SERCOM_USART_CTRLB_TXEN |
-                SERCOM_USART_CTRLB_CHSIZE(0 /*8 bits*/);
+        /* Select UART function */
+        SERCOM_PTR(UART_CHAN2_SERCOM)->FUNCSEL = UART_FUNCSEL_UART;
 
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.BAUD.reg = (uint16_t)br;
+        /* Set UART line configuration */
+        SERCOM_PTR(UART_CHAN2_SERCOM)->LINE = UART_WORD_LEN_8 | UART_PARITY_NONE | UART_STOP_BIT_1;
 
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.CTRLA.reg |= SERCOM_USART_CTRLA_ENABLE;
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.INTENSET.reg = SERCOM_USART_INTENSET_RXC; /*Enable RX interrupt*/
+        /* Set UART Rx and RTS trigger level to 1 byte*/
+        SERCOM_PTR(UART_CHAN2_SERCOM)->FIFO &= ~(UART_FIFO_RFITL_Msk | UART_FIFO_RTSTRGLV_Msk);
 
-        NVIC_EnableIRQ(SERCOM_IRQn(UART_CHAN2_SERCOM)); /*Enable SERCOM interrupt*/
-        break;
+        UART2->BAUD = UART_BAUD_MODE2 | UART_BAUD_MODE2_DIVIDER(__HIRC, baudDef[baud]);
+
+        /*Enable RX interrupt*/
+        NVIC_EnableIRQ(UART02_IRQn);
+        SERCOM_PTR(UART_CHAN2_SERCOM)->INTEN = UART_INTEN_RDAIEN_Msk;
+
 #endif
     }
 }
@@ -172,11 +175,11 @@ void uartTx(unsigned char uart, unsigned char data)
         break;
 #endif
 #ifdef UART_CHAN2
-    case UART_CHAN2:
-        while (!(SERCOM_PTR(UART_CHAN2_SERCOM)->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE))
-            ;
-        SERCOM_PTR(UART_CHAN2_SERCOM)->USART.DATA.reg = data;
-        break;
+        // case UART_CHAN2:
+        //     while (!(SERCOM_PTR(UART_CHAN2_SERCOM)->USART.INTFLAG.reg & SERCOM_USART_INTFLAG_DRE))
+        //         ;
+        //     SERCOM_PTR(UART_CHAN2_SERCOM)->USART.DATA.reg = data;
+        //     break;
 #endif
     }
 }
@@ -186,6 +189,7 @@ void uartTx(unsigned char uart, unsigned char data)
 void UART02_IRQHandler(void)
 {
     /*Check for UART0 RX int*/
+#ifdef UART_CHAN0
     if(UART0->INTSTS & UART_INTSTS_RDAINT_Msk)
     {
         uartChan0Fifo[uartChan0FifoWrite] = UART0->DAT & 0xff;
@@ -194,4 +198,17 @@ void UART02_IRQHandler(void)
         else
             uartChan0FifoWrite = 0;
     }
+#endif
+
+    /*Check for UART2 RX int*/
+#ifdef UART_CHAN2
+    if(UART2->INTSTS & UART_INTSTS_RDAINT_Msk)
+    {
+        uartChan2Fifo[uartChan2FifoWrite] = UART2->DAT & 0xff;
+        if (uartChan2FifoWrite < UART_CHAN2_FIFO_LEN)
+            uartChan2FifoWrite++;
+        else
+            uartChan2FifoWrite = 0;
+    }
+#endif
 }
