@@ -47,8 +47,6 @@
         }
     ],
     "includes": [
-        {
-            "Source/include"
-        }
+        "Source/include"
     ]
 }
