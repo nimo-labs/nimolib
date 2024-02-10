@@ -22,7 +22,7 @@
             "language": "c"
         },
         {
-            "fileName": "Source/GCC/ARM_CM0/port.c",
+            "fileName": "Source/portable/GCC/ARM_CM0/port.c",
             "language": "c"
         },
         {
