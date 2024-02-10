@@ -47,6 +47,7 @@
         }
     ],
     "includes": [
-        "Source/include"
+        "Source/include",
+        "Source/portable/GCC/ARM_CM0"
     ]
 }
