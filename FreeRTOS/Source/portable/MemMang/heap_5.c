@@ -68,6 +68,7 @@
  * Note 0x80000000 is the lower address so appears in the array first.
  *
  */
+#ifdef configUSE_MEMMANG_5
 #include <stdlib.h>
 #include <string.h>
 
@@ -707,3 +708,4 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
     taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
+#endif //configUSE_MEMMANG_5

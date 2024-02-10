@@ -34,6 +34,7 @@
  * See heap_1.c, heap_2.c and heap_3.c for alternative implementations, and the
  * memory management pages of https://www.FreeRTOS.org for more information.
  */
+#ifdef configUSE_MEMMANG_4
 #include <stdlib.h>
 #include <string.h>
 
@@ -608,3 +609,4 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
     taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
+#endif //configUSE_MEMMANG_4

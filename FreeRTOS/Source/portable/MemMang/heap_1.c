@@ -34,6 +34,7 @@
  * See heap_2.c, heap_3.c and heap_4.c for alternative implementations, and the
  * memory management pages of https://www.FreeRTOS.org for more information.
  */
+#ifdef configUSE_MEMMANG_1
 #include <stdlib.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
@@ -150,3 +151,4 @@ size_t xPortGetFreeHeapSize( void )
 {
     return( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+#endif //configUSE_MEMMANG_1

@@ -37,7 +37,7 @@
  * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the
  * memory management pages of https://www.FreeRTOS.org for more information.
  */
-
+#ifdef configUSE_MEMMANG_3
 #include <stdlib.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
@@ -92,3 +92,4 @@ void vPortFree( void * pv )
         ( void ) xTaskResumeAll();
     }
 }
+#endif //configUSE_MEMMANG_3
