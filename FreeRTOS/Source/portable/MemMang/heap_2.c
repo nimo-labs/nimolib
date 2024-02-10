@@ -35,6 +35,7 @@
  * See heap_1.c, heap_3.c and heap_4.c for alternative implementations, and the
  * memory management pages of https://www.FreeRTOS.org for more information.
  */
+#include "FreeRTOSConfig.h"
 #ifdef configUSE_MEMMANG_2
 #include <stdlib.h>
 #include <string.h>

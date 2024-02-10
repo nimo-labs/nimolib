@@ -68,6 +68,7 @@
  * Note 0x80000000 is the lower address so appears in the array first.
  *
  */
+#include "FreeRTOSConfig.h"
 #ifdef configUSE_MEMMANG_5
 #include <stdlib.h>
 #include <string.h>
