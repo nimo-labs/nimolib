@@ -48,7 +48,7 @@
     ],
     "includes": [
         {
-            "fileName": "Source/include"
+            "Source/include"
         }
     ]
 }
