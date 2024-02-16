@@ -120,6 +120,13 @@ extern uint32_t SystemCoreClock;
 #define configGENERATE_RUN_TIME_STATS   0
 #define configUSE_QUEUE_SETS            1
 
+/*Choose which Mem Manager to use (Only 1 can be selected at a time)*/
+#define configUSE_HEAP_1                1
+#define configUSE_HEAP_2                0
+#define configUSE_HEAP_3                0
+#define configUSE_HEAP_4                0
+#define configUSE_HEAP_5                0
+
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES       0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

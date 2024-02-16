@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-
+#if 1 == configUSE_HEAP_2
 /*
  * A sample implementation of pvPortMalloc() and vPortFree() that permits
  * allocated blocks to be freed, but does not combine adjacent free blocks
@@ -282,3 +282,4 @@ static void prvHeapInit( void )
     pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }
 /*-----------------------------------------------------------*/
+#endif

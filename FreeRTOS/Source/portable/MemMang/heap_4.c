@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-
+#if 1 == configUSE_HEAP_4
 /*
  * A sample implementation of pvPortMalloc() and vPortFree() that combines
  * (coalescences) adjacent memory blocks as they are freed, and in so doing
@@ -500,3 +500,4 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
     }
     taskEXIT_CRITICAL();
 }
+#endif

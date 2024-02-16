@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-
+#if 1 == configUSE_HEAP_5
 /*
  * A sample implementation of pvPortMalloc() that allows the heap to be defined
  * across multiple non-contigous blocks and combines (coalescences) adjacent
@@ -555,3 +555,4 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
     }
     taskEXIT_CRITICAL();
 }
+#endif

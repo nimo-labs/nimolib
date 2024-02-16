@@ -24,7 +24,7 @@
  *
  */
 
-
+#if 1 == configUSE_HEAP_1
 /*
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
@@ -149,3 +149,4 @@ size_t xPortGetFreeHeapSize( void )
 {
     return( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+#endif

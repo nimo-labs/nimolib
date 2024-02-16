@@ -25,7 +25,7 @@
  * 1 tab == 4 spaces!
  */
 
-
+#if 1 == configUSE_HEAP_3
 /*
  * Implementation of pvPortMalloc() and vPortFree() that relies on the
  * compilers own malloc() and free() implementations.
@@ -92,3 +92,4 @@ void vPortFree( void * pv )
         ( void ) xTaskResumeAll();
     }
 }
+#endif
