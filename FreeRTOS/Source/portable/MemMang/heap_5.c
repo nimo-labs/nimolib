@@ -23,7 +23,7 @@
  * https://github.com/FreeRTOS
  *
  */
-#if 1 == configUSE_HEAP_5
+
 /*
  * A sample implementation of pvPortMalloc() that allows the heap to be defined
  * across multiple non-contigous blocks and combines (coalescences) adjacent
@@ -74,12 +74,13 @@
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #include "FreeRTOS.h"
+#if 1 == configUSE_HEAP_5
 #include "task.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
-    #error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
+#error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
 #endif
 
 /* Block sizes must not get too small. */
@@ -149,8 +150,8 @@ void * pvPortMalloc( size_t xWantedSize )
         {
             /* The wanted size is increased so it can contain a BlockLink_t
              * structure in addition to the requested amount of bytes. */
-            if( ( xWantedSize > 0 ) && 
-                ( ( xWantedSize + xHeapStructSize ) >  xWantedSize ) ) /* Overflow check */
+            if( ( xWantedSize > 0 ) &&
+                    ( ( xWantedSize + xHeapStructSize ) >  xWantedSize ) ) /* Overflow check */
             {
                 xWantedSize += xHeapStructSize;
 
@@ -159,11 +160,11 @@ void * pvPortMalloc( size_t xWantedSize )
                 {
                     /* Byte alignment required. Check for overflow */
                     if( ( xWantedSize + ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) ) ) >
-                         xWantedSize )
+                            xWantedSize )
                     {
                         xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
-                    } 
-                    else 
+                    }
+                    else
                     {
                         xWantedSize = 0;
                     }
@@ -262,19 +263,19 @@ void * pvPortMalloc( size_t xWantedSize )
     }
     ( void ) xTaskResumeAll();
 
-    #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+#if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+    {
+        if( pvReturn == NULL )
         {
-            if( pvReturn == NULL )
-            {
-                extern void vApplicationMallocFailedHook( void );
-                vApplicationMallocFailedHook();
-            }
-            else
-            {
-                mtCOVERAGE_TEST_MARKER();
-            }
+            extern void vApplicationMallocFailedHook( void );
+            vApplicationMallocFailedHook();
         }
-    #endif /* if ( configUSE_MALLOC_FAILED_HOOK == 1 ) */
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+    }
+#endif /* if ( configUSE_MALLOC_FAILED_HOOK == 1 ) */
 
     return pvReturn;
 }
@@ -537,7 +538,8 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
                 /* Move to the next block in the chain until the last block is
                  * reached. */
                 pxBlock = pxBlock->pxNextFreeBlock;
-            } while( pxBlock != pxEnd );
+            }
+            while( pxBlock != pxEnd );
         }
     }
     ( void ) xTaskResumeAll();

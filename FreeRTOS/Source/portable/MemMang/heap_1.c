@@ -24,7 +24,6 @@
  *
  */
 
-#if configUSE_HEAP_1 == 1
 /*
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
@@ -40,6 +39,7 @@
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #include "FreeRTOS.h"
+#if 1 == configUSE_HEAP_1
 #include "task.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
