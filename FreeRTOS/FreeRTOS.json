@@ -49,5 +49,8 @@
     "includes": [
         "Source/include",
         "Source/portable/GCC/ARM_CM0"
+    ],
+    "cflags": [
+        "-D NIMOLIB_FREERTOS"
     ]
 }
