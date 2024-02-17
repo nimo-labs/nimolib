@@ -24,7 +24,7 @@
  *
  */
 
-#if 1 == configUSE_HEAP_1
+#if configUSE_HEAP_1 == 1
 /*
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
@@ -45,7 +45,7 @@
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
-    #error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
+#error This file must not be used if configSUPPORT_DYNAMIC_ALLOCATION is 0
 #endif
 
 /* A few bytes might be lost to byte aligning the heap start address. */
@@ -56,9 +56,9 @@
 
 /* The application writer has already defined the array used for the RTOS
 * heap - probably so it can be placed in a special segment or address. */
-    extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
-    static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
 /* Index into the ucHeap array. */
@@ -72,22 +72,22 @@ void * pvPortMalloc( size_t xWantedSize )
     static uint8_t * pucAlignedHeap = NULL;
 
     /* Ensure that blocks are always aligned. */
-    #if ( portBYTE_ALIGNMENT != 1 )
+#if ( portBYTE_ALIGNMENT != 1 )
+    {
+        if( xWantedSize & portBYTE_ALIGNMENT_MASK )
         {
-            if( xWantedSize & portBYTE_ALIGNMENT_MASK )
+            /* Byte alignment required. Check for overflow. */
+            if ( (xWantedSize + ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) )) > xWantedSize )
             {
-                /* Byte alignment required. Check for overflow. */
-                if ( (xWantedSize + ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) )) > xWantedSize )
-                {
-                    xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
-                } 
-                else 
-                {
-                    xWantedSize = 0;
-                }
+                xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
+            }
+            else
+            {
+                xWantedSize = 0;
             }
         }
-    #endif
+    }
+#endif
 
     vTaskSuspendAll();
     {
@@ -99,8 +99,8 @@ void * pvPortMalloc( size_t xWantedSize )
 
         /* Check there is enough room left for the allocation and. */
         if( ( xWantedSize > 0 ) && /* valid size */
-            ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
-            ( ( xNextFreeByte + xWantedSize ) > xNextFreeByte ) ) /* Check for overflow. */
+                ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
+                ( ( xNextFreeByte + xWantedSize ) > xNextFreeByte ) ) /* Check for overflow. */
         {
             /* Return the next free byte then increment the index past this
              * block. */
@@ -112,15 +112,15 @@ void * pvPortMalloc( size_t xWantedSize )
     }
     ( void ) xTaskResumeAll();
 
-    #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+#if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+    {
+        if( pvReturn == NULL )
         {
-            if( pvReturn == NULL )
-            {
-                extern void vApplicationMallocFailedHook( void );
-                vApplicationMallocFailedHook();
-            }
+            extern void vApplicationMallocFailedHook( void );
+            vApplicationMallocFailedHook();
         }
-    #endif
+    }
+#endif
 
     return pvReturn;
 }
