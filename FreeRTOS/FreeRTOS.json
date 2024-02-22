@@ -44,6 +44,10 @@
         {
             "fileName": "Source/portable/MemMang/heap_5.c",
             "language": "c"
+        },
+        {
+            "fileName": "Source/portable/GCC/ARM_CM0/printf-stdarg.c",
+            "language": "c"
         }
     ],
     "includes": [
