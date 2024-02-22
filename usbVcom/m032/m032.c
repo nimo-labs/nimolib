@@ -403,7 +403,7 @@ uint8_t vcomSend(uint8_t *data, uint32_t size)
         return 1;
 }
 
-void putchar(uint8_t c)
+int putchar(int c)
 {
     vcomSend(&c, 1);
 }
