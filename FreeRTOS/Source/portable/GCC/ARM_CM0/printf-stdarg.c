@@ -28,6 +28,7 @@
 // #define putchar(c) c
 
 #include <stdarg.h>
+#include <stdint.h>
 
 static void printchar(char **str, int c)
 {
