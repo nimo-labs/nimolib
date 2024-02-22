@@ -237,6 +237,32 @@ int snprintf( char *buf, unsigned int count, const char *format, ... )
     return print( &buf, format, args );
 }
 
+void *_sbrk(int32_t incr)
+{
+#if defined(__NUVO_M032K)
+    extern char StackTop;
+    char _stack_top = StackTop;
+#else
+    extern char _stack_top; /* Set by linker.  */
+#endif
+    static char *heap_end;
+    char *prev_heap_end;
+    if (heap_end == 0)
+    {
+        heap_end = &_stack_top;
+    }
+
+    prev_heap_end = heap_end;
+    heap_end += incr;
+
+    /*printf("_sbrk: Growing memory pool by %d bytes. New span is 0x%X-0x%X (%d bytes)\n",
+    	   incr,
+    	   (uint32_t)(&end),
+    	   (uint32_t)(heap_end),
+    	   (uint32_t)(heap_end) - (uint32_t)(&end));
+    */
+    return (void *)prev_heap_end;
+}
 
 #ifdef TEST_PRINTF
 int main(void)
