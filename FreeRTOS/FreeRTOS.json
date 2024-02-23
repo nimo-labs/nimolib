@@ -55,6 +55,8 @@
         "Source/portable/GCC/ARM_CM0"
     ],
     "cflags": [
-        "-D NIMOLIB_FREERTOS"
+        "-D NIMOLIB_FREERTOS",
+        "-fno-builtin-printf",
+        "-fno-builtin-fprintf"
     ]
 }
