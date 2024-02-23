@@ -372,7 +372,8 @@ void VCOM_ClassRequest(void)
 
 __attribute__((weak)) void vcomRecv(uint8_t *data, uint32_t size)
 {
-
+    (void) data;
+    (void) size;
 }
 
 uint8_t vcomSend(uint8_t *data, uint32_t size)
