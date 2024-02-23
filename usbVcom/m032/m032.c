@@ -402,3 +402,8 @@ uint8_t vcomSend(uint8_t *data, uint32_t size)
     else
         return 1;
 }
+
+int putchar(int c)
+{
+    vcomSend(&c, 1);
+}

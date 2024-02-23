@@ -25,6 +25,10 @@
 
 #include "printf.h"
 
+#ifdef NIMOLIB_FREERTOS
+#error The FreeRTOS book defines its own printf, please remove the printf book from your project.
+#endif
+
 #if (PRINTF_BUFF_SIZE > 0)
 
 
