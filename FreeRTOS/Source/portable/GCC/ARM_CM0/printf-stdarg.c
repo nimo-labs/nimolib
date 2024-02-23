@@ -25,10 +25,10 @@
 
 */
 
-// #define putchar(c) c
-
 #include <stdarg.h>
 #include <stdint.h>
+
+#include <usbVcom.h>
 
 static void printchar(char **str, int c)
 {
@@ -240,7 +240,9 @@ int snprintf( char *buf, unsigned int count, const char *format, ... )
 
 void *_sbrk(int32_t incr)
 {
+    (void) incr;
 
+    return NULL;
 }
 
 #ifdef TEST_PRINTF

@@ -92,6 +92,7 @@ void EP2_Handler(void);
 void EP3_Handler(void);
 void VCOM_LineCoding(uint8_t port);
 void VCOM_TransferData(void);
+int putchar(int c);
 
 #endif  /* __USBD_CDC_H_ */
 
