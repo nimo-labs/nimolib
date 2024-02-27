@@ -2540,6 +2540,7 @@ UBaseType_t uxTaskGetSystemState( TaskStatus_t * const pxTaskStatusArray,
                 uxQueue--;
                 uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &( pxReadyTasksLists[ uxQueue ] ), eReady );
             }
+            //NOLINTNEXTLINE(google-readability-casting) See next line for justification
             while( uxQueue > ( UBaseType_t ) tskIDLE_PRIORITY );   /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 
             /* Fill in an TaskStatus_t structure with information on each
