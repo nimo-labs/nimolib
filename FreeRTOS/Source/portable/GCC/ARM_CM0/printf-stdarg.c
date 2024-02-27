@@ -174,7 +174,7 @@ static int print( char **out, const char *format, va_list args )
             }
             if( *format == 's' )
             {
-                register char *s = (char *)va_arg( args, int );
+                register char *s = (char *)va_arg( args, int ); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 pc += prints (out, s?s:"(null)", width, pad);
                 continue;
             }
