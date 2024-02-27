@@ -32,9 +32,13 @@ static volatile unsigned long sysTickTicks = 0;
 unsigned long delayGetDiff(unsigned long start, unsigned long end)
 {
     if (end > start)
+    {
         return (end - start);
+    }
     else
+    {
         return sysTickTicks - (start + 4294967295);
+    }
 }
 
 unsigned long delayGetTicks(void)
@@ -45,9 +49,13 @@ unsigned long delayGetTicks(void)
 unsigned char delayMillis(unsigned long last, unsigned long target)
 {
     if (delayGetDiff(last, sysTickTicks) > target)
+    {
         return 1;
+    }
     else
+    {
         return 0;
+    }
 }
 
 void delayMs(unsigned int delay)
