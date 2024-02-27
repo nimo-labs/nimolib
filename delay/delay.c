@@ -64,5 +64,7 @@ void delayMs(unsigned int delay)
 
     ticks = delayGetTicks();
     while (delayGetDiff(ticks, delayGetTicks()) < delay)
+    {
         ;
+    }
 }
