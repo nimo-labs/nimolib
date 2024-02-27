@@ -236,7 +236,7 @@ int sprintf(char *out, const char *format, ...)
 }
 
 
-int snprintf( char *buf, unsigned long count, const char *format, ... )
+int snprintf( char *buf, unsigned int count, const char *format, ... ) //NOLINT(clang-diagnostic-incompatible-library-redeclaration) The microcontroller stdlib does actually use unsigned int for arg 2 NOT unsigned long
 {
     va_list args;
 
