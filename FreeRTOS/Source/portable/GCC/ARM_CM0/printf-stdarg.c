@@ -180,28 +180,28 @@ static int print( char **out, const char *format, va_list args )
             }
             if( *format == 'd' )
             {
-                pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'x' )
             {
-                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'X' )
             {
-                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'u' )
             {
-                pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'c' )
             {
                 /* char are converted to int then pushed on the stack */
-                scr[0] = (char)va_arg( args, int );
+                scr[0] = (char)va_arg( args, int ); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 scr[1] = '\0';
                 pc += prints (out, scr, width, pad);
                 continue;
@@ -236,7 +236,7 @@ int sprintf(char *out, const char *format, ...)
 }
 
 
-int snprintf( char *buf, unsigned int count, const char *format, ... )
+int snprintf( char *buf, unsigned long count, const char *format, ... )
 {
     va_list args;
 
