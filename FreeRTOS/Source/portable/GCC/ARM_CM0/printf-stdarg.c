@@ -57,8 +57,14 @@ static int prints(char **out, const char *string, int width, int pad)
         register int len = 0;
         register const char *ptr;
         for (ptr = string; *ptr; ++ptr) ++len;
-        if (len >= width) width = 0;
-        else width -= len;
+        if (len >= width)
+        {
+            width = 0;
+        }
+        else
+        {
+            width -= len;
+        }
         if (pad & PAD_ZERO) padchar = '0';
     }
     if (!(pad & PAD_RIGHT))
@@ -113,7 +119,9 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
     {
         t = (unsigned int)u % b;
         if( t >= 10 )
+        {
             t += letbase - '0' - 10;
+        }
         *--s = (char)(t + '0');
         u /= b;
     }
