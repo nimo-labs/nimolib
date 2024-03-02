@@ -31,7 +31,7 @@ struct s_nmeaDecode
     char qual;
     char gpsAlt[8];
     char altUnit;
-    char numSats;
+    char numSats[2];
 };
 
 unsigned char nmeaDecode(struct s_nmeaDecode *view, unsigned char data);

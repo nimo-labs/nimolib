@@ -107,7 +107,7 @@ unsigned char nmeaDecode(struct s_nmeaDecode *view, unsigned char data)
                     view->qual = *token;
                 token = nimotok(NULL, ','); /*Get num sat*/
                 if(token)
-                    view->numSats = *token;
+                    strcpy(view->numSats, token);
                 token = nimotok(NULL, ','); /*Get HDOP*/
                 token = nimotok(NULL, ','); /*Get Alt*/
                 if (token)

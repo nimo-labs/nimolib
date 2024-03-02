@@ -57,8 +57,14 @@ static int prints(char **out, const char *string, int width, int pad)
         register int len = 0;
         register const char *ptr;
         for (ptr = string; *ptr; ++ptr) ++len;
-        if (len >= width) width = 0;
-        else width -= len;
+        if (len >= width)
+        {
+            width = 0;
+        }
+        else
+        {
+            width -= len;
+        }
         if (pad & PAD_ZERO) padchar = '0';
     }
     if (!(pad & PAD_RIGHT))
@@ -113,7 +119,9 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
     {
         t = (unsigned int)u % b;
         if( t >= 10 )
+        {
             t += letbase - '0' - 10;
+        }
         *--s = (char)(t + '0');
         u /= b;
     }
@@ -166,34 +174,34 @@ static int print( char **out, const char *format, va_list args )
             }
             if( *format == 's' )
             {
-                register char *s = (char *)va_arg( args, int );
+                register char *s = (char *)va_arg( args, int ); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 pc += prints (out, s?s:"(null)", width, pad);
                 continue;
             }
             if( *format == 'd' )
             {
-                pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 10, 1, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'x' )
             {
-                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'X' )
             {
-                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A');
+                pc += printi (out, va_arg( args, int ), 16, 0, width, pad, 'A'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'u' )
             {
-                pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a');
+                pc += printi (out, va_arg( args, int ), 10, 0, width, pad, 'a'); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 continue;
             }
             if( *format == 'c' )
             {
                 /* char are converted to int then pushed on the stack */
-                scr[0] = (char)va_arg( args, int );
+                scr[0] = (char)va_arg( args, int ); //NOLINT(clang-analyzer-valist.Uninitialized) args is initialised in calling function
                 scr[1] = '\0';
                 pc += prints (out, scr, width, pad);
                 continue;
@@ -228,7 +236,7 @@ int sprintf(char *out, const char *format, ...)
 }
 
 
-int snprintf( char *buf, unsigned int count, const char *format, ... )
+int snprintf( char *buf, unsigned int count, const char *format, ... ) //NOLINT(clang-diagnostic-incompatible-library-redeclaration) The microcontroller stdlib does actually use unsigned int for arg 2 NOT unsigned long
 {
     va_list args;
 
