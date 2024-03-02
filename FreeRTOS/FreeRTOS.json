@@ -1,0 +1,62 @@
+{
+    "book": "FreeRTOS",
+    "files": [
+        {
+            "fileName": "Source/event_groups.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/list.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/queue.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/tasks.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/timers.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/GCC/ARM_CM0/port.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/MemMang/heap_1.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/MemMang/heap_2.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/MemMang/heap_3.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/MemMang/heap_4.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/MemMang/heap_5.c",
+            "language": "c"
+        },
+        {
+            "fileName": "Source/portable/GCC/ARM_CM0/printf-stdarg.c",
+            "language": "c"
+        }
+    ],
+    "includes": [
+        "Source/include",
+        "Source/portable/GCC/ARM_CM0"
+    ],
+    "cflags": [
+        "-D NIMOLIB_FREERTOS",
+        "-fno-builtin-printf",
+        "-fno-builtin-fprintf"
+    ]
+}

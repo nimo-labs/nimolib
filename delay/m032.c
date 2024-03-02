@@ -47,4 +47,8 @@ void delaySetup(unsigned int baseTimer)
 void SysTick_Handler(void)
 {
     sysTickTicks++;
+#ifdef NIMOLIB_FREERTOS
+    extern void xPortSysTickHandler( void );
+    xPortSysTickHandler();
+#endif
 }

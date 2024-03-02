@@ -16,7 +16,7 @@
 #include "usbd.h"
 
 uint8_t volatile g_u8Suspend = 0;
-static volatile uint8_t txBuf[SIMPLE_VCOM_TX_BUFSIZE];
+static uint8_t txBuf[SIMPLE_VCOM_TX_BUFSIZE];
 static volatile uint32_t txBufHead = 0;
 static volatile uint32_t txBufTail = 0;
 static volatile uint8_t txLock=0;
@@ -216,7 +216,7 @@ void usbTriggerSend(void)
                 sendDataSize = SIMPLE_VCOM_TX_BUFSIZE - txBufTail;
                 USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2)), &txBuf[txBufTail], sendDataSize);
                 txBufTail=0;
-                if(txBufHead <= (64-sendDataSize)) /*Unsent data <= 64 bytes*/
+                if(txBufHead <= (uint8_t)(64-sendDataSize)) /*Unsent data <= 64 bytes*/
                 {
                     USBD_MemCopy((uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2))+sendDataSize, &txBuf[txBufTail], txBufHead);
                     txBufTail+=txBufHead;
@@ -372,7 +372,8 @@ void VCOM_ClassRequest(void)
 
 __attribute__((weak)) void vcomRecv(uint8_t *data, uint32_t size)
 {
-
+    (void) data;
+    (void) size;
 }
 
 uint8_t vcomSend(uint8_t *data, uint32_t size)
@@ -401,4 +402,11 @@ uint8_t vcomSend(uint8_t *data, uint32_t size)
     }
     else
         return 1;
+}
+
+int putchar(int c)
+{
+    uint8_t uiC = (uint8_t) c;
+    vcomSend(&uiC, 1);
+    return 0;
 }
