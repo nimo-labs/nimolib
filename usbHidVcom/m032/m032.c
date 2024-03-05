@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "NuMicro.h"
-#include "VCOM_and_HID_Transfer.h"
 
 uint8_t volatile g_u8Suspend = 0;
 
