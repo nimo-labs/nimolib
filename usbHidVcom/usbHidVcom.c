@@ -35,6 +35,14 @@
 #define RX_BUFSIZE           512 /* RX buffer size */
 #define TX_BUFSIZE           512 /* RX buffer size */
 #define TX_FIFO_SIZE         16  /* TX Hardware FIFO size */
+typedef struct
+{
+    uint32_t  u32DTERate;     /* Baud rate    */
+    uint8_t   u8CharFormat;   /* stop bit     */
+    uint8_t   u8ParityType;   /* parity       */
+    uint8_t   u8DataBits;     /* data bits    */
+} STR_VCOM_LINE_CODING;
+STR_VCOM_LINE_CODING gLineCoding = {115200, 0, 0, 8};   /* Baud rate : 115200    */
 volatile uint8_t comRbuf[RX_BUFSIZE];
 volatile uint16_t comRbytes = 0;
 volatile uint16_t comRhead = 0;
