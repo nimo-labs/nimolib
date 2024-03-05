@@ -281,3 +281,11 @@ const S_USBD_INFO_T gsInfo =
     (uint32_t *)gu32UsbHidReportLen,
     (uint32_t *)gu32ConfigHidDescIdx
 };
+
+/*!<USB Product String Descriptor */
+uint8_t gu8SerialNumStringDesc[] =
+{
+    22,             /* bLength          */
+    DESC_STRING,    /* bDescriptorType  */
+    '0', 0, 'x', 0, 'D', 0, 'E', 0, 'T', 0, 'r', 0, 'a', 0, 'n', 0, 's', 0, 'f', 0
+};
