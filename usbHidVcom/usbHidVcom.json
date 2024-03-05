@@ -1,0 +1,9 @@
+{
+	"book": "usbHidVcom",
+	"files": [
+		{
+			"fileName": "usbHidVcom.c",
+			"language": "c"
+		}
+	]
+}
