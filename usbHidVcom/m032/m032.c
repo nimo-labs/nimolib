@@ -206,6 +206,8 @@ void EP6_Handler(void)  /* Interrupt OUT handler */
   */
 void usbHidVcomInit(void)
 {
+    /* Setup USB device */
+    USBD_Open(&gsInfo, NULL, NULL);
     /* Init setup packet buffer */
     /* Buffer range for setup packet -> [0 ~ 0x7] */
     USBD->STBUFSEG = SETUP_BUF_BASE;
