@@ -24,11 +24,13 @@
 
 /*-------------------------------------------------------------*/
 /* Define EP maximum packet size */
-#define EP0_MAX_PKT_SIZE    64
+#define EP0_MAX_PKT_SIZE    8
 #define EP1_MAX_PKT_SIZE    EP0_MAX_PKT_SIZE
 #define EP2_MAX_PKT_SIZE    64
 #define EP3_MAX_PKT_SIZE    64
 #define EP4_MAX_PKT_SIZE    8
+#define EP5_MAX_PKT_SIZE    64
+#define EP6_MAX_PKT_SIZE    64
 
 #define SETUP_BUF_BASE      0
 #define SETUP_BUF_LEN       8
@@ -44,12 +46,15 @@
 #define EP4_BUF_LEN         EP4_MAX_PKT_SIZE
 
 /* Define the interrupt In EP number */
-#define BULK_IN_EP_NUM      0x01
-#define BULK_OUT_EP_NUM     0x02
-#define INT_IN_EP_NUM       0x03
+#define BULK_IN_EP_NUM        0x01
+#define BULK_OUT_EP_NUM       0x02
+#define INT_IN_EP_NUM         0x03
+#define INT_IN_EP_NUM_1       0x04
+#define INT_OUT_EP_NUM_1      0x05
 
 
 /* Define Descriptor information */
+#define HID_DEFAULT_INT_IN_INTERVAL     1
 #define USBD_SELF_POWERED               0
 #define USBD_REMOTE_WAKEUP              0
 #define USBD_MAX_POWER                  50  /* The unit is in 2mA. ex: 50 * 2mA = 100mA */
