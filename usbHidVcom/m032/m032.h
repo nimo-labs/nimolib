@@ -44,6 +44,10 @@
 #define EP3_BUF_LEN         EP3_MAX_PKT_SIZE
 #define EP4_BUF_BASE        (EP3_BUF_BASE + EP3_BUF_LEN)
 #define EP4_BUF_LEN         EP4_MAX_PKT_SIZE
+#define EP5_BUF_BASE    (EP4_BUF_BASE + EP4_BUF_LEN)
+#define EP5_BUF_LEN     EP5_MAX_PKT_SIZE
+#define EP6_BUF_BASE    (EP5_BUF_BASE + EP5_BUF_LEN)
+#define EP6_BUF_LEN     EP6_MAX_PKT_SIZE
 
 /* Define the interrupt In EP number */
 #define BULK_IN_EP_NUM        0x01
