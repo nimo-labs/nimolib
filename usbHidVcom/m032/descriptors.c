@@ -11,7 +11,7 @@
  *****************************************************************************/
 /*!<Includes */
 #include "NuMicro.h"
-#include "usbd.h"
+#include "VCOM_and_HID_Transfer.h"
 
 /*!<USB HID Report Descriptor */
 uint8_t HID_DeviceReportDescriptor[] =
@@ -280,12 +280,4 @@ const S_USBD_INFO_T gsInfo =
     0,
     (uint32_t *)gu32UsbHidReportLen,
     (uint32_t *)gu32ConfigHidDescIdx
-};
-
-/*!<USB Product String Descriptor */
-uint8_t gu8SerialNumStringDesc[] =
-{
-    22,             /* bLength          */
-    DESC_STRING,    /* bDescriptorType  */
-    '0', 0, 'x', 0, 'D', 0, 'E', 0, 'T', 0, 'r', 0, 'a', 0, 'n', 0, 's', 0, 'f', 0
 };

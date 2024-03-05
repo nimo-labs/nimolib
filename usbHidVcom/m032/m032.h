@@ -1,8 +1,8 @@
 /******************************************************************************
- * @file     cdc_serial.h
+ * @file     usbd_hid.h
  * @version  V1.00
  * $Revision: 4 $
- * $Date: 18/04/03 10:53a $
+ * $Date: 18/04/03 1:43p $
  * @brief    M031 series USB driver header file
  *
  * @note
@@ -10,12 +10,30 @@
  * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 
-#ifndef __USBD_CDC_H__
-#define __USBD_CDC_H__
+#ifndef __USBD_HID_H__
+#define __USBD_HID_H__
 
 /* Define the vendor id and product id */
 #define USBD_VID        0x0416
-#define USBD_PID        0xB002
+#define USBD_PID        0xDC00
+
+/*!<Define HID Class Specific Request */
+#define GET_REPORT          0x01
+#define GET_IDLE            0x02
+#define GET_PROTOCOL        0x03
+#define SET_REPORT          0x09
+#define SET_IDLE            0x0A
+#define SET_PROTOCOL        0x0B
+
+/*!<USB HID Interface Class protocol */
+#define HID_NONE            0x00
+#define HID_KEYBOARD        0x01
+#define HID_MOUSE           0x02
+
+/*!<USB HID Class Report Type */
+#define HID_RPT_TYPE_INPUT      0x01
+#define HID_RPT_TYPE_OUTPUT     0x02
+#define HID_RPT_TYPE_FEATURE    0x03
 
 /*!<Define CDC Class Specific Request */
 #define SET_LINE_CODE           0x20
@@ -32,30 +50,29 @@
 #define EP5_MAX_PKT_SIZE    64
 #define EP6_MAX_PKT_SIZE    64
 
-#define SETUP_BUF_BASE      0
-#define SETUP_BUF_LEN       8
-#define EP0_BUF_BASE        (SETUP_BUF_BASE + SETUP_BUF_LEN)
-#define EP0_BUF_LEN         EP0_MAX_PKT_SIZE
-#define EP1_BUF_BASE        (SETUP_BUF_BASE + SETUP_BUF_LEN)
-#define EP1_BUF_LEN         EP1_MAX_PKT_SIZE
-#define EP2_BUF_BASE        (EP1_BUF_BASE + EP1_BUF_LEN)
-#define EP2_BUF_LEN         EP2_MAX_PKT_SIZE
-#define EP3_BUF_BASE        (EP2_BUF_BASE + EP2_BUF_LEN)
-#define EP3_BUF_LEN         EP3_MAX_PKT_SIZE
-#define EP4_BUF_BASE        (EP3_BUF_BASE + EP3_BUF_LEN)
-#define EP4_BUF_LEN         EP4_MAX_PKT_SIZE
+#define SETUP_BUF_BASE  0
+#define SETUP_BUF_LEN   8
+#define EP0_BUF_BASE    (SETUP_BUF_BASE + SETUP_BUF_LEN)
+#define EP0_BUF_LEN     EP0_MAX_PKT_SIZE
+#define EP1_BUF_BASE    (SETUP_BUF_BASE + SETUP_BUF_LEN)
+#define EP1_BUF_LEN     EP1_MAX_PKT_SIZE
+#define EP2_BUF_BASE    (EP1_BUF_BASE + EP1_BUF_LEN)
+#define EP2_BUF_LEN     EP2_MAX_PKT_SIZE
+#define EP3_BUF_BASE    (EP2_BUF_BASE + EP2_BUF_LEN)
+#define EP3_BUF_LEN     EP3_MAX_PKT_SIZE
+#define EP4_BUF_BASE    (EP3_BUF_BASE + EP3_BUF_LEN)
+#define EP4_BUF_LEN     EP4_MAX_PKT_SIZE
 #define EP5_BUF_BASE    (EP4_BUF_BASE + EP4_BUF_LEN)
 #define EP5_BUF_LEN     EP5_MAX_PKT_SIZE
 #define EP6_BUF_BASE    (EP5_BUF_BASE + EP5_BUF_LEN)
 #define EP6_BUF_LEN     EP6_MAX_PKT_SIZE
 
-/* Define the interrupt In EP number */
+/* Define the EP number */
 #define BULK_IN_EP_NUM        0x01
 #define BULK_OUT_EP_NUM       0x02
 #define INT_IN_EP_NUM         0x03
 #define INT_IN_EP_NUM_1       0x04
 #define INT_OUT_EP_NUM_1      0x05
-
 
 /* Define Descriptor information */
 #define HID_DEFAULT_INT_IN_INTERVAL     1
@@ -94,15 +111,21 @@ extern uint32_t gu32RxSize;
 extern uint32_t gu32TxSize;
 
 /*-------------------------------------------------------------*/
-void VCOM_Init(void);
-void VCOM_ClassRequest(void);
+
+/*-------------------------------------------------------------*/
+void HID_Init(void);
+void HID_ClassRequest(void);
 
 void EP2_Handler(void);
 void EP3_Handler(void);
 void VCOM_LineCoding(uint8_t port);
 void VCOM_TransferData(void);
-int putchar(int c);
 
-#endif  /* __USBD_CDC_H_ */
+void EP5_Handler(void);
+void EP6_Handler(void);
+void HID_SetInReport(void);
+void HID_GetOutReport(uint8_t *pu8EpBuf, uint32_t u32Size);
+
+#endif  /* __USBD_HID_H_ */
 
 /*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
