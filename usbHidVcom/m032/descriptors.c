@@ -11,7 +11,7 @@
  *****************************************************************************/
 /*!<Includes */
 #include "NuMicro.h"
-#include "VCOM_and_HID_Transfer.h"
+#include "usbd.h"
 
 /*!<USB HID Report Descriptor */
 uint8_t HID_DeviceReportDescriptor[] =
