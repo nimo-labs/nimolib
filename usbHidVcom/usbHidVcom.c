@@ -31,6 +31,25 @@
 #include "m032/descriptors.c"
 #include "m032/m032.c"
 
+#warning these are from the demo and should be removed once this driver has been re-written to match usbVcom
+
+volatile uint8_t comRbuf[RX_BUFSIZE];
+volatile uint16_t comRbytes = 0;
+volatile uint16_t comRhead = 0;
+volatile uint16_t comRtail = 0;
+
+volatile uint8_t comTbuf[TX_BUFSIZE];
+volatile uint16_t comTbytes = 0;
+volatile uint16_t comThead = 0;
+volatile uint16_t comTtail = 0;
+
+uint8_t gRxBuf[64] = {0};
+uint8_t *gpu8RxBuf = 0;
+uint32_t gu32RxSize = 0;
+uint32_t gu32TxSize = 0;
+
+volatile int8_t gi8BulkOutReady = 0;
+
 #elif
 #error usbHidVcom: Processor not supported
 
