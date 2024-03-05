@@ -113,7 +113,7 @@ extern uint32_t gu32TxSize;
 /*-------------------------------------------------------------*/
 
 /*-------------------------------------------------------------*/
-void HID_Init(void);
+void usbHidVcomInit(void);
 void HID_ClassRequest(void);
 
 void EP2_Handler(void);

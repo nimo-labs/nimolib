@@ -204,7 +204,7 @@ void EP6_Handler(void)  /* Interrupt OUT handler */
   * @param  None.
   * @retval None.
   */
-void VCOM_Init(void)
+void usbHidVcomInit(void)
 {
     /* Init setup packet buffer */
     /* Buffer range for setup packet -> [0 ~ 0x7] */
@@ -251,6 +251,12 @@ void VCOM_Init(void)
     USBD_SET_EP_BUF_ADDR(EP6, EP6_BUF_BASE);
     /* trigger to receive OUT data */
     USBD_SET_PAYLOAD_LEN(EP6, EP6_MAX_PKT_SIZE);
+
+    /* Start USB device */
+    USBD_Start();
+
+    NVIC_EnableIRQ(USBD_IRQn);
+    USBD->INTEN = USBD_INTEN_USBIEN_Msk;
 
 }
 

@@ -26,7 +26,6 @@
 #include "m032/usbd.h"
 #include "m032/m032.h"
 
-#define usbVcomInit() VCOM_Init()
 #define USB_VCOM 0
 
 #endif
