@@ -32,7 +32,9 @@
 #include "m032/m032.c"
 
 #warning these are from the demo and should be removed once this driver has been re-written to match usbVcom
-
+#define RX_BUFSIZE           512 /* RX buffer size */
+#define TX_BUFSIZE           512 /* RX buffer size */
+#define TX_FIFO_SIZE         16  /* TX Hardware FIFO size */
 volatile uint8_t comRbuf[RX_BUFSIZE];
 volatile uint16_t comRbytes = 0;
 volatile uint16_t comRhead = 0;
