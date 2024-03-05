@@ -157,12 +157,17 @@ void USBD_IRQHandler(void)
     {
         /* Clear event flag */
         USBD_CLR_INT_FLAG(USBD_INTSTS_EP5);
+
+        /* Interrupt IN */
+        EP5_Handler();
     }
 
     if (u32IntSts & USBD_INTSTS_EP6)
     {
         /* Clear event flag */
         USBD_CLR_INT_FLAG(USBD_INTSTS_EP6);
+        /* Interrupt OUT */
+        EP6_Handler();
     }
 
     if (u32IntSts & USBD_INTSTS_EP7)
@@ -187,6 +192,20 @@ void EP3_Handler(void)
     /* RX Handler */
     vcomRecv(pu8RxBuf, u32RxSize);
     USBD_SET_PAYLOAD_LEN(EP3, EP3_MAX_PKT_SIZE);
+}
+
+void EP5_Handler(void)  /* Interrupt IN handler */
+{
+    //HID_SetInReport();
+}
+
+void EP6_Handler(void)  /* Interrupt OUT handler */
+{
+    uint8_t *ptr;
+    /* Interrupt OUT */
+    ptr = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP6));
+    // HID_GetOutReport(ptr, USBD_GET_PAYLOAD_LEN(EP6));
+    USBD_SET_PAYLOAD_LEN(EP6, EP6_MAX_PKT_SIZE);
 }
 
 void usbTriggerSend(void)
