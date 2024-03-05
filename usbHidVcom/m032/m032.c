@@ -206,6 +206,8 @@ void EP6_Handler(void)  /* Interrupt OUT handler */
   */
 void usbHidVcomInit(void)
 {
+    /* Enable USB clock */
+    CLK->APBCLK0 |= CLK_APBCLK0_USBDCKEN_Msk;
     /* Setup USB device */
     USBD_Open(&gsInfo, NULL, NULL);
     /* Init setup packet buffer */
