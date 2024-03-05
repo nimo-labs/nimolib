@@ -287,6 +287,19 @@ void VCOM_Init(void)
     /* Buffer offset for EP4 ->  */
     USBD_SET_EP_BUF_ADDR(EP4, EP4_BUF_BASE);
 
+    /*****************************************************/
+    /* EP5 ==> Interrupt IN endpoint, address 4 */
+    USBD_CONFIG_EP(EP5, USBD_CFG_EPMODE_IN | INT_IN_EP_NUM_1);
+    /* Buffer range for EP5 */
+    USBD_SET_EP_BUF_ADDR(EP5, EP5_BUF_BASE);
+
+    /* EP6 ==> Interrupt OUT endpoint, address 5 */
+    USBD_CONFIG_EP(EP6, USBD_CFG_EPMODE_OUT | INT_OUT_EP_NUM_1);
+    /* Buffer range for EP6 */
+    USBD_SET_EP_BUF_ADDR(EP6, EP6_BUF_BASE);
+    /* trigger to receive OUT data */
+    USBD_SET_PAYLOAD_LEN(EP6, EP6_MAX_PKT_SIZE);
+
     /* Start USB device */
     USBD_Start();
 
