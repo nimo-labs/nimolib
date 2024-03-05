@@ -204,7 +204,7 @@ void EP6_Handler(void)  /* Interrupt OUT handler */
   * @param  None.
   * @retval None.
   */
-void HID_Init(void)
+void VCOM_Init(void)
 {
     /* Init setup packet buffer */
     /* Buffer range for setup packet -> [0 ~ 0x7] */
