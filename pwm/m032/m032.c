@@ -22,6 +22,21 @@
 
 #include "m032.h"
 
+void setupPwmChan(uint32_t u32ChannelNum)
+{
+    /* Set BPWM Timer clock prescaler */
+    BPWM_SET_PRESCALER(BPWM0, u32ChannelNum, 0); /* Divided by 1 */
+
+    /* Set BPWM Timer duty */
+    BPWM_SET_CMR(BPWM0, u32ChannelNum, 19200);
+
+    /* Set BPWM Timer period */
+    BPWM_SET_CNR(BPWM0, u32ChannelNum, 38399);
+
+    /* Set waveform generation */
+    BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_0_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+}
+
 void pwmInit(void)
 {
     /* Enable BPWM0 module clock */
@@ -44,18 +59,6 @@ void pwmInit(void)
 
     /* Set BPWM to up counter type(edge aligned) */
     BPWM0->CTL1 &= ~BPWM_CTL1_CNTTYPE0_Msk;
-
-    /* Set BPWM Timer clock prescaler */
-    BPWM_SET_PRESCALER(BPWM0, 0, 0); /* Divided by 1 */
-
-    /* Set BPWM Timer duty */
-    BPWM_SET_CMR(BPWM0, 0, 19200);
-
-    /* Set BPWM Timer period */
-    BPWM_SET_CNR(BPWM0, 0, 38399);
-
-    /* Set waveform generation */
-    BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_0_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
 
     /* Enable output of BPWM0 channel 0 */
     BPWM0->POEN |= BPWM_POEN_POEN0_Msk;
