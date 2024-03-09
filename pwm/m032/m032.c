@@ -93,5 +93,5 @@ void pwmSetChanDuty(uint8_t channel, uint32_t dutyCycle)
     /* Get new comparator value by call CalNewDutyCMR() */
     u32NewCMR = CalNewDutyCMR(BPWM0, channel, dutyCycle, 100);
     /* Set new comparator value to register */
-    BPWM_SET_CMR(BPWM0, 0, u32NewCMR);
+    BPWM_SET_CMR(BPWM0, channel, u32NewCMR);
 }
