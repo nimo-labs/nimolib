@@ -24,6 +24,6 @@
 
 void pwmInit(void);
 void pwmSetChanDuty(uint8_t channel, uint32_t dutyCycle);
-void setupPwmChan(uint32_t u32ChannelNum);
+void setupPwmChan(uint32_t u32ChannelNum, uint32_t pwmModulePrescaler, uint32_t pwmModulePeriod);
 
 #endif /* ADC_H */

@@ -22,16 +22,16 @@
 
 #include "m032.h"
 
-void setupPwmChan(uint32_t u32ChannelNum)
+void setupPwmChan(uint32_t u32ChannelNum, uint32_t pwmModulePrescaler, uint32_t pwmModulePeriod)
 {
     /* Set BPWM Timer clock prescaler */
-    BPWM_SET_PRESCALER(BPWM0, u32ChannelNum, 0); /* Divided by 1 */
+    BPWM_SET_PRESCALER(BPWM0, u32ChannelNum, pwmModulePrescaler); /* Divided by 4096 */
 
     /* Set BPWM Timer duty */
-    BPWM_SET_CMR(BPWM0, u32ChannelNum, 19200);
+    BPWM_SET_CMR(BPWM0, u32ChannelNum, 0);
 
     /* Set BPWM Timer period */
-    BPWM_SET_CNR(BPWM0, u32ChannelNum, 38399);
+    BPWM_SET_CNR(BPWM0, u32ChannelNum, 234);
 
     /* Set waveform generation */
     switch(u32ChannelNum)
