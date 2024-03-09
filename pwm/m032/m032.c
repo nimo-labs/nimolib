@@ -34,7 +34,19 @@ void setupPwmChan(uint32_t u32ChannelNum)
     BPWM_SET_CNR(BPWM0, u32ChannelNum, 38399);
 
     /* Set waveform generation */
-    BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_0_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+    switch(u32ChannelNum)
+    {
+    case 0:
+        BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_0_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+        break;
+
+    case 1:
+        BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_1_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+        break;
+
+    default:
+        break;
+    }
 }
 
 void pwmInit(void)
