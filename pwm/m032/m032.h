@@ -104,6 +104,8 @@ extern "C"
 #define BPWM_CLKSRC_TIMER2                        (3UL)    /*!< BPWM Clock source selects to TIMER2 overflow */
 #define BPWM_CLKSRC_TIMER3                        (4UL)    /*!< BPWM Clock source selects to TIMER3 overflow */
 
+#define CLK_CLKSEL2_BPWM0SEL_PLL         (0x0UL<<CLK_CLKSEL2_BPWM0SEL_Pos)      /*!< Setting BPWM0 clock source as PLL   \hideinitializer */
+#define CLK_CLKSEL2_BPWM0SEL_PCLK0       (0x1UL<<CLK_CLKSEL2_BPWM0SEL_Pos)      /*!< Setting BPWM0 clock source as PCLK0 \hideinitializer */
 /*@}*/ /* end of group BPWM_EXPORTED_CONSTANTS */
 
 
