@@ -20,6 +20,8 @@
 #ifndef ADC_H
 #define ADC_H
 
+#include <stdint.h>
+
 void pwmInit(void);
 void pwmSetChanDuty(uint8_t channel, uint32_t dutyCycle);
 
