@@ -34,9 +34,6 @@ void pwmInit(void)
     SYS->IPRST2 |= SYS_IPRST2_BPWM0RST_Msk;
     SYS->IPRST2 &= ~SYS_IPRST2_BPWM0RST_Msk;
 
-    /* Set PA multi-function pin for BPWM0 Channel 0 */
-    SYS->GPA_MFPH = (SYS->GPA_MFPL & (~SYS_GPA_MFPH_PA11MFP_Msk)) | SYS_GPA_MFPH_PA11MFP_BPWM0_CH0;
-
     /*
       Configure BPWM0 channel 0 init period and duty(up counter type).
       Period is PLL / (prescaler * (CNR + 1))
