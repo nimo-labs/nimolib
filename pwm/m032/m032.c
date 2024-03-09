@@ -20,6 +20,8 @@
 #include "M031Series.h"
 #include <pwm.h>
 
+#include "m032.h"
+
 void adcInit(void)
 {
     /* Enable BPWM0 module clock */
