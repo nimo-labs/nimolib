@@ -18,9 +18,7 @@
 */
 
 #include "M031Series.h"
-#include <adc.h>
-
-#include "pwm.h"
+#include <pwm.h>
 
 void adcInit(void)
 {
