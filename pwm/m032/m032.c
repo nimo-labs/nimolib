@@ -38,10 +38,14 @@ void setupPwmChan(uint32_t u32ChannelNum)
     {
     case 0:
         BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_0_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+        /* Enable output of BPWM0 channel 0 */
+        BPWM0->POEN |= BPWM_POEN_POEN0_Msk;
         break;
 
     case 1:
         BPWM_SET_OUTPUT_LEVEL(BPWM0, BPWM_CH_1_MASK, BPWM_OUTPUT_HIGH, BPWM_OUTPUT_LOW, BPWM_OUTPUT_NOTHING, BPWM_OUTPUT_NOTHING);
+        /* Enable output of BPWM0 channel 0 */
+        BPWM0->POEN |= BPWM_POEN_POEN1_Msk;
         break;
 
     default:
@@ -71,9 +75,6 @@ void pwmInit(void)
 
     /* Set BPWM to up counter type(edge aligned) */
     BPWM0->CTL1 &= ~BPWM_CTL1_CNTTYPE0_Msk;
-
-    /* Enable output of BPWM0 channel 0 */
-    BPWM0->POEN |= BPWM_POEN_POEN0_Msk;
 
     /* Start */
     BPWM0->CNTEN |= BPWM_CNTEN_CNTEN0_Msk;
