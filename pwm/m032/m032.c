@@ -18,7 +18,6 @@
 */
 
 #include "M031Series.h"
-#include <printf.h>
 #include <adc.h>
 
 #include "pwm.h"
