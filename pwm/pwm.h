@@ -20,8 +20,7 @@
 #ifndef ADC_H
 #define ADC_H
 
-void adcInit(void);
-unsigned int adcReadChan(unsigned char channel);       // Mode = 1 for single ended, 0 for internal
-unsigned int adcReadChanSingle(unsigned char channel); // Mode = 1 for single ended, 0 for internal
+void pwmInit(void);
+void pwmSetChanDuty(uint8_t channel, uint32_t dutyCycle);
 
 #endif /* ADC_H */

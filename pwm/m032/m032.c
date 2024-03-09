@@ -22,7 +22,7 @@
 
 #include "m032.h"
 
-void adcInit(void)
+void pwmInit(void)
 {
     /* Enable BPWM0 module clock */
     CLK->APBCLK1 |= CLK_APBCLK1_BPWM0CKEN_Msk;
@@ -68,3 +68,33 @@ void adcInit(void)
 
 }
 
+/**
+ * @brief       Calculate the comparator value of new duty by configured period
+ *
+ * @param       bpwm                  The pointer of the specified BPWM module
+ *
+ * @param       u32ChannelNum        BPWM channel number. Valid values are between 0~5
+ *
+ * @param       u32DutyCycle         Target generator duty cycle percentage. Valid range are between 0 ~ u32CycleResolution.
+ *                                   If u32CycleResolution is 100, and u32DutyCycle is 10 means 10%, 20 means 20% ...
+ *
+ * @param       u32CycleResolution   Target generator duty cycle resolution. The value in general is 100.
+ *
+ * @return      The compatator value by new duty cycle
+ */
+static uint32_t CalNewDutyCMR(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t u32DutyCycle, uint32_t u32CycleResolution)
+{
+    if (u32DutyCycle >= u32CycleResolution)
+        return BPWM_GET_CNR(bpwm, u32ChannelNum);
+
+    return (u32DutyCycle * (BPWM_GET_CNR(bpwm, u32ChannelNum) + 1) / u32CycleResolution);
+}
+
+void pwmSetChanDuty(uint8_t channel, uint32_t dutyCycle)
+{
+    uint32_t u32NewCMR = 0;
+    /* Get new comparator value by call CalNewDutyCMR() */
+    u32NewCMR = CalNewDutyCMR(BPWM0, channel, u32NewDutyCycle, 100);
+    /* Set new comparator value to register */
+    BPWM_SET_CMR(BPWM0, 0, u32NewCMR);
+}
