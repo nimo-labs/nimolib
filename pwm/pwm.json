@@ -1,9 +1,9 @@
 {
-    "book": "pwm",
-    "files": [
-        {
-            "fileName": "pwm.c",
-            "language": "c"
-        }
-    ]
+	"book": "pwm",
+	"files": [
+		{
+			"fileName": "pwm.c",
+			"language": "c"
+		}
+	]
 }
